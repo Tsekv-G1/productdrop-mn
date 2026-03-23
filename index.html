@@ -3,250 +3,571 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ProductDrop.MN — Нэвтрэх</title>
+<title>ProductDrop.MN — Монголын #1 Бараа Судалгааны Платформ</title>
+<meta name="description" content="500+ шалгарсан бараа, ашгийн тооцоолуур, өрсөлдөгч шинжилгээ. Монголын онлайн бизнест зориулсан.">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#06060a;--surface:#0d0d12;--surface2:#13131a;
   --border:#1c1c26;--border2:#28283a;
   --text:#efefef;--muted:#5a5a72;--muted2:#3a3a50;
-  --accent:#c8ff00;--red:#ff4444;
+  --accent:#c8ff00;--red:#ff4444;--gold:#f5c518;--orange:#ff9632;--purple:#a78bfa;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;line-height:1.7;overflow-x:hidden;}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:.5;}
+a{color:inherit;text-decoration:none;}
 
-/* LOGIN */
-#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg);}
-.login-wrap{width:min(400px,92vw);}
-.login-back{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;transition:color .2s;}
-.login-back:hover{color:var(--text);}
-.login-box{background:var(--surface);border:1px solid var(--border2);padding:36px 32px;position:relative;overflow:hidden;}
-.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
-.login-glow{position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(200,255,0,.05),transparent 70%);pointer-events:none;}
-.ll{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.5px;margin-bottom:4px;}
-.ll span{color:var(--accent);}
-.ls{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;}
-.lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block;}
-.pwd-input{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:13px 16px;outline:none;transition:border-color .2s;letter-spacing:.08em;}
-.pwd-input:focus{border-color:var(--accent);}
-.login-btn{width:100%;margin-top:14px;padding:14px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
-.login-btn:hover{background:#b5e800;transform:translateY(-1px);}
-.login-err{margin-top:10px;font-size:11px;color:var(--red);display:none;text-align:center;}
-.login-note{margin-top:16px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6;}
-.login-note a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:60px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,10,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.5px;}
+.logo span{color:var(--accent);}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:10px 22px;border:none;cursor:pointer;transition:all .2s;}
+.nav-cta:hover{background:#b5e800;transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,255,0,.2);}
+@media(max-width:768px){nav{padding:0 16px;}.nav-links{display:none;}}
 
-/* DASHBOARD */
-#dashboard{display:none;}
-nav{position:sticky;top:0;background:rgba(6,6,10,.94);border-bottom:1px solid var(--border);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:50;backdrop-filter:blur(20px);}
-.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:-.3px;}
-.nav-logo span{color:var(--accent);}
-.nav-right{display:flex;align-items:center;gap:16px;}
-.nav-meta{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
-#nav-user{color:var(--accent);font-weight:500;}
-.nav-logout{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;background:none;border:none;font-family:'DM Mono',monospace;transition:color .2s;}
-.nav-logout:hover{color:var(--red);}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:60px 48px 0;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(200,255,0,.032) 0%,transparent 65%);pointer-events:none;}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.live-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 2s infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(200,255,0,.06);border:1px solid rgba(200,255,0,.15);padding:5px 14px;margin-bottom:28px;border-radius:2px;}
+.hero-badge span{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(34px,4.5vw,60px);line-height:1.02;letter-spacing:-2.5px;margin-bottom:22px;}
+h1 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);}
+.hero-desc{color:var(--muted);font-size:13px;line-height:1.8;max-width:420px;margin-bottom:36px;}
+.btn-primary{background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:15px 32px;border:none;cursor:pointer;transition:all .2s;display:inline-block;}
+.btn-primary:hover{background:#b5e800;transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,255,0,.22);}
+.btn-ghost{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:none;border:none;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--border2);font-family:'DM Mono',monospace;transition:color .2s;}
+.btn-ghost:hover{color:var(--text);}
+.hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:36px;margin-top:52px;padding-top:36px;border-top:1px solid var(--border);}
+.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-1px;font-variant-numeric:tabular-nums;}
+.stat-num span{color:var(--accent);}
+.stat-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 
-/* stats */
-.stats-bar{padding:12px 40px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
-.stats-bar::-webkit-scrollbar{display:none;}
-.sb-i{display:flex;flex-direction:column;gap:3px;padding-right:22px;border-right:1px solid var(--border);margin-right:22px;flex-shrink:0;}
-.sb-i:last-child{border-right:none;}
-.sb-v{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;color:var(--text);}
-.sb-v.ac{color:var(--accent);}
-.sb-l{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+/* hero right product preview */
+.product-preview{background:var(--surface);border:1px solid var(--border2);overflow:hidden;}
+.preview-header{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.preview-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.preview-live{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--accent);letter-spacing:1px;text-transform:uppercase;}
+.product-row{display:grid;grid-template-columns:44px 1fr 85px 65px;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);transition:background .15s;}
+.product-row:hover{background:var(--surface2);}
+.product-row:last-child{border-bottom:none;}
+.prod-icon{width:44px;height:44px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.prod-name{font-family:'DM Mono',monospace;font-size:11px;color:var(--text);line-height:1.4;}
+.prod-cat{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.prod-profit{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--accent);text-align:right;}
+.prod-profit-lbl{font-size:7px;color:var(--muted);text-transform:uppercase;}
+.trend-up{font-size:10px;color:var(--accent);text-align:right;}
+.trend-bar{height:2px;background:var(--border2);margin-top:5px;position:relative;overflow:hidden;}
+.trend-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);}
+.float-card{position:absolute;bottom:-18px;left:-22px;background:var(--surface);border:1px solid var(--border2);padding:12px 16px;min-width:145px;}
+.fc-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.fc-val{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-1px;color:var(--accent);}
+.fc-sub{font-size:8px;color:var(--muted);margin-top:2px;}
 
-/* hero */
-.dash-hero{padding:48px 40px 40px;border-bottom:1px solid var(--border);}
-.dash-hero-inner{max-width:1100px;margin:0 auto;}
-.sec-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
-.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);max-width:60px;}
-.dash-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(24px,3vw,38px);letter-spacing:-2px;line-height:1.05;margin-bottom:8px;}
-.dash-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);}
-.dash-sub{color:var(--muted);font-size:12px;max-width:460px;}
+/* SECTION */
+section{padding:96px 48px;border-top:1px solid var(--border);}
+.si{max-width:1100px;margin:0 auto;width:100%;}
+.sec-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:44px;display:flex;align-items:center;gap:12px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);max-width:80px;}
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(26px,3.5vw,48px);letter-spacing:-2px;line-height:1.05;margin-bottom:18px;}
+h2 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);}
+.sec-desc{color:var(--muted);max-width:500px;line-height:1.8;margin-bottom:56px;}
 
-/* cat grid */
-.cat-section{padding:36px 40px 60px;max-width:1100px;margin:0 auto;}
+/* CATEGORIES */
 .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);}
-.cc{background:var(--surface);padding:0;cursor:pointer;transition:background .2s;position:relative;overflow:hidden;border:none;text-align:left;width:100%;display:flex;flex-direction:column;text-decoration:none;color:inherit;}
-.cc:hover{background:var(--surface2);}
-.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .35s;}
-.cc:hover::before{transform:scaleX(1);}
-.cc[data-c=beauty]::before{background:#ff6eb4;}
-.cc[data-c=home]::before{background:#4fc3f7;}
-.cc[data-c=health]::before{background:#00e676;}
-.cc[data-c=goods]::before{background:#ffb800;}
-.cc[data-c=kids]::before{background:#ce93d8;}
-.cc-img{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:46px;opacity:.6;}
-.cc-body{padding:16px 16px 20px;}
-.cc-badge{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:2px;display:inline-block;margin-bottom:8px;}
-.cc[data-c=beauty] .cc-badge{background:rgba(255,110,180,.08);color:#ff6eb4;border:1px solid rgba(255,110,180,.2);}
-.cc[data-c=home] .cc-badge{background:rgba(79,195,247,.08);color:#4fc3f7;border:1px solid rgba(79,195,247,.2);}
-.cc[data-c=health] .cc-badge{background:rgba(0,230,118,.08);color:#00e676;border:1px solid rgba(0,230,118,.2);}
-.cc[data-c=goods] .cc-badge{background:rgba(255,184,0,.08);color:#ffb800;border:1px solid rgba(255,184,0,.2);}
-.cc[data-c=kids] .cc-badge{background:rgba(206,147,216,.08);color:#ce93d8;border:1px solid rgba(206,147,216,.2);}
-.cc-name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.5px;margin-bottom:4px;}
-.cc-count{font-size:10px;color:var(--muted);margin-bottom:6px;}
-.cc-subs{font-size:9px;color:var(--muted2);line-height:1.6;}
+.cat-card{background:var(--bg);padding:28px 22px;transition:background .2s;position:relative;overflow:hidden;}
+.cat-card:hover{background:var(--surface);}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.cat-card:hover::before{transform:scaleX(1);}
+.cat-icon{font-size:26px;margin-bottom:14px;}
+.cat-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;letter-spacing:-.3px;margin-bottom:6px;}
+.cat-cnt{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.cat-cnt span{color:var(--accent);}
 
-@media(max-width:700px){
-  nav{padding:0 16px;}
-  .stats-bar{padding:12px 16px;}
-  .dash-hero{padding:32px 16px 28px;}
-  .cat-section{padding:20px 16px 48px;}
-  .cat-grid{grid-template-columns:1fr 1fr;}
-  .sb-i{padding-right:14px;margin-right:14px;}
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.feat-card{background:var(--bg);padding:32px 28px;transition:background .2s;position:relative;}
+.feat-card:hover{background:var(--surface);}
+.feat-line{position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.feat-card:hover .feat-line{transform:scaleX(1);}
+.feat-icon{width:38px;height:38px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:16px;}
+.feat-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;letter-spacing:-.3px;margin-bottom:8px;}
+.feat-desc{color:var(--muted);font-size:11px;line-height:1.8;}
+.feat-tag{display:inline-block;margin-top:12px;background:rgba(200,255,0,.06);color:var(--accent);border:1px solid rgba(200,255,0,.12);font-size:8px;padding:2px 8px;letter-spacing:1.5px;text-transform:uppercase;border-radius:2px;}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.pc{background:var(--surface);padding:36px 30px;position:relative;}
+.pc.featured{border-top:2px solid var(--accent);}
+.pc.premium{background:var(--surface2);border-top:2px solid var(--purple);}
+.pc-popular{position:absolute;top:-1px;right:24px;background:var(--accent);color:#000;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;font-family:'DM Mono',monospace;font-weight:600;}
+.pc-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px;display:inline-block;margin-bottom:18px;}
+.pc-badge.g{background:rgba(200,255,0,.1);color:var(--accent);border:1px solid rgba(200,255,0,.2);}
+.pc-badge.o{background:rgba(255,150,50,.1);color:var(--orange);border:1px solid rgba(255,150,50,.2);}
+.pc-badge.p{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);}
+.pc-name{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.5px;margin-bottom:5px;}
+.pc-desc{font-size:10px;color:var(--muted);letter-spacing:.5px;line-height:1.6;margin-bottom:22px;}
+.pc-price{font-family:'Syne',sans-serif;font-weight:800;font-size:40px;letter-spacing:-2px;line-height:1;margin-bottom:3px;font-variant-numeric:tabular-nums;}
+.pc-price sup{font-size:16px;letter-spacing:0;vertical-align:super;font-weight:600;opacity:.7;}
+.pc-price.ac{color:var(--accent);}
+.pc-price.pp{color:var(--purple);}
+.pc-period{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:24px;}
+.pc-features{list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:9px;}
+.pc-features li{font-size:11px;color:var(--muted);padding-left:16px;position:relative;line-height:1.5;}
+.pc-features li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:10px;}
+.pc-features li.off{color:var(--muted2);}
+.pc-features li.off::before{content:'×';color:var(--muted2);}
+.pc-btn{width:100%;padding:13px;font-family:'Syne',sans-serif;font-weight:700;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;}
+.pc-btn.primary{background:var(--accent);color:#000;}
+.pc-btn.primary:hover{background:#b5e800;}
+.pc-btn.outline{background:transparent;color:var(--text);border:1px solid var(--border2);}
+.pc-btn.outline:hover{border-color:var(--accent);color:var(--accent);}
+.pc-btn.purp{background:var(--purple);color:#000;}
+.pc-btn.purp:hover{opacity:.85;}
+
+/* QPAY MODAL */
+#qpay-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+#qpay-modal.open{display:flex;}
+.qm-box{width:min(480px,92vw);background:var(--surface);border:1px solid var(--border2);position:relative;overflow:hidden;}
+.qm-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
+.qm-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.qm-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.qm-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;}
+.qm-close:hover{color:var(--text);}
+.qm-body{padding:24px;}
+.qm-plan{background:var(--surface2);border:1px solid var(--border2);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.qm-plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
+.qm-plan-price{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-1px;color:var(--accent);font-variant-numeric:tabular-nums;}
+/* Steps */
+.qm-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.qm-step{display:flex;align-items:flex-start;gap:12px;}
+.qm-step-num{width:22px;height:22px;background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.2);color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.qm-step-text{font-size:12px;color:var(--muted);line-height:1.6;}
+.qm-step-text strong{color:var(--text);}
+/* Bank info */
+.qm-bank-info{background:var(--surface2);border:1px solid rgba(200,255,0,.15);padding:16px;margin-bottom:16px;}
+.qm-bank-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.qm-bank-row:last-child{margin-bottom:0;}
+.qm-bank-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.qm-bank-val{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);font-variant-numeric:tabular-nums;}
+.qm-bank-val.ac{color:var(--accent);font-size:16px;font-weight:800;letter-spacing:.5px;}
+.copy-btn{font-size:8px;letter-spacing:1px;text-transform:uppercase;background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.2);color:var(--accent);padding:3px 8px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+.copy-btn:hover{background:rgba(200,255,0,.15);}
+/* Confirm section */
+.qm-confirm{background:var(--surface2);border:1px solid var(--border2);padding:16px;margin-bottom:16px;}
+.qm-confirm-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.qm-confirm-label::before{content:'✓';color:var(--accent);}
+.qm-confirm-desc{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:12px;}
+.qm-proceed-btn{width:100%;padding:14px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.qm-proceed-btn:hover{background:#b5e800;}
+.qm-note{font-size:10px;color:var(--muted2);text-align:center;margin-top:10px;line-height:1.6;}
+
+/* HOW IT WORKS */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.step{background:var(--bg);padding:40px 30px;position:relative;transition:background .2s;}
+.step:hover{background:var(--surface);}
+.step-num{font-family:'Syne',sans-serif;font-weight:800;font-size:60px;color:var(--border2);line-height:1;letter-spacing:-4px;margin-bottom:18px;transition:color .3s;}
+.step:hover .step-num{color:rgba(200,255,0,.1);}
+.step-icon{font-size:24px;margin-bottom:14px;}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;letter-spacing:-.3px;margin-bottom:8px;}
+.step-desc{color:var(--muted);font-size:11px;line-height:1.8;}
+.step-arrow{position:absolute;top:40px;right:-1px;width:26px;height:26px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted2);}
+
+/* TESTI */
+.testi-top{display:flex;align-items:center;gap:20px;padding:22px 28px;background:var(--surface);border:1px solid var(--border2);margin-bottom:1px;}
+.testi-big{font-family:'Syne',sans-serif;font-weight:800;font-size:42px;letter-spacing:-2px;line-height:1;}
+.testi-big span{color:var(--gold);}
+.testi-stars{display:flex;gap:3px;color:var(--gold);font-size:13px;margin-bottom:3px;}
+.testi-cnt{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.testi-card{background:var(--bg);padding:26px 22px;transition:background .15s;}
+.testi-card:hover{background:var(--surface);}
+.testi-stars-sm{display:flex;gap:2px;color:var(--gold);font-size:11px;margin-bottom:11px;}
+.testi-text{color:var(--muted);font-size:11px;line-height:1.8;margin-bottom:14px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-avatar{width:30px;height:30px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.testi-name{font-family:'Syne',sans-serif;font-weight:700;font-size:11px;}
+.testi-role{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:1px;background:var(--border);}
+.faq-item{background:var(--bg);overflow:hidden;}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);background:none;border:none;text-align:left;transition:background .15s;}
+.faq-q:hover{background:var(--surface);}
+.faq-icon{width:20px;height:20px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);flex-shrink:0;transition:all .3s;}
+.faq-item.open .faq-icon{background:var(--accent);color:#000;border-color:var(--accent);transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .32s ease,padding .32s ease;padding:0 22px;color:var(--muted);font-size:12px;line-height:1.9;}
+.faq-item.open .faq-a{max-height:200px;padding:0 22px 18px;}
+
+/* CTA */
+.cta-wrap{padding:100px 48px;border-top:1px solid var(--border);position:relative;overflow:hidden;text-align:center;}
+.cta-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:260px;background:radial-gradient(ellipse,rgba(200,255,0,.05) 0%,transparent 70%);pointer-events:none;}
+.cta-inner{max-width:660px;margin:0 auto;}
+.cta-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:26px;}
+.cta-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(28px,4.5vw,52px);letter-spacing:-2.5px;line-height:1.02;margin-bottom:18px;}
+.cta-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);}
+.cta-sub{color:var(--muted);margin-bottom:36px;font-size:13px;line-height:1.8;}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;}
+.cta-note{font-size:9px;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-top:18px;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:36px 48px 28px;}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:-.5px;}
+.footer-logo span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;list-style:none;}
+.footer-links a{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:color .2s;}
+.footer-links a:hover{color:var(--text);}
+.footer-copy{font-size:9px;color:var(--muted2);letter-spacing:.8px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{padding:60px 20px 0;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero-right{display:none;}
+  section{padding:60px 20px;}
+  .cat-grid,.feat-grid,.steps-grid,.testi-grid,.pricing-grid{grid-template-columns:1fr;}
+  .step-arrow{display:none;}
+  .testi-top{flex-direction:column;align-items:flex-start;gap:10px;}
+  .cta-wrap{padding:72px 20px;}
+  footer{padding:28px 20px;}
+  .footer-inner{flex-direction:column;align-items:flex-start;}
 }
+
+/* Fade animations */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.vis{opacity:1;transform:translateY(0);}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-wrap">
-    <a href="landing.html" class="login-back">← Буцах</a>
-    <div class="login-box">
-      <div class="login-glow"></div>
-      <div class="ll">PRODUCT<span>DROP</span>.MN</div>
-      <div class="ls">Бараа судалгааны платформ</div>
-      <label class="lbl">Хэрэглэгчийн нэр</label>
-      <input type="text" class="pwd-input" id="uname" placeholder="Нэрээ оруулна уу" autocomplete="username" style="margin-bottom:16px;">
-      <label class="lbl">Нэвтрэх код</label>
-      <input type="password" class="pwd-input" id="pwd" placeholder="PD-XXXXX-XXXXX-XXXXX" autocomplete="current-password">
-      <button class="login-btn" onclick="doLogin()">Нэвтрэх →</button>
-      <div class="login-err" id="lerr">Код буруу байна</div>
-      <div class="login-note">Код байхгүй юу? <a href="landing.html#pricing">Subscription авах →</a><br><span style="font-size:9px;color:var(--muted2)">Код: PD-... хэлбэрийн</span></div>
+<!-- NAV -->
+<nav>
+  <div class="logo">PRODUCT<span>DROP</span>.MN</div>
+  <ul class="nav-links">
+    <li><a href="#categories">Бараа</a></li>
+    <li><a href="#features">Хэрэгслүүд</a></li>
+    <li><a href="#pricing">Үнэ</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openQPay('pro')">Эхлэх →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="border-top:none;padding-top:60px;">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="fade-up">
+      <div class="hero-badge"><div class="live-dot"></div><span>Монголын #1 платформ</span></div>
+      <h1>Ашигтай бараа<br>олох хамгийн <em>хурдан</em> арга</h1>
+      <p class="hero-desc">500+ шалгарсан бараа, ашгийн тооцоолуур, өрсөлдөгч шинжилгээ — бүгдийг нэг дороос. Монголын онлайн бизнесэд зориулан бүтээсэн.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="openQPay('pro')">Одоо авах →</button>
+        <a href="login.html" class="btn-ghost">Нэвтрэх</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">500<span>+</span></div><div class="stat-lbl">Шалгарсан бараа</div></div>
+        <div><div class="stat-num">5<span>×</span></div><div class="stat-lbl">Дундаж ашиг</div></div>
+        <div><div class="stat-num">4.8<span>★</span></div><div class="stat-lbl">Үнэлгээ</div></div>
+      </div>
     </div>
+    <div class="hero-right fade-up" style="transition-delay:.18s;position:relative;">
+      <div class="product-preview">
+        <div class="preview-header">
+          <span class="preview-title">Trending бараанууд</span>
+          <div class="preview-live"><div class="live-dot"></div>Шууд</div>
+        </div>
+        <div class="product-row"><div class="prod-icon">🎧</div><div><div class="prod-name">Wireless Earbuds Pro</div><div class="prod-cat">Electronics</div></div><div><div class="prod-profit">₮52,000</div><div class="prod-profit-lbl">ашиг</div></div><div><div class="trend-up">↑ 84%</div><div class="trend-bar"><div class="trend-fill" style="width:84%"></div></div></div></div>
+        <div class="product-row"><div class="prod-icon">💆</div><div><div class="prod-name">Massage Gun Pro</div><div class="prod-cat">Health</div></div><div><div class="prod-profit">₮68,000</div><div class="prod-profit-lbl">ашиг</div></div><div><div class="trend-up">↑ 72%</div><div class="trend-bar"><div class="trend-fill" style="width:72%"></div></div></div></div>
+        <div class="product-row"><div class="prod-icon">🌿</div><div><div class="prod-name">Collagen Serum Set</div><div class="prod-cat">Beauty</div></div><div><div class="prod-profit">₮44,000</div><div class="prod-profit-lbl">ашиг</div></div><div><div class="trend-up">↑ 91%</div><div class="trend-bar"><div class="trend-fill" style="width:91%"></div></div></div></div>
+        <div class="product-row"><div class="prod-icon">🏠</div><div><div class="prod-name">Smart LED Strip</div><div class="prod-cat">Home</div></div><div><div class="prod-profit">₮38,000</div><div class="prod-profit-lbl">ашиг</div></div><div><div class="trend-up">↑ 67%</div><div class="trend-bar"><div class="trend-fill" style="width:67%"></div></div></div></div>
+      </div>
+      <div class="float-card"><div class="fc-lbl">Энэ сарын best</div><div class="fc-val">₮3.2M</div><div class="fc-sub">нийт ашиг · Top seller</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="si">
+    <div class="sec-label fade-up">Категориуд</div>
+    <h2 class="fade-up">5 категори, <em>500 бараа</em></h2>
+    <p class="sec-desc fade-up">Бараа бүр судалгааны багаар шалгагдсан. Ашиг, өрсөлдөөн, контент боломж — бүгд дүн шинжилгээтэй.</p>
+    <div class="cat-grid">
+      <div class="cat-card fade-up"><div class="cat-icon">💄</div><div class="cat-name">Beauty</div><div class="cat-cnt"><span>100</span> бараа · Makeup, Skincare, Hair, Tools</div></div>
+      <div class="cat-card fade-up" style="transition-delay:.06s"><div class="cat-icon">🏠</div><div class="cat-name">Home</div><div class="cat-cnt"><span>100</span> бараа · Kitchen, Smart Home, Decor</div></div>
+      <div class="cat-card fade-up" style="transition-delay:.12s"><div class="cat-icon">💪</div><div class="cat-name">Health</div><div class="cat-cnt"><span>100</span> бараа · Fitness, Recovery, Wellness</div></div>
+      <div class="cat-card fade-up" style="transition-delay:.18s"><div class="cat-icon">🛍️</div><div class="cat-name">Goods</div><div class="cat-cnt"><span>100</span> бараа · Electronics, Fashion, Pet</div></div>
+      <div class="cat-card fade-up" style="transition-delay:.24s"><div class="cat-icon">🧸</div><div class="cat-name">Kids</div><div class="cat-cnt"><span>100</span> бараа · Baby, Learning, Play</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="si">
+    <div class="sec-label fade-up">Хэрэгслүүд</div>
+    <h2 class="fade-up">Бизнесийн бүх хэрэгсэл <em>нэг дор</em></h2>
+    <p class="sec-desc fade-up">Дэлгүүр эрхлэхэд шаардлагатай мэдээлэл, шинжилгээ, контент санаа — нэг платформд.</p>
+    <div class="feat-grid">
+      <div class="feat-card fade-up"><div class="feat-line"></div><div class="feat-icon">📊</div><div class="feat-name">Бараа Судалгаа</div><div class="feat-desc">500+ барааны борлуулалт, тренд, өрсөлдөөний дата. Бодит тоонд тулгуурлан шийдвэр гарга.</div><span class="feat-tag">Live data</span></div>
+      <div class="feat-card fade-up" style="transition-delay:.07s"><div class="feat-line"></div><div class="feat-icon">🧮</div><div class="feat-name">Ашгийн Тооцоолуур</div><div class="feat-desc">Авах үнэ, тээвэр, гааль, маркетингийн зардлыг оруулаад цэвэр ашгийг нэн даруй мэд. ₮ төгрөгөөр.</div><span class="feat-tag">₮ Төгрөг</span></div>
+      <div class="feat-card fade-up" style="transition-delay:.14s"><div class="feat-line"></div><div class="feat-icon">🔭</div><div class="feat-name">Өрсөлдөгч Шинжилгээ</div><div class="feat-desc">Монгол болон дэлхийн зах зээлд тухайн бараагаа хэн, хэрхэн зарж байгааг мэд.</div><span class="feat-tag">Шинэ</span></div>
+      <div class="feat-card fade-up"><div class="feat-line"></div><div class="feat-icon">⚡</div><div class="feat-name">Контент Санаа</div><div class="feat-desc">Бараа бүрт TikTok, Reel, Facebook-т зориулсан контент санаа, hook, caption бэлэн.</div><span class="feat-tag">AI санаа</span></div>
+      <div class="feat-card fade-up" style="transition-delay:.07s"><div class="feat-line"></div><div class="feat-icon">📈</div><div class="feat-name">Улирлын Тренд</div><div class="feat-desc">Ямар бараа ямар улиралд зарагддагийг урьдчилан мэдэж, яг цагт нь бараагаа бэлд.</div><span class="feat-tag">Forecast</span></div>
+      <div class="feat-card fade-up" style="transition-delay:.14s"><div class="feat-line"></div><div class="feat-icon">🔗</div><div class="feat-name">Нийлүүлэгч Линк</div><div class="feat-desc">AliExpress, Amazon, TikTok Shop — бараа бүрт шууд холбоос. Захиалга нэг товшилтоор.</div><span class="feat-tag">5 платформ</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="si">
+    <div class="sec-label fade-up">Яаж ажилладаг</div>
+    <h2 class="fade-up">3 алхамд <em>амжилтад хүр</em></h2>
+    <p class="sec-desc fade-up">Бүртгэлээс эхлээд анхны борлуулалт хүртэл.</p>
+    <div class="steps-grid">
+      <div class="step fade-up"><div class="step-num">01</div><div class="step-icon">💳</div><div class="step-title">Төлбөр хий</div><div class="step-desc">Дансаар шилжүүлэг хийж subscribe хий. Баталгаажсаны дараа нэвтрэх нууц үгийг авна.</div><div class="step-arrow">→</div></div>
+      <div class="step fade-up" style="transition-delay:.1s"><div class="step-num">02</div><div class="step-icon">🔍</div><div class="step-title">Бараа судла</div><div class="step-desc">500+ барааны жагсаалтаас ашигтай бараагаа ол. Ашиг, өрсөлдөөн, контент санаа бүгд харагдана.</div><div class="step-arrow">→</div></div>
+      <div class="step fade-up" style="transition-delay:.2s"><div class="step-num">03</div><div class="step-icon">💰</div><div class="step-title">Зарж ол</div><div class="step-desc">AliExpress-ээс захиалж, TikTok/Instagram-д зар. Ашгийг тооцоолж байгаад scale хий.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="si">
+    <div class="sec-label fade-up">Үнийн мэдээлэл</div>
+    <h2 class="fade-up">Таны бизнест <em>тохирсон</em> план</h2>
+    <p class="sec-desc fade-up">Төлбөр хийснийхээ дараа нэвтрэх нууц үг авна. Хэзээ ч цуцалж болно.</p>
+    <div class="pricing-grid">
+      <!-- LITE -->
+      <div class="pc fade-up">
+        <span class="pc-badge o">Lite</span>
+        <div class="pc-name">Starter</div>
+        <div class="pc-desc">Эхлэгч бизнес эрхлэгчдэд</div>
+        <div class="pc-price"><sup>₮</sup>29,900</div>
+        <div class="pc-period">сард</div>
+        <ul class="pc-features">
+          <li>Beauty + Home — 200 бараа</li>
+          <li>Ашгийн тооцоолуур</li>
+          <li>Нийлүүлэгч линк (AliExpress)</li>
+          <li>Зураг upload боломж</li>
+          <li class="off">Health + Goods + Kids</li>
+          <li class="off">Контент санаа</li>
+          <li class="off">Өрсөлдөгч шинжилгээ</li>
+        </ul>
+        <button class="pc-btn outline" onclick="openQPay('lite')">Авах →</button>
+      </div>
+      <!-- PRO -->
+      <div class="pc featured fade-up" style="transition-delay:.1s">
+        <div class="pc-popular">Хамгийн алдартай</div>
+        <span class="pc-badge g">Pro</span>
+        <div class="pc-name">Professional</div>
+        <div class="pc-desc">Идэвхтэй бизнес эрхлэгчдэд</div>
+        <div class="pc-price ac"><sup>₮</sup>59,900</div>
+        <div class="pc-period">сард</div>
+        <ul class="pc-features">
+          <li>Бүх 5 категори — 500 бараа</li>
+          <li>Ашгийн тооцоолуур</li>
+          <li>Нийлүүлэгч линк (5 платформ)</li>
+          <li>Зураг upload боломж</li>
+          <li>Контент санаа</li>
+          <li>Монгол тайлбар + эрсдэл</li>
+          <li class="off">Өрсөлдөгч шинжилгээ</li>
+        </ul>
+        <button class="pc-btn primary" onclick="openQPay('pro')">Авах →</button>
+      </div>
+      <!-- ELITE -->
+      <div class="pc premium fade-up" style="transition-delay:.2s">
+        <span class="pc-badge p">Elite</span>
+        <div class="pc-name">Elite</div>
+        <div class="pc-desc">Scale хийж буй бизнест</div>
+        <div class="pc-price pp"><sup>₮</sup>99,900</div>
+        <div class="pc-period">сард</div>
+        <ul class="pc-features">
+          <li>Бүх 5 категори — 500 бараа</li>
+          <li>Ашгийн тооцоолуур</li>
+          <li>Нийлүүлэгч линк (5 платформ)</li>
+          <li>Зураг upload боломж</li>
+          <li>AI контент санаа</li>
+          <li>Монгол тайлбар + эрсдэл</li>
+          <li>Өрсөлдөгч шинжилгээ + тренд</li>
+        </ul>
+        <button class="pc-btn purp" onclick="openQPay('elite')">Авах →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="si">
+    <div class="sec-label fade-up">Хэрэглэгчдийн сэтгэгдэл</div>
+    <h2 class="fade-up">Бизнес эрхлэгчид <em>юу хэлдэг</em> вэ</h2>
+    <div class="testi-top fade-up">
+      <div class="testi-big">4.8<span>★</span></div>
+      <div><div class="testi-stars">★★★★★</div><div class="testi-cnt">238 хэрэглэгчийн үнэлгээ</div></div>
+      <div style="margin-left:auto;font-size:9px;color:var(--muted);letter-spacing:.8px;max-width:160px;text-align:right;">✓ 30 мин дотор нууц үг илгээнэ</div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card fade-up"><div class="testi-stars-sm">★★★★★</div><p class="testi-text">"ProductDrop ашиглаж эхэлснээс хойш дэлгүүрийнхээ орлого 3 дахин өслөө. Бараа сонгох хэд хоногоо хэмнэдэг болсон."</p><div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Оюунцэцэг Б.</div><div class="testi-role">Онлайн дэлгүүр · UB</div></div></div></div>
+      <div class="testi-card fade-up" style="transition-delay:.08s"><div class="testi-stars-sm">★★★★★</div><p class="testi-text">"Ашгийн тооцоолуур маш хэрэгтэй. Авах үнэ, тээвэр, ашгийг нэг дороос харна. Өнөөдөр л хоёр бараа захиалсан."</p><div class="testi-author"><div class="testi-avatar">👨</div><div><div class="testi-name">Баттулга Д.</div><div class="testi-role">Reseller · Дархан</div></div></div></div>
+      <div class="testi-card fade-up" style="transition-delay:.16s"><div class="testi-stars-sm">★★★★★</div><p class="testi-text">"Контент санаа хамгийн их хэрэгтэй байсан. TikTok-д яг ямар hook ашиглах вэ гэдгийг заадаг болсон."</p><div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Мөнхзул Г.</div><div class="testi-role">TikTok seller · UB</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="si">
+    <div class="sec-label fade-up">Нийтлэг асуулт</div>
+    <h2 class="fade-up">Түгээмэл <em>асуултууд</em></h2>
+    <div class="faq-list" style="margin-top:52px;">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Төлбөр хийсний дараа яаж нэвтрэх вэ?<div class="faq-icon">+</div></button><div class="faq-a">Дансаар шилжүүлэг хийснийхээ дараа манай Instagram/утсанд screenshot илгээнэ үү. Бид 30 минутын дотор нэвтрэх нууц үгийг илгээнэ.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Subscription цуцлах боломжтой юу?<div class="faq-icon">+</div></button><div class="faq-a">Тийм. Хэзээ ч цуцалж болно. Дараагийн сарын төлбөр цэнэглэгдэхгүй.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Бараанууд хэр байн байн шинэчлэгддэг вэ?<div class="faq-icon">+</div></button><div class="faq-a">Судалгааны баг долоо хоног бүр шинэ бараа нэмдэг. Улирлын тренд, вирал болсон бараанууд тэр долоо хоногтоо нэмэгддэг.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Монголын зах зээлд тохирсон уу?<div class="faq-icon">+</div></button><div class="faq-a">Тийм. ProductDrop.MN нь зөвхөн Монголын зах зээлд зориулж бүтээгдсэн. Үнэ ₮ төгрөгөөр, тайлбар монгол хэлээр байна.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Нэг account хэд хэдэн хүн ашиглаж болох уу?<div class="faq-icon">+</div></button><div class="faq-a">Нэг subscription нь нэг хэрэглэгчид зориулагдсан. Баг ашиглахыг хүсвэл тусдаа subscription авна уу.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <div class="cta-glow"></div>
+  <div class="cta-inner fade-up">
+    <div class="cta-label">Өнөөдөр эхэл</div>
+    <h2 class="cta-title">ProductDrop-г<br><em>өнөөдөр</em> туршаарай</h2>
+    <p class="cta-sub">Дансаар шилжүүлэг хийгээд 500+ бараанд хандаарай.</p>
+    <div class="cta-actions">
+      <button class="btn-primary" onclick="openQPay('pro')">Авах →</button>
+      <a href="login.html" class="btn-ghost">Нэвтрэх</a>
+    </div>
+    <div class="cta-note">✓ Дансаар шилжүүлэг &nbsp;·&nbsp; ✓ 30 мин дотор нууц үг &nbsp;·&nbsp; ✓ Хэзээ ч цуцлах боломжтой</div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard">
-  <nav>
-    <div class="nav-logo">PRODUCT<span>DROP</span>.MN</div>
-    <div class="nav-right">
-      <span class="nav-meta" id="nav-user"></span><span class="nav-meta" id="nav-plan">PRO</span><span class="nav-meta">Research DB · v2</span>
-      <button class="nav-logout" onclick="doLogout()">Гарах</button>
-    </div>
-  </nav>
-  <div class="stats-bar">
-    <div class="sb-i"><div class="sb-v ac">500</div><div class="sb-l">Нийт бараа</div></div>
-    <div class="sb-i"><div class="sb-v">5</div><div class="sb-l">Категори</div></div>
-    <div class="sb-i"><div class="sb-v">💄</div><div class="sb-l">Beauty · 100</div></div>
-    <div class="sb-i"><div class="sb-v">🏠</div><div class="sb-l">Home · 100</div></div>
-    <div class="sb-i"><div class="sb-v">💪</div><div class="sb-l">Health · 100</div></div>
-    <div class="sb-i"><div class="sb-v">🛍</div><div class="sb-l">Goods · 100</div></div>
-    <div class="sb-i"><div class="sb-v">🧸</div><div class="sb-l">Kids · 100</div></div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">PRODUCT<span>DROP</span>.MN</div>
+    <ul class="footer-links">
+      <li><a href="#features">Хэрэгслүүд</a></li>
+      <li><a href="#pricing">Үнэ</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="login.html">Нэвтрэх</a></li>
+    </ul>
+    <div class="footer-copy">© 2025 ProductDrop.MN. Бүх эрх хуулиар хамгаалагдсан.</div>
   </div>
-  <div class="dash-hero">
-    <div class="dash-hero-inner">
-      <div class="sec-lbl">Dashboard</div>
-      <h1 class="dash-title">Категори <em>сонгоно уу</em></h1>
-      <p class="dash-sub">500+ шалгарсан бараа. Карт дарж категорид нэвтэрнэ.</p>
+</footer>
+
+<!-- PAYMENT MODAL -->
+<div id="qpay-modal">
+  <div class="qm-box">
+    <div class="qm-header">
+      <div class="qm-title">🏦 Дансаар төлөх</div>
+      <button class="qm-close" onclick="closeQPay()">✕</button>
     </div>
-  </div>
-  <div class="cat-section">
-    <div class="cat-grid">
-      <a class="cc" data-c="beauty" href="app/beauty.html"><div class="cc-img" style="background:linear-gradient(135deg,#1f0d18,#130a10)">💄</div><div class="cc-body"><span class="cc-badge">Beauty</span><div class="cc-name">Beauty</div><div class="cc-count">100 бараа</div><div class="cc-subs">Makeup · Skincare · Hair<br>Nails · Body · Tools</div></div></a>
-      <a class="cc" data-c="home" href="app/home.html"><div class="cc-img" style="background:linear-gradient(135deg,#001a2a,#000f1a)">🏠</div><div class="cc-body"><span class="cc-badge">Home</span><div class="cc-name">Home</div><div class="cc-count">100 бараа</div><div class="cc-subs">Kitchen · Bedroom<br>Bathroom · Smart Home</div></div></a>
-      <a class="cc" data-c="health" href="app/health.html"><div class="cc-img" style="background:linear-gradient(135deg,#001a10,#000f09)">💪</div><div class="cc-body"><span class="cc-badge">Health</span><div class="cc-name">Health</div><div class="cc-count">100 бараа</div><div class="cc-subs">Fitness · Recovery<br>Nutrition · Sleep</div></div></a>
-      <a class="cc" data-c="goods" href="app/goods.html"><div class="cc-img" style="background:linear-gradient(135deg,#1a1200,#0f0900)">🛍️</div><div class="cc-body"><span class="cc-badge">Goods</span><div class="cc-name">Goods</div><div class="cc-count">100 бараа</div><div class="cc-subs">Electronics · Pet<br>Car · Travel · Sports</div></div></a>
-      <a class="cc" data-c="kids" href="app/kids.html"><div class="cc-img" style="background:linear-gradient(135deg,#1a0d1f,#10080f)">🧸</div><div class="cc-body"><span class="cc-badge">Kids</span><div class="cc-name">Kids</div><div class="cc-count">100 бараа</div><div class="cc-subs">Baby · Learning<br>Creative · Safety</div></div></a>
+    <div class="qm-body">
+      <div class="qm-plan">
+        <div class="qm-plan-name" id="qm-plan-name">Pro Plan</div>
+        <div class="qm-plan-price" id="qm-plan-price">₮59,900/сар</div>
+      </div>
+      <div class="qm-steps">
+        <div class="qm-step"><div class="qm-step-num">1</div><div class="qm-step-text">Доорх дансны мэдээллийг <strong>хуулж авна</strong></div></div>
+        <div class="qm-step"><div class="qm-step-num">2</div><div class="qm-step-text">Банкны апп нээж <strong>шилжүүлэг хий</strong> — утгад нэрээ/Instagram нэрээ бич</div></div>
+        <div class="qm-step"><div class="qm-step-num">3</div><div class="qm-step-text">Instagram <strong>@productdrop.mn</strong> эсвэл утсанд screenshot явуул</div></div>
+        <div class="qm-step"><div class="qm-step-num">4</div><div class="qm-step-text"><strong>30 минутын</strong> дотор нэвтрэх нууц үг илгээнэ</div></div>
+      </div>
+      <div class="qm-bank-info">
+        <div class="qm-bank-row">
+          <span class="qm-bank-label">Банк</span>
+          <span class="qm-bank-val">Хаан Банк</span>
+        </div>
+        <div class="qm-bank-row">
+          <span class="qm-bank-label">IBAN</span>
+          <span class="qm-bank-val">18000500</span>
+        </div>
+        <div class="qm-bank-row">
+          <span class="qm-bank-label">Дансны дугаар</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="qm-bank-val ac" id="qm-account">5018953118</span>
+            <button class="copy-btn" onclick="copyAccount()">Хуулах</button>
+          </div>
+        </div>
+        <div class="qm-bank-row">
+          <span class="qm-bank-label">Хүлээн авагч</span>
+          <span class="qm-bank-val">Ганбаяр Цэвэгмид</span>
+        </div>
+        <div class="qm-bank-row">
+          <span class="qm-bank-label">Дүн</span>
+          <span class="qm-bank-val ac" id="qm-amount">₮59,900</span>
+        </div>
+      </div>
+      <div class="qm-confirm" style="background:rgba(200,255,0,.04);border:1px solid rgba(200,255,0,.12);">
+        <div class="qm-confirm-label" style="color:var(--accent);">📝 Утга хэсэгт:</div>
+        <div class="qm-confirm-desc">Утасны дугаар эсвэл Facebook / Instagram нэрээ бичнэ үү.<br>Жишээ: <strong style="color:var(--accent)">99001234</strong> эсвэл <strong style="color:var(--accent)">@tainy.username</strong></div>
+      </div>
+      <div class="qm-confirm">
+        <div class="qm-confirm-label">Холбоо барих</div>
+        <div class="qm-confirm-desc">
+          📱 <strong>Instagram:</strong> @productdrop.mn<br>
+          📞 <strong>Утас:</strong> +976 9900-XXXX
+        </div>
+      </div>
+      <button class="qm-proceed-btn" onclick="closeQPay()">ойлголоо →</button>
+      <div class="qm-note">Асуулт байвал Instagram DM-ээр холбогдоорой</div>
     </div>
   </div>
 </div>
 
 <script>
-const SESSION_KEY = "pd_sess_v2";
-const SALT = 'PD2026MN';
+// FAQ
+function toggleFaq(btn){const item=btn.closest('.faq-item');const was=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!was)item.classList.add('open');}
 
-function validatePassword(pw,uname){
-  // Format: PD-{UID}-{EXPIRY_B36}-{CHECKSUM}
-  if(!pw||!pw.startsWith('PD-'))return null;
-  var parts=pw.split('-');
-  if(parts.length<4)return null;
-  var uid=parts[1];
-  var exB36=parts[2];
-  var ckStr=parts[3];
-  var expiry=parseInt(exB36,36);
-  if(isNaN(expiry)||expiry<Date.now())return null; // expired
-  // Normalize username: lowercase, no spaces
-  var normName=(uname||'').toLowerCase().replace(/\s+/g,'');
-  // Verify checksum (try all plans) — name must match
-  for(var plan of ['lite','pro','elite']){
-    var raw=uid+exB36+SALT+plan+normName;
-    var ck=0;for(var i=0;i<raw.length;i++)ck=(ck*31+raw.charCodeAt(i))&0xFFFFFF;
-    if(ck.toString(36).toUpperCase().padStart(5,'0')===ckStr){
-      return {uid,expiry,plan};
-    }
-  }
-  return null;
+// Fade on scroll
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.08});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// Trend bars animate
+setTimeout(()=>{document.querySelectorAll('.trend-fill').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>{el.style.transition='width .9s ease';el.style.width=w;},200);});},600);
+
+// Payment modal
+const PLANS = {
+  lite:  {name:'Starter Plan',price:'₮29,900/сар',amount:'₮29,900'},
+  pro:   {name:'Pro Plan',    price:'₮59,900/сар',amount:'₮59,900'},
+  elite: {name:'Elite Plan',  price:'₮99,900/сар',amount:'₮99,900'},
+};
+const BANK_ACCOUNT = '5018953118';
+
+function openQPay(plan){
+  const p = PLANS[plan]||PLANS.pro;
+  document.getElementById('qm-plan-name').textContent = p.name;
+  document.getElementById('qm-plan-price').textContent = p.price;
+  document.getElementById('qm-amount').textContent = p.amount;
+  document.getElementById('qm-account').textContent = BANK_ACCOUNT;
+  document.getElementById('qpay-modal').classList.add('open');
 }
-
-function chkSess(){
-  try{
-    var s=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
-    if(!s||!s.e||s.e<Date.now())return false;
-    return true;
-  }catch{return false;}
-}
-function startSess(info,uname){
-  localStorage.setItem(SESSION_KEY,JSON.stringify({e:info.expiry,uid:info.uid,plan:info.plan,uname:uname}));
-}
-function endSess(){localStorage.removeItem(SESSION_KEY);}
-function getSessInfo(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||"null");}catch{return null;}}
-
-
-
-document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-
-function showLogin(){document.getElementById('login-screen').style.display='flex';document.getElementById('dashboard').style.display='none';}
-function showDash(){document.getElementById('login-screen').style.display='none';document.getElementById('dashboard').style.display='block';}
-
-function doLogin(){
-  var uname=document.getElementById('uname').value.trim();
-  var v=document.getElementById('pwd').value.trim();
-  if(!uname){
-    var e=document.getElementById('lerr');e.textContent='Нэрээ оруулна уу';e.style.display='block';
-    document.getElementById('uname').style.borderColor='var(--red)';
-    setTimeout(function(){e.style.display='none';document.getElementById('uname').style.borderColor='';},3000);
-    return;
-  }
-  var info=validatePassword(v,uname);
-  if(info){
-    startSess(info,uname);
-    var planEl=document.getElementById('nav-plan');
-    if(planEl)planEl.textContent=info.plan.toUpperCase();
-    var userEl=document.getElementById('nav-user');
-    if(userEl)userEl.textContent=uname;
-    showDash();
-  } else {
-    var msg='Нэр эсвэл код буруу байна';
-    var e=document.getElementById('lerr');e.textContent=msg;e.style.display='block';
-    document.getElementById('pwd').style.borderColor='var(--red)';
-    document.getElementById('uname').style.borderColor='var(--red)';
-    setTimeout(function(){e.style.display='none';document.getElementById('pwd').style.borderColor='';document.getElementById('uname').style.borderColor='';},3000);
-  }
-}
-function doLogout(){endSess();document.getElementById('pwd').value='';document.getElementById('uname').value='';showLogin();}
-
-window.addEventListener('DOMContentLoaded',function(){
-  if(chkSess()){
-    var info=getSessInfo();
-    var planEl=document.getElementById('nav-plan');
-    if(planEl&&info)planEl.textContent=info.plan?info.plan.toUpperCase():'PRO';
-    var userEl=document.getElementById('nav-user');
-    if(userEl&&info&&info.uname)userEl.textContent=info.uname;
-    showDash();
-  } else {showLogin();}
-});
-
-// Guard cat links
-document.querySelectorAll('.cc').forEach(link=>{
-  link.addEventListener('click',e=>{
-    if(!chkSess()){e.preventDefault();showLogin();}
+function closeQPay(){document.getElementById('qpay-modal').classList.remove('open');}
+function copyAccount(){
+  navigator.clipboard.writeText(BANK_ACCOUNT).then(()=>{
+    const btn=document.querySelector('.copy-btn');btn.textContent='Хуулагдлаа ✓';btn.style.color='var(--accent)';
+    setTimeout(()=>{btn.textContent='Хуулах';btn.style.color='';},2000);
+  }).catch(()=>{
+    const el=document.getElementById('qm-account');el.select&&el.select();
   });
-});
+}
+// Close modal on backdrop click
+document.getElementById('qpay-modal').addEventListener('click',function(e){if(e.target===this)closeQPay();});
 </script>
 </body>
 </html>
