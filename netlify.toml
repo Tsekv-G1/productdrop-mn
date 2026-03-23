@@ -7,8 +7,3 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Cache-Control = "no-store, no-cache, must-revalidate"
-
-[[redirects]]
-  from = "/"
-  to = "/landing.html"
-  status = 301
