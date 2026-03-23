@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProductDrop.MN — Password Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06060a;--s:#0d0d12;--s2:#13131a;--b:#1c1c26;--b2:#28283a;--t:#efefef;--m:#5a5a72;--a:#c8ff00;--r:#ff4444;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--t);font-family:'DM Mono',monospace;font-size:13px;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.wrap{width:min(560px,100%);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;margin-bottom:32px;letter-spacing:-.5px;}
+.logo span{color:var(--a);}
+.box{background:var(--s);border:1px solid var(--b2);padding:28px 24px;margin-bottom:16px;position:relative;}
+.box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--a);}
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--m);margin-bottom:20px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--m);}
+input,select{background:var(--s2);border:1px solid var(--b2);color:var(--t);font-family:'DM Mono',monospace;font-size:13px;padding:9px 12px;outline:none;width:100%;}
+input:focus,select:focus{border-color:var(--a);}
+select option{background:var(--s2);}
+.btn{width:100%;margin-top:14px;padding:13px;background:var(--a);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.btn:hover{background:#b5e800;}
+.result{background:var(--s2);border:1px solid rgba(200,255,0,.2);padding:16px;margin-top:14px;display:none;}
+.pw-display{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--a);letter-spacing:2px;margin-bottom:8px;word-break:break-all;}
+.pw-meta{font-size:10px;color:var(--m);line-height:1.8;}
+.copy-btn{margin-top:10px;padding:8px 18px;background:transparent;border:1px solid var(--a);color:var(--a);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;}
+.copy-btn:hover{background:rgba(200,255,0,.08);}
+.list-box{margin-top:12px;max-height:280px;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--m);padding:8px 10px;text-align:left;border-bottom:1px solid var(--b2);}
+td{padding:9px 10px;font-size:11px;border-bottom:1px solid var(--b);}
+td.pw{color:var(--a);font-family:'Syne',sans-serif;font-weight:700;}
+.del-btn{background:none;border:none;color:var(--r);cursor:pointer;font-size:12px;padding:0;}
+.tag{display:inline-block;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(200,255,0,.08);color:var(--a);border:1px solid rgba(200,255,0,.2);}
+.tag.exp{background:rgba(255,68,68,.08);color:var(--r);border-color:rgba(255,68,68,.2);}
+</style>
+</head>
+<body>
+<!-- ADMIN LOGIN -->
+<div id="admin-login" style="position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;">
+  <div style="width:min(380px,90vw);">
+    <div class="logo">PRODUCT<span>DROP</span>.MN <span style="font-size:11px;color:var(--m);font-family:'DM Mono'">Admin</span></div>
+    <div class="box">
+      <h2>Admin нэвтрэх</h2>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Admin код</label>
+        <input type="password" id="admin-pwd" placeholder="Admin нууц үг" style="margin-top:5px;">
+      </div>
+      <button class="btn" onclick="adminLogin()">Нэвтрэх →</button>
+      <div id="admin-err" style="margin-top:10px;font-size:11px;color:var(--r);display:none;text-align:center;">Нууц үг буруу байна</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none;min-height:100vh;width:100%;align-items:center;justify-content:center;padding:24px;">
+<div class="wrap">
+  <div class="logo">PRODUCT<span>DROP</span>.MN <span style="font-size:11px;color:var(--m);font-family:'DM Mono'">Admin</span></div>
+
+  <div class="box">
+    <h2>Шинэ нууц үг үүсгэх</h2>
+    <div class="row">
+      <div class="field"><label>Хэрэглэгчийн нэр</label><input id="f-name" placeholder="Билгүүн"></div>
+      <div class="field"><label>Утас / ID</label><input id="f-id" placeholder="99001122"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Хүчинтэй хугацаа</label>
+        <select id="f-days">
+          <option value="30">30 хоног</option>
+          <option value="60">60 хоног</option>
+          <option value="90">90 хоног</option>
+          <option value="180">180 хоног</option>
+          <option value="365">1 жил</option>
+        </select>
+      </div>
+      <div class="field"><label>Subscription төрөл</label>
+        <select id="f-plan">
+          <option value="lite">Lite</option>
+          <option value="pro" selected>Pro</option>
+          <option value="elite">Elite</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" onclick="genPW()">Нууц үг үүсгэх →</button>
+    <div class="result" id="result">
+      <div class="pw-display" id="pw-out"></div>
+      <div class="pw-meta" id="pw-meta"></div>
+      <button class="copy-btn" onclick="copyPW()">📋 Хуулах</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>Идэвхтэй нууц үгүүд</h2>
+    <div class="list-box">
+      <table>
+        <thead><tr><th>Нэр / ID</th><th>Нууц үг</th><th>Дуусах</th><th>Plan</th><th></th></tr></thead>
+        <tbody id="pw-list"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div><!-- /admin-panel -->
+<script>
+const ADMIN_PASS='PD-ADMIN-2026';
+const ADMIN_SESS='pd_admin_sess';
+
+function adminLogin(){
+  var v=document.getElementById('admin-pwd').value.trim();
+  if(v===ADMIN_PASS){
+    sessionStorage.setItem(ADMIN_SESS,'1');
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='flex';
+  } else {
+    var e=document.getElementById('admin-err');e.style.display='block';
+    document.getElementById('admin-pwd').style.borderColor='var(--r)';
+    setTimeout(function(){e.style.display='none';document.getElementById('admin-pwd').style.borderColor='';},2500);
+  }
+}
+document.getElementById('admin-pwd').addEventListener('keydown',function(e){if(e.key==='Enter')adminLogin();});
+
+(function(){
+  if(sessionStorage.getItem(ADMIN_SESS)==='1'){
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='flex';
+  }
+})();
+const SALT='PD2026MN';
+const STORE='pd_admin_pws';
+
+function loadPWs(){try{return JSON.parse(localStorage.getItem(STORE)||'[]');}catch{return[];}}
+function savePWs(a){localStorage.setItem(STORE,JSON.stringify(a));}
+
+function genPW(){
+  var name=document.getElementById('f-name').value.trim()||'User';
+  var uid=document.getElementById('f-id').value.trim()||Math.random().toString(36).slice(2,8).toUpperCase();
+  var days=+document.getElementById('f-days').value;
+  var plan=document.getElementById('f-plan').value;
+  var expiry=Date.now()+days*86400000;
+  var exB36=expiry.toString(36).toUpperCase();
+  // Normalize name for checksum: lowercase, trim
+  var normName=name.toLowerCase().replace(/\s+/g,'');
+  // Checksum includes name
+  var raw=uid+exB36+SALT+plan+normName;
+  var ck=0;for(var i=0;i<raw.length;i++)ck=(ck*31+raw.charCodeAt(i))&0xFFFFFF;
+  var ckStr=ck.toString(36).toUpperCase().padStart(5,'0');
+  var pw='PD-'+uid.toUpperCase().replace(/[^A-Z0-9]/g,'')+'-'+exB36+'-'+ckStr;
+  
+  var pws=loadPWs();
+  pws.push({name,uid,plan,expiry,pw,created:Date.now()});
+  savePWs(pws);
+  
+  document.getElementById('pw-out').textContent=pw;
+  document.getElementById('pw-meta').innerHTML=
+    'Хэрэглэгч: <b>'+name+'</b> ('+uid+')<br>'+
+    'Plan: <b>'+plan.toUpperCase()+'</b><br>'+
+    'Дуусах: <b>'+new Date(expiry).toLocaleDateString('mn-MN')+'</b><br>'+
+    '<span style="color:var(--a)">⚠ Нэвтрэх нэр: <b>'+name+'</b> — яг энэ нэрээр л нэвтэрнэ!</span>';
+  document.getElementById('result').style.display='block';
+  renderList();
+}
+
+function copyPW(){
+  var pw=document.getElementById('pw-out').textContent;
+  navigator.clipboard.writeText(pw).then(function(){
+    document.querySelector('.copy-btn').textContent='✓ Хуулагдлаа';
+    setTimeout(function(){document.querySelector('.copy-btn').textContent='📋 Хуулах';},2000);
+  });
+}
+
+function renderList(){
+  var pws=loadPWs();
+  var now=Date.now();
+  var tbody=document.getElementById('pw-list');
+  if(!pws.length){tbody.innerHTML='<tr><td colspan="5" style="color:var(--m);text-align:center;padding:16px">Нууц үг байхгүй</td></tr>';return;}
+  tbody.innerHTML=pws.map(function(p,i){
+    var exp=p.expiry<now;
+    return '<tr>'+
+      '<td>'+p.name+'<br><span style="color:var(--m);font-size:10px">'+p.uid+'</span></td>'+
+      '<td class="pw">'+p.pw+'</td>'+
+      '<td><span class="tag'+(exp?' exp':'')+'">'+new Date(p.expiry).toLocaleDateString('mn-MN')+(exp?' ✗':'')+'</span></td>'+
+      '<td><span class="tag">'+p.plan+'</span></td>'+
+      '<td><button class="del-btn" onclick="delPW('+i+')">✕</button></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function delPW(i){var pws=loadPWs();pws.splice(i,1);savePWs(pws);renderList();}
+
+renderList();
+</script>
+</body>
+</html>

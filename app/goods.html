@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goods — ProductDrop.MN</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bg2:#121212;--bg3:#1a1a1a;--border:#222;--border2:#333;--text:#f0f0f0;--muted:#777;--muted2:#3a3a3a;--accent:#ffb800;--accR:255,184,0;--warn:#ffaa00;--red:#ff5555;--tik:#69c9d0;--ig:#e1306c;--fb:#5890ff;--amz:#ffaa44;--ali:#ff6b35;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;font-size:13px;}
+.top-nav{position:sticky;top:0;background:rgba(10,10,10,.96);border-bottom:1px solid var(--border);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(16px);}
+.back-btn{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'DM Mono',monospace;transition:color .2s;text-decoration:none;}
+.back-btn:hover{color:var(--text);}
+.back-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;}
+.top-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:-.3px;color:var(--text);}
+.top-logo span{color:#ffb800;}
+.cat-badge{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:2px;background:rgba(255,184,0,.08);color:#ffb800;border:1px solid rgba(255,184,0,.2);}
+.header{background:var(--bg);border-bottom:1px solid var(--border);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;}
+.header-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:.15em;color:#fff;}
+.header-logo span{color:#ffb800;}
+.header-meta{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+.stats-bar{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;gap:0;background:var(--bg2);overflow-x:auto;scrollbar-width:none;}
+.stats-bar::-webkit-scrollbar{display:none;}
+.st{display:flex;flex-direction:column;gap:2px;padding-right:16px;border-right:1px solid var(--border);margin-right:16px;flex-shrink:0;}
+.st:last-child{border-right:none;}
+.stv{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;}
+.stv.ac{color:#ffb800;}
+.stl{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.toolbar{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap;align-items:center;background:var(--bg);}
+.sw{position:relative;flex-shrink:0;}
+.sw::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.5;}
+.si{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:8px 12px 8px 30px;outline:none;width:180px;}
+.si:focus{border-color:#ffb800;}
+.fb{padding:5px 11px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;white-space:nowrap;}
+.fb:hover,.fb.active{border-color:#ffb800;color:#ffb800;background:rgba(255,184,0,.06);}
+.vt{margin-left:auto;display:flex;gap:3px;}
+.vb{width:28px;height:28px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;}
+.vb.active{border-color:#ffb800;color:#ffb800;background:rgba(255,184,0,.06);}
+.grid-wrap{padding:18px 18px 280px;}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:12px;}
+.pc{background:var(--bg2);border:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden;transition:border-color .2s,box-shadow .2s;cursor:pointer;position:relative;}
+.pc:hover{border-color:#ffb800;box-shadow:0 0 0 1px rgba(255,184,0,.1),0 6px 24px rgba(0,0,0,.4);}
+.pc-img{width:100%;aspect-ratio:1/1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pc-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.pc:hover .pc-img img{transform:scale(1.05);}
+.pc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(0,0,0,.5));pointer-events:none;}
+.pc-cat-tag{position:absolute;top:8px;left:8px;font-size:7px;letter-spacing:1.2px;text-transform:uppercase;color:#ffb800;background:rgba(0,0,0,.85);border:1px solid rgba(255,184,0,.15);padding:2px 7px;}
+.pc-wow{position:absolute;top:8px;right:8px;font-size:7px;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;}
+.pc-wow.wow{background:rgba(255,184,0,.12);color:#ffb800;border:1px solid rgba(255,184,0,.25);}
+.img-edit-btn{position:absolute;bottom:6px;right:6px;z-index:5;background:rgba(0,0,0,.8);border:1px solid rgba(255,184,0,.2);color:#ffb800;font-size:8px;padding:3px 8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Mono',monospace;opacity:0;transition:opacity .15s;}
+.pc:hover .img-edit-btn{opacity:1;}
+.pc-body{padding:12px 12px 0;}
+.pc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;line-height:1.35;margin-bottom:12px;min-height:32px;}
+.pc-prices{display:grid;grid-template-columns:1fr 1fr;background:var(--border);border:1px solid var(--border);}
+.pc-pc{background:var(--bg3);padding:8px 10px;}
+.pc-pc:first-child{border-right:1px solid var(--border);}
+.pc-pl{font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.pc-pv{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:-.5px;}
+.pc-profit{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(255,184,0,.04);border:1px solid rgba(255,184,0,.1);border-top:none;}
+.pc-pl2{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.pc-pval{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#ffb800;}
+.pc-chips{padding:8px 12px 0;display:flex;flex-wrap:wrap;gap:3px;}
+.chip{font-size:7px;padding:2px 6px;border:1px solid var(--border2);color:var(--muted);}
+.chip.g{color:#ffb800;border-color:rgba(255,184,0,.2);background:rgba(255,184,0,.04);}
+.chip.n{color:var(--warn);border-color:rgba(255,170,0,.2);}
+.chip.b{color:var(--red);border-color:rgba(255,68,68,.2);}
+.pc-open{width:100%;margin-top:10px;padding:9px;background:transparent;border:none;border-top:1px solid var(--border);color:#ffb800;font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;}
+.pc-open:hover{background:rgba(255,184,0,.06);}
+.pc-open svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;}
+.tbl-wrap{padding:0 20px 280px;}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:2px solid var(--border2);position:sticky;top:100px;background:var(--bg);z-index:50;}
+th{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:10px 8px;text-align:left;font-weight:400;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+tbody tr:hover{background:var(--bg2);}
+td{padding:11px 8px;font-size:11px;vertical-align:top;}
+.tnum{color:var(--muted);font-size:9px;width:32px;}
+.tname{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;min-width:140px;}
+.tcat{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#ffb800;background:rgba(255,184,0,.06);padding:2px 7px;display:inline-block;border:1px solid rgba(255,184,0,.15);margin-top:3px;}
+.tprice{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;}
+.tprofit{color:#ffb800;}
+.links-col{display:flex;flex-wrap:wrap;gap:3px;min-width:100px;}
+.lb{display:inline-flex;align-items:center;gap:3px;padding:4px 7px;font-size:8px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:1px solid var(--border2);color:#888;background:transparent;white-space:nowrap;font-family:'DM Mono',monospace;}
+.lb.ali{color:var(--ali);border-color:rgba(255,107,53,.25);}
+.lb.tik{color:var(--tik);border-color:rgba(105,201,208,.25);}
+.lb.ig{color:var(--ig);border-color:rgba(225,48,108,.25);}
+.lb.fb{color:var(--fb);border-color:rgba(88,144,255,.25);}
+.lb.amz{color:var(--amz);border-color:rgba(255,170,68,.25);}
+.dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.rc{display:flex;flex-direction:column;gap:3px;min-width:150px;}
+.rr{display:flex;align-items:center;gap:5px;}
+.rk{font-size:8px;color:#555;width:70px;flex-shrink:0;}
+.rb{font-size:9px;padding:1px 6px;border:1px solid #222;color:#444;}
+.rb.val-good,.rb.val-wow,.rb.val-yes,.rb.val-vgood,.rb.val-5x{color:#ffb800;border-color:rgba(255,184,0,.25);}
+.rb.val-notbad,.rb.val-notyet,.rb.val-3x{color:var(--warn);border-color:rgba(255,170,0,.25);}
+.rb.val-bad,.rb.val-no{color:var(--red);border-color:rgba(255,68,68,.25);}
+/* IMG MODAL */
+#img-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+#img-modal.open{display:flex;}
+.im-box{width:min(460px,92vw);background:var(--bg2);border:1px solid var(--border2);position:relative;overflow:hidden;}
+.im-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#ffb800;}
+.im-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.im-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;}
+.im-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;line-height:1;}
+.im-body{padding:18px;}
+.im-name{font-size:10px;color:#ffb800;letter-spacing:.08em;margin-bottom:14px;font-family:'Syne',sans-serif;font-weight:700;line-height:1.4;}
+.im-prev{width:100%;aspect-ratio:4/3;background:var(--bg3);border:1px solid var(--border2);overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;}
+.im-prev img{width:100%;height:100%;object-fit:cover;}
+.im-empty{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;flex-direction:column;gap:6px;display:flex;}
+.im-empty span{font-size:28px;opacity:.3;}
+.im-drop{border:2px dashed var(--border2);padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px;position:relative;}
+.im-drop:hover,.im-drop.drag-over{border-color:#ffb800;}
+.im-drop-icon{font-size:24px;margin-bottom:6px;opacity:.5;}
+.im-drop-text{font-size:10px;color:var(--muted);line-height:1.6;}
+.im-drop-text strong{color:#ffb800;}
+.im-file{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.im-actions{display:flex;gap:7px;}
+.im-save{flex:1;padding:11px;background:#ffb800;color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:9px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
+.im-save:hover{opacity:.85;}
+.im-save:disabled{opacity:.35;cursor:not-allowed;}
+.im-clear{padding:11px 14px;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.im-clear:hover{border-color:var(--red);color:var(--red);}
+.p-img-edit{position:absolute;top:10px;left:10px;z-index:10;background:rgba(0,0,0,.65);border:1px solid rgba(255,184,0,.2);color:#ffb800;font-size:8px;padding:4px 9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Mono',monospace;backdrop-filter:blur(6px);}
+/* PANEL */
+#panel{position:fixed;right:0;top:0;bottom:0;width:min(460px,100vw);background:var(--bg2);border-left:1px solid var(--border2);z-index:200;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+#panel.open{transform:translateX(0);}
+.p-img-wrap{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;flex-shrink:0;}
+.p-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.p-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;opacity:.4;}
+.p-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,10,10,.9));}
+.p-info{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;}
+.p-name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;line-height:1.3;margin-bottom:3px;}
+.p-cat{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#ffb800;}
+.p-close{position:absolute;top:10px;right:10px;width:30px;height:30px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);color:var(--text);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);z-index:10;}
+.p-close:hover{background:rgba(255,85,85,.2);color:var(--red);}
+.p-body{padding:16px 18px 22px;}
+.p-prices{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:16px;}
+.p-pi{background:var(--bg3);padding:10px 12px;}
+.p-pil{font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.p-piv{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;letter-spacing:-.5px;}
+.p-piv.pr{color:#ffb800;}
+.p-sec{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;margin-top:3px;}
+.p-links{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.rf{margin-bottom:12px;}
+.rfl{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block;}
+.ros{display:flex;gap:4px;flex-wrap:wrap;}
+.ro{padding:5px 10px;font-size:9px;letter-spacing:.06em;border:1px solid var(--border2);background:transparent;color:#666;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+.ro:hover{border-color:#ffb800;color:#ffb800;}
+.ro.selected-good,.ro.selected-wow,.ro.selected-yes,.ro.selected-vgood,.ro.selected-5x{background:rgba(255,184,0,.1);border-color:#ffb800;color:#ffb800;}
+.ro.selected-notbad,.ro.selected-notyet,.ro.selected-3x{background:rgba(255,170,0,.08);border-color:var(--warn);color:var(--warn);}
+.ro.selected-bad,.ro.selected-no{background:rgba(255,68,68,.08);border-color:var(--red);color:var(--red);}
+.nf{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:10px;resize:vertical;min-height:68px;outline:none;margin-top:5px;line-height:1.6;}
+.nf:focus{border-color:#ffb800;}
+.save-btn{width:100%;padding:12px;background:#ffb800;color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:7px;transition:opacity .2s;}
+.save-btn:hover{opacity:.85;}
+@media(max-width:768px){
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:9px;}
+  .grid-wrap{padding:12px 12px 280px;}
+  .tbl-wrap table{display:none;}
+  #panel{width:100vw;}
+  .toolbar{padding:9px 12px;gap:6px;}
+  .si{width:100%;}
+  .vt{display:none;}
+}
+
+/* ── Toolbar single-row fix ── */
+.toolbar{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;
+  gap:4px!important;padding:8px 16px!important;scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch;}
+.toolbar::-webkit-scrollbar{display:none!important;}
+.fb{padding:5px 10px!important;font-size:8px!important;letter-spacing:.06em!important;white-space:nowrap!important;flex-shrink:0!important;}
+.sw{flex-shrink:0!important;min-width:120px!important;}
+.si{width:120px!important;}
+.vt{margin-left:auto!important;flex-shrink:0!important;display:flex!important;gap:3px!important;}
+/* ── Card price display ── */
+.pc-prices{display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:8px 10px!important;background:rgba(0,0,0,.3)!important;border:none!important;
+  border-top:1px solid var(--border)!important;}
+.pc-pc{background:transparent!important;padding:0!important;border:none!important;}
+.pc-pc:first-child{border-right:none!important;}
+.pc-pl{font-size:7px!important;letter-spacing:.1em!important;color:var(--muted)!important;margin-bottom:1px!important;}
+.pc-pv{font-family:'Syne',sans-serif!important;font-weight:800!important;font-size:12px!important;}
+.pc-pv.buy{font-size:10px!important;color:var(--muted)!important;font-weight:400!important;}
+.pc-profit{padding:7px 10px!important;border-top:1px solid rgba(255,255,255,.05)!important;
+  display:flex!important;justify-content:space-between!important;align-items:center!important;}
+.pc-pl2{font-size:7px!important;letter-spacing:.1em!important;color:var(--muted)!important;}
+.pc-pval{font-family:'Syne',sans-serif!important;font-weight:800!important;font-size:13px!important;}
+/* ── Panel p-prices ── */
+.p-prices{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1px!important;
+  background:var(--border)!important;margin-bottom:14px!important;}
+.p-pi.full{grid-column:1/-1!important;}
+.p-pi{background:var(--bg3,#1a1a1a)!important;padding:8px 10px!important;}
+.p-pil{font-size:7px!important;letter-spacing:.12em!important;text-transform:uppercase!important;
+  color:var(--muted)!important;margin-bottom:3px!important;}
+.p-piv{font-family:'Syne',sans-serif!important;font-weight:800!important;font-size:14px!important;}
+.p-piv.pr{color:var(--accent,#c8ff00)!important;}
+
+.p-extra-btn{width:100%;margin-top:5px;padding:10px;border:none;font-family:'Syne',sans-serif;
+  font-weight:700;font-size:9px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.p-extra-btn.wl{background:transparent;border:1px solid var(--border2,#333);color:var(--muted,#777);}
+.p-extra-btn.wl:hover,.p-extra-btn.wl.saved{border-color:var(--accent,#c8ff00);color:var(--accent,#c8ff00);background:rgba(200,255,0,.06);}
+.p-extra-btn.calc{margin-top:4px;background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.2);color:var(--accent,#c8ff00);}
+
+#pd-calc{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.82);opacity:0;pointer-events:none;transition:opacity .2s;}
+#pd-calc.open{opacity:1;pointer-events:all;}
+.pdc-box{background:var(--bg2,#121212);border:1px solid var(--border2,#333);
+  width:min(440px,94vw);padding:22px 18px;position:relative;max-height:88vh;overflow-y:auto;}
+.pdc-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,#c8ff00);}
+.pdc-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.pdc-ttl{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:-.2px;}
+.pdc-x{background:none;border:none;color:var(--muted,#777);cursor:pointer;font-size:17px;padding:0;}
+.pdc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+.pdc-f{display:flex;flex-direction:column;gap:3px;}
+.pdc-lbl{font-size:8px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted,#777);}
+.pdc-inp{background:var(--bg3,#1a1a1a);border:1px solid var(--border2,#333);
+  color:var(--text,#f0f0f0);font-family:'DM Mono',monospace;font-size:13px;padding:7px 9px;outline:none;width:100%;}
+.pdc-inp:focus{border-color:var(--accent,#c8ff00);}
+.pdc-res{background:rgba(200,255,0,.04);border:1px solid rgba(200,255,0,.1);padding:12px;margin-top:9px;}
+.pdc-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;}
+.pdc-row+.pdc-row{border-top:1px solid rgba(255,255,255,.04);}
+.pdc-row:last-child{padding-top:9px;border-top:1px solid rgba(200,255,0,.2);margin-top:3px;}
+.pdc-lbl2{color:var(--muted,#777);}
+.pdc-val{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;}
+.pdc-val.p{color:var(--accent,#c8ff00);}
+.pdc-val.n{color:#ff4444;}
+.pdc-btn{width:100%;margin-top:11px;padding:11px;background:var(--accent,#c8ff00);color:#000;border:none;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+
+
+/* ── Readable number font override ── */
+.pc-pv, .stv, .sb-v, .p-piv, .pc-pval, .pdc-val, .cm-res-val {
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: 700 !important;
+}
+.pc-pval { font-size: 14px !important; }
+.pc-pv   { font-size: 13px !important; letter-spacing: -0.3px !important; }
+
+</style>
+</head>
+<body>
+<script>
+// ── INLINE AUTH ──
+const APP_PASSWORD="Drop2025#";
+const SESSION_KEY="pd_sess_v2";
+const SESSION_TTL=30*24*60*60*1000;
+function pdChkSess(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");return s&&s.e>Date.now();}catch{return false;}}
+function pdStartSess(){localStorage.setItem(SESSION_KEY,JSON.stringify({e:Date.now()+SESSION_TTL}));}
+function pdEndSess(){localStorage.removeItem(SESSION_KEY);}
+// Redirect if not logged in
+if(!pdChkSess()){ window.location.replace('../index.html'); }
+</script>
+
+<div class="top-nav">
+  <a class="back-btn" href="../index.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Буцах</a>
+  <div class="top-logo">PRODUCT<span>DROP</span>.MN</div>
+  <span class="cat-badge">Goods</span>
+</div>
+
+<div class="header">
+  <div class="header-logo">GOODS<span>.</span></div>
+  <div class="header-meta">Product Research · v1</div>
+</div>
+<div class="stats-bar">
+  <div class="st"><div class="stv ac">200</div><div class="stl">Нийт бараа</div></div>
+  <div class="st"><div class="stv">Goods</div><div class="stl">Категори</div></div>
+  <div class="st"><div class="stv" id="s-rated">0</div><div class="stl">Үнэлсэн</div></div>
+  <div class="st"><div class="stv" id="s-wow">0</div><div class="stl">Wow</div></div>
+  <div class="st"><div class="stv" id="s-5x">0</div><div class="stl">5x Ашиг</div></div>
+  <div class="st"><div class="stv" id="s-wl">0</div><div class="stl">★ Хадгалсан</div></div>
+</div>
+<div class="toolbar">
+  <div class="sw"><input class="si" id="si" type="text" placeholder="Хайх..." oninput="applyFilters()"></div>
+  <button class="fb active" onclick="setFilter(this,'all')">Бүгд</button><button class="fb" onclick="setFilter(this,'Electronics')">Электроник</button><button class="fb" onclick="setFilter(this,'Fashion')">Хувцас</button><button class="fb" onclick="setFilter(this,'Car')">Машин</button><button class="fb" onclick="setFilter(this,'Pet')">Тэжээвэр</button><button class="fb" onclick="setFilter(this,'Travel')">Аялал</button><button class="fb" onclick="setFilter(this,'Sports')">Спорт</button><button class="fb" onclick="setFilter(this,'Outdoor')">Гадаа</button><button class="fb" onclick="setFilter(this,'Hobby')">Хобби</button>
+  <button class="fb" id="btn-top" onclick="setSort('profit',this)">🔥 Топ</button>
+  <button class="fb" id="btn-wl" onclick="setWLFilter(this)">★</button>
+  <div class="vt">
+    <button class="vb active" id="vb-grid" onclick="setView('grid')">⊞</button>
+    <button class="vb" id="vb-table" onclick="setView('table')">☰</button>
+  </div>
+</div>
+<div class="grid-wrap" id="view-grid"><div class="prod-grid" id="prod-grid"></div></div>
+<div class="tbl-wrap" id="view-table" style="display:none;">
+  <table><thead><tr><th>#</th><th>Бараа</th><th>Категори</th><th>Авах</th><th>Зарах</th><th>Ашиг</th><th>Линк</th><th>Үнэлгээ</th></tr></thead><tbody id="tbl-body"></tbody></table>
+</div>
+
+<div id="img-modal">
+  <div class="im-box">
+    <div class="im-hdr"><div class="im-title">🖼 Зураг оруулах</div><button class="im-close" onclick="closeImgModal()">✕</button></div>
+    <div class="im-body">
+      <div class="im-name" id="im-name">—</div>
+      <div class="im-prev"><div class="im-empty" id="im-empty"><span>🖼</span>Зураг байхгүй</div><img id="im-img" src="" alt="" style="display:none;"></div>
+      <div class="im-drop" id="im-drop" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
+        <input type="file" class="im-file" id="im-file" accept="image/*" onchange="handleFile(this)">
+        <div class="im-drop-icon">📁</div>
+        <div class="im-drop-text"><strong>Файл сонгох</strong> эсвэл чирж тавих — JPG · PNG · WEBP</div>
+      </div>
+      <div class="im-actions">
+        <button class="im-save" id="im-save" onclick="saveImg()" disabled>Хадгалах</button>
+        <button class="im-clear" onclick="clearImg()">Устгах</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="panel">
+  <button class="p-close" onclick="closePanel()">✕</button>
+  <button class="p-img-edit" onclick="openImgModal(curIdx,event)">✏️ Зураг</button>
+  <div class="p-img-wrap" id="p-img-wrap">
+    <div class="p-fallback" id="p-fallback"></div>
+    <img id="p-img" src="" alt="" style="display:none;" onerror="this.style.display='none'">
+    <div class="p-overlay"></div>
+    <div class="p-info"><div class="p-name" id="p-name">—</div><div class="p-cat" id="p-cat">—</div></div>
+  </div>
+  <div class="p-body">
+    <div class="p-prices" id="p-prices"></div>
+    <div class="p-sec">Линкүүд</div>
+    <div class="p-links" id="p-links"></div>
+    <div class="p-sec">Үнэлгээ засах</div>
+    <div id="p-fields"></div>
+    <button class="save-btn" onclick="saveRatings()">Хадгалах</button><button id="p-wl-btn" class="p-extra-btn wl" onclick="toggleWL(PRODUCTS[curIdx],this)">☆ Хадгалах</button><button class="p-extra-btn calc" onclick="openCalc(curIdx)">🧮 Тооцоолуур</button>
+  </div>
+</div>
+
+<script>
+const CAT_EMOJI = {"Electronics":"📱","Fashion":"👗","Pet":"🐾","Car":"🚗","Travel":"✈️","Sports":"⚽","Outdoor":"🏕️","Hobby":"🎨"};
+const CAT_GRADIENT = {"Electronics":"linear-gradient(135deg,#001020,#00090f)","Fashion":"linear-gradient(135deg,#1a0d18,#10080f)","Pet":"linear-gradient(135deg,#1a1000,#100900)","Car":"linear-gradient(135deg,#0d0d0d,#080808)","Travel":"linear-gradient(135deg,#001520,#000d14)","Sports":"linear-gradient(135deg,#001a10,#000f09)","Outdoor":"linear-gradient(135deg,#0d1a00,#080f00)","Hobby":"linear-gradient(135deg,#1a0d00,#100800)"};
+const PRICE_DATA={"Magnetic Phone Mount Dashboard":{"cost":"₮11,843","price":"₮55,900","costN":11843,"priceN":55900,"shippingN":4506,"customsN":684,"packagingN":1562,"totalCostN":18595,"netProfitN":37305,"netMarginPct":67,"shipping":"₮4,506","customs":"₮684","packaging":"₮1,562","totalCost":"₮18,595","netProfit":"₮37,305"},"Portable Power Bank 20000mAh":{"cost":"₮64,616","price":"₮180,900","costN":64616,"priceN":180900,"shippingN":6883,"customsN":4118,"packagingN":1369,"totalCostN":76986,"netProfitN":103914,"netMarginPct":57,"shipping":"₮6,883","customs":"₮4,118","packaging":"₮1,369","totalCost":"₮76,986","netProfit":"₮103,914"},"Smart Ring NFC Payment":{"cost":"₮23,144","price":"₮70,900","costN":23144,"priceN":70900,"shippingN":4181,"customsN":1256,"packagingN":772,"totalCostN":29353,"netProfitN":41547,"netMarginPct":59,"shipping":"₮4,181","customs":"₮1,256","packaging":"₮772","totalCost":"₮29,353","netProfit":"₮41,547"},"Foldable Bluetooth Keyboard":{"cost":"₮11,539","price":"₮70,900","costN":11539,"priceN":70900,"shippingN":4786,"customsN":687,"packagingN":925,"totalCostN":17937,"netProfitN":52963,"netMarginPct":75,"shipping":"₮4,786","customs":"₮687","packaging":"₮925","totalCost":"₮17,937","netProfit":"₮52,963"},"Wireless Earbuds Bone Conduction":{"cost":"₮38,999","price":"₮180,900","costN":38999,"priceN":180900,"shippingN":7803,"customsN":3250,"packagingN":575,"totalCostN":50627,"netProfitN":130273,"netMarginPct":72,"shipping":"₮7,803","customs":"₮3,250","packaging":"₮575","totalCost":"₮50,627","netProfit":"₮130,273"},"LED Pixel Art Display Board":{"cost":"₮7,273","price":"₮70,900","costN":7273,"priceN":70900,"shippingN":5313,"customsN":610,"packagingN":1744,"totalCostN":14940,"netProfitN":55960,"netMarginPct":79,"shipping":"₮5,313","customs":"₮610","packaging":"₮1,744","totalCost":"₮14,940","netProfit":"₮55,960"},"Thermal Label Printer Mini":{"cost":"₮75,624","price":"₮180,900","costN":75624,"priceN":180900,"shippingN":7065,"customsN":3415,"packagingN":1599,"totalCostN":87703,"netProfitN":93197,"netMarginPct":52,"shipping":"₮7,065","customs":"₮3,415","packaging":"₮1,599","totalCost":"₮87,703","netProfit":"₮93,197"},"Smart Watch Budget Fitness":{"cost":"₮58,985","price":"₮180,900","costN":58985,"priceN":180900,"shippingN":6288,"customsN":4966,"packagingN":844,"totalCostN":71083,"netProfitN":109817,"netMarginPct":61,"shipping":"₮6,288","customs":"₮4,966","packaging":"₮844","totalCost":"₮71,083","netProfit":"₮109,817"},"Retractable USB-C Cable Reel":{"cost":"₮6,286","price":"₮65,900","costN":6286,"priceN":65900,"shippingN":5403,"customsN":335,"packagingN":1583,"totalCostN":13607,"netProfitN":52293,"netMarginPct":79,"shipping":"₮5,403","customs":"₮335","packaging":"₮1,583","totalCost":"₮13,607","netProfit":"₮52,293"},"Action Camera Accessories Kit":{"cost":"₮72,686","price":"₮180,900","costN":72686,"priceN":180900,"shippingN":6660,"customsN":5712,"packagingN":1181,"totalCostN":86239,"netProfitN":94661,"netMarginPct":52,"shipping":"₮6,660","customs":"₮5,712","packaging":"₮1,181","totalCost":"₮86,239","netProfit":"₮94,661"},"Portable Monitor USB-C":{"cost":"₮304,461","price":"₮610,900","costN":304461,"priceN":610900,"shippingN":17201,"customsN":27065,"packagingN":901,"totalCostN":349628,"netProfitN":261272,"netMarginPct":43,"shipping":"₮17,201","customs":"₮27,065","packaging":"₮901","totalCost":"₮349,628","netProfit":"₮261,272"},"Fingerprint Padlock Smart":{"cost":"₮32,684","price":"₮110,900","costN":32684,"priceN":110900,"shippingN":7645,"customsN":2326,"packagingN":939,"totalCostN":43594,"netProfitN":67306,"netMarginPct":61,"shipping":"₮7,645","customs":"₮2,326","packaging":"₮939","totalCost":"₮43,594","netProfit":"₮67,306"},"Mini Drone Pocket Foldable":{"cost":"₮308,061","price":"₮600,900","costN":308061,"priceN":600900,"shippingN":15511,"customsN":22518,"packagingN":1408,"totalCostN":347498,"netProfitN":253402,"netMarginPct":42,"shipping":"₮15,511","customs":"₮22,518","packaging":"₮1,408","totalCost":"₮347,498","netProfit":"₮253,402"},"Wireless Charging Stand 3in1":{"cost":"₮23,896","price":"₮55,900","costN":23896,"priceN":55900,"shippingN":3468,"customsN":1499,"packagingN":1215,"totalCostN":30078,"netProfitN":25822,"netMarginPct":46,"shipping":"₮3,468","customs":"₮1,499","packaging":"₮1,215","totalCost":"₮30,078","netProfit":"₮25,822"},"Handheld Game Console Retro":{"cost":"₮29,338","price":"₮110,900","costN":29338,"priceN":110900,"shippingN":7784,"customsN":2634,"packagingN":684,"totalCostN":40440,"netProfitN":70460,"netMarginPct":64,"shipping":"₮7,784","customs":"₮2,634","packaging":"₮684","totalCost":"₮40,440","netProfit":"₮70,460"},"Solar Power Bank Charger":{"cost":"₮39,790","price":"₮180,900","costN":39790,"priceN":180900,"shippingN":7820,"customsN":1785,"packagingN":1075,"totalCostN":50470,"netProfitN":130430,"netMarginPct":72,"shipping":"₮7,820","customs":"₮1,785","packaging":"₮1,075","totalCost":"₮50,470","netProfit":"₮130,430"},"Bluetooth Tracker Card Slim":{"cost":"₮7,414","price":"₮55,900","costN":7414,"priceN":55900,"shippingN":4200,"customsN":558,"packagingN":1282,"totalCostN":13454,"netProfitN":42446,"netMarginPct":76,"shipping":"₮4,200","customs":"₮558","packaging":"₮1,282","totalCost":"₮13,454","netProfit":"₮42,446"},"Portable Projector Pico":{"cost":"₮178,499","price":"₮440,900","costN":178499,"priceN":440900,"shippingN":16817,"customsN":8495,"packagingN":565,"totalCostN":204376,"netProfitN":236524,"netMarginPct":54,"shipping":"₮16,817","customs":"₮8,495","packaging":"₮565","totalCost":"₮204,376","netProfit":"₮236,524"},"Smart Audio Sunglasses":{"cost":"₮24,933","price":"₮70,900","costN":24933,"priceN":70900,"shippingN":5555,"customsN":1734,"packagingN":1528,"totalCostN":33750,"netProfitN":37150,"netMarginPct":52,"shipping":"₮5,555","customs":"₮1,734","packaging":"₮1,528","totalCost":"₮33,750","netProfit":"₮37,150"},"Keyboard Mechanical Compact":{"cost":"₮18,809","price":"₮70,900","costN":18809,"priceN":70900,"shippingN":3843,"customsN":958,"packagingN":1641,"totalCostN":25251,"netProfitN":45649,"netMarginPct":64,"shipping":"₮3,843","customs":"₮958","packaging":"₮1,641","totalCost":"₮25,251","netProfit":"₮45,649"},"Phone Grip Expanding Stand":{"cost":"₮11,549","price":"₮55,900","costN":11549,"priceN":55900,"shippingN":3651,"customsN":653,"packagingN":1672,"totalCostN":17525,"netProfitN":38375,"netMarginPct":69,"shipping":"₮3,651","customs":"₮653","packaging":"₮1,672","totalCost":"₮17,525","netProfit":"₮38,375"},"Digital Voice Recorder Mini":{"cost":"₮50,013","price":"₮180,900","costN":50013,"priceN":180900,"shippingN":7328,"customsN":3822,"packagingN":1144,"totalCostN":62307,"netProfitN":118593,"netMarginPct":66,"shipping":"₮7,328","customs":"₮3,822","packaging":"₮1,144","totalCost":"₮62,307","netProfit":"₮118,593"},"LED Gaming Mouse Pad XL":{"cost":"₮22,583","price":"₮55,900","costN":22583,"priceN":55900,"shippingN":3213,"customsN":1134,"packagingN":993,"totalCostN":27923,"netProfitN":27977,"netMarginPct":50,"shipping":"₮3,213","customs":"₮1,134","packaging":"₮993","totalCost":"₮27,923","netProfit":"₮27,977"},"Portable Air Pump Electric":{"cost":"₮10,873","price":"₮70,900","costN":10873,"priceN":70900,"shippingN":4316,"customsN":645,"packagingN":1619,"totalCostN":17453,"netProfitN":53447,"netMarginPct":75,"shipping":"₮4,316","customs":"₮645","packaging":"₮1,619","totalCost":"₮17,453","netProfit":"₮53,447"},"Wireless Presenter Remote":{"cost":"₮13,089","price":"₮70,900","costN":13089,"priceN":70900,"shippingN":5166,"customsN":986,"packagingN":1614,"totalCostN":20855,"netProfitN":50045,"netMarginPct":71,"shipping":"₮5,166","customs":"₮986","packaging":"₮1,614","totalCost":"₮20,855","netProfit":"₮50,045"},"Charging Cable Organizer Roll":{"cost":"₮3,833","price":"₮50,900","costN":3833,"priceN":50900,"shippingN":4173,"customsN":175,"packagingN":990,"totalCostN":9171,"netProfitN":41729,"netMarginPct":82,"shipping":"₮4,173","customs":"₮175","packaging":"₮990","totalCost":"₮9,171","netProfit":"₮41,729"},"RGB Desk Fan Mini USB":{"cost":"₮11,914","price":"₮70,900","costN":11914,"priceN":70900,"shippingN":5062,"customsN":661,"packagingN":1235,"totalCostN":18872,"netProfitN":52028,"netMarginPct":73,"shipping":"₮5,062","customs":"₮661","packaging":"₮1,235","totalCost":"₮18,872","netProfit":"₮52,028"},"Smart IR Remote Blaster":{"cost":"₮23,715","price":"₮70,900","costN":23715,"priceN":70900,"shippingN":5463,"customsN":1092,"packagingN":1539,"totalCostN":31809,"netProfitN":39091,"netMarginPct":55,"shipping":"₮5,463","customs":"₮1,092","packaging":"₮1,539","totalCost":"₮31,809","netProfit":"₮39,091"},"Smart Pen Digitizer Writing":{"cost":"₮5,449","price":"₮40,900","costN":5449,"priceN":40900,"shippingN":3425,"customsN":472,"packagingN":1048,"totalCostN":10394,"netProfitN":30506,"netMarginPct":75,"shipping":"₮3,425","customs":"₮472","packaging":"₮1,048","totalCost":"₮10,394","netProfit":"₮30,506"},"Portable Laptop Cooling Pad":{"cost":"₮12,951","price":"₮55,900","costN":12951,"priceN":55900,"shippingN":3328,"customsN":534,"packagingN":1171,"totalCostN":17984,"netProfitN":37916,"netMarginPct":68,"shipping":"₮3,328","customs":"₮534","packaging":"₮1,171","totalCost":"₮17,984","netProfit":"₮37,916"},"Magnetic Sunglasses Clip-On":{"cost":"₮21,998","price":"₮55,900","costN":21998,"priceN":55900,"shippingN":4010,"customsN":1505,"packagingN":588,"totalCostN":28101,"netProfitN":27799,"netMarginPct":50,"shipping":"₮4,010","customs":"₮1,505","packaging":"₮588","totalCost":"₮28,101","netProfit":"₮27,799"},"Invisible Bra Strapless Silicone":{"cost":"₮21,889","price":"₮70,900","costN":21889,"priceN":70900,"shippingN":4371,"customsN":1673,"packagingN":818,"totalCostN":28751,"netProfitN":42149,"netMarginPct":59,"shipping":"₮4,371","customs":"₮1,673","packaging":"₮818","totalCost":"₮28,751","netProfit":"₮42,149"},"Magnetic Clasp Bracelet Set":{"cost":"₮4,124","price":"₮35,900","costN":4124,"priceN":35900,"shippingN":4035,"customsN":349,"packagingN":681,"totalCostN":9189,"netProfitN":26711,"netMarginPct":74,"shipping":"₮4,035","customs":"₮349","packaging":"₮681","totalCost":"₮9,189","netProfit":"₮26,711"},"Shoe Stretcher Adjustable":{"cost":"₮3,737","price":"₮40,900","costN":3737,"priceN":40900,"shippingN":3499,"customsN":210,"packagingN":1079,"totalCostN":8525,"netProfitN":32375,"netMarginPct":79,"shipping":"₮3,499","customs":"₮210","packaging":"₮1,079","totalCost":"₮8,525","netProfit":"₮32,375"},"Anti-Blister Heel Pad":{"cost":"₮22,643","price":"₮55,900","costN":22643,"priceN":55900,"shippingN":5075,"customsN":1343,"packagingN":1494,"totalCostN":30555,"netProfitN":25345,"netMarginPct":45,"shipping":"₮5,075","customs":"₮1,343","packaging":"₮1,494","totalCost":"₮30,555","netProfit":"₮25,345"},"Tie Dye Kit Premium":{"cost":"₮5,342","price":"₮70,900","costN":5342,"priceN":70900,"shippingN":4882,"customsN":285,"packagingN":1428,"totalCostN":11937,"netProfitN":58963,"netMarginPct":83,"shipping":"₮4,882","customs":"₮285","packaging":"₮1,428","totalCost":"₮11,937","netProfit":"₮58,963"},"Leather Belt Hole Punch":{"cost":"₮15,711","price":"₮70,900","costN":15711,"priceN":70900,"shippingN":4226,"customsN":713,"packagingN":1067,"totalCostN":21717,"netProfitN":49183,"netMarginPct":69,"shipping":"₮4,226","customs":"₮713","packaging":"₮1,067","totalCost":"₮21,717","netProfit":"₮49,183"},"Heat Transfer Vinyl Roll":{"cost":"₮21,135","price":"₮70,900","costN":21135,"priceN":70900,"shippingN":3695,"customsN":1131,"packagingN":965,"totalCostN":26926,"netProfitN":43974,"netMarginPct":62,"shipping":"₮3,695","customs":"₮1,131","packaging":"₮965","totalCost":"₮26,926","netProfit":"₮43,974"},"Portable Fabric Shaver":{"cost":"₮7,116","price":"₮60,900","costN":7116,"priceN":60900,"shippingN":4542,"customsN":391,"packagingN":1787,"totalCostN":13836,"netProfitN":47064,"netMarginPct":77,"shipping":"₮4,542","customs":"₮391","packaging":"₮1,787","totalCost":"₮13,836","netProfit":"₮47,064"},"Clip-On Collar Extender Set":{"cost":"₮19,703","price":"₮55,900","costN":19703,"priceN":55900,"shippingN":4823,"customsN":1415,"packagingN":1077,"totalCostN":27018,"netProfitN":28882,"netMarginPct":52,"shipping":"₮4,823","customs":"₮1,415","packaging":"₮1,077","totalCost":"₮27,018","netProfit":"₮28,882"},"Magnetic Jewelry Clasp Converter":{"cost":"₮11,116","price":"₮70,900","costN":11116,"priceN":70900,"shippingN":4675,"customsN":740,"packagingN":818,"totalCostN":17349,"netProfitN":53551,"netMarginPct":76,"shipping":"₮4,675","customs":"₮740","packaging":"₮818","totalCost":"₮17,349","netProfit":"₮53,551"},"Shoe Deodorizer Spray":{"cost":"₮10,224","price":"₮70,900","costN":10224,"priceN":70900,"shippingN":3460,"customsN":547,"packagingN":1592,"totalCostN":15823,"netProfitN":55077,"netMarginPct":78,"shipping":"₮3,460","customs":"₮547","packaging":"₮1,592","totalCost":"₮15,823","netProfit":"₮55,077"},"Velvet Hangers Slim Set":{"cost":"₮15,442","price":"₮55,900","costN":15442,"priceN":55900,"shippingN":2959,"customsN":675,"packagingN":749,"totalCostN":19825,"netProfitN":36075,"netMarginPct":65,"shipping":"₮2,959","customs":"₮675","packaging":"₮749","totalCost":"₮19,825","netProfit":"₮36,075"},"Portable Steamer Travel Mini":{"cost":"₮6,038","price":"₮70,900","costN":6038,"priceN":70900,"shippingN":4690,"customsN":385,"packagingN":1592,"totalCostN":12705,"netProfitN":58195,"netMarginPct":82,"shipping":"₮4,690","customs":"₮385","packaging":"₮1,592","totalCost":"₮12,705","netProfit":"₮58,195"},"Hat Shaper Block Steaming":{"cost":"₮18,857","price":"₮70,900","costN":18857,"priceN":70900,"shippingN":4357,"customsN":1228,"packagingN":1031,"totalCostN":25473,"netProfitN":45427,"netMarginPct":64,"shipping":"₮4,357","customs":"₮1,228","packaging":"₮1,031","totalCost":"₮25,473","netProfit":"₮45,427"},"Vintage Scarf Ring Clip":{"cost":"₮19,923","price":"₮55,900","costN":19923,"priceN":55900,"shippingN":4843,"customsN":908,"packagingN":1352,"totalCostN":27026,"netProfitN":28874,"netMarginPct":52,"shipping":"₮4,843","customs":"₮908","packaging":"₮1,352","totalCost":"₮27,026","netProfit":"₮28,874"},"Shoe Tree Adjustable Cedar":{"cost":"₮9,680","price":"₮70,900","costN":9680,"priceN":70900,"shippingN":3662,"customsN":696,"packagingN":1561,"totalCostN":15599,"netProfitN":55301,"netMarginPct":78,"shipping":"₮3,662","customs":"₮696","packaging":"₮1,561","totalCost":"₮15,599","netProfit":"₮55,301"},"Iron-On Patch Set Embroidered":{"cost":"₮4,501","price":"₮40,900","costN":4501,"priceN":40900,"shippingN":4658,"customsN":311,"packagingN":554,"totalCostN":10024,"netProfitN":30876,"netMarginPct":75,"shipping":"₮4,658","customs":"₮311","packaging":"₮554","totalCost":"₮10,024","netProfit":"₮30,876"},"Silicone Ring Set Athletic":{"cost":"₮26,419","price":"₮70,900","costN":26419,"priceN":70900,"shippingN":4451,"customsN":1736,"packagingN":1762,"totalCostN":34368,"netProfitN":36532,"netMarginPct":52,"shipping":"₮4,451","customs":"₮1,736","packaging":"₮1,762","totalCost":"₮34,368","netProfit":"₮36,532"},"Compression Socks Performance":{"cost":"₮15,212","price":"₮70,900","costN":15212,"priceN":70900,"shippingN":4698,"customsN":678,"packagingN":544,"totalCostN":21132,"netProfitN":49768,"netMarginPct":70,"shipping":"₮4,698","customs":"₮678","packaging":"₮544","totalCost":"₮21,132","netProfit":"₮49,768"},"Flat Cap Newsboy Hat":{"cost":"₮10,195","price":"₮70,900","costN":10195,"priceN":70900,"shippingN":4635,"customsN":714,"packagingN":1635,"totalCostN":17179,"netProfitN":53721,"netMarginPct":76,"shipping":"₮4,635","customs":"₮714","packaging":"₮1,635","totalCost":"₮17,179","netProfit":"₮53,721"},"Zipper Pull Replacement Kit":{"cost":"₮25,712","price":"₮70,900","costN":25712,"priceN":70900,"shippingN":5536,"customsN":1422,"packagingN":1300,"totalCostN":33970,"netProfitN":36930,"netMarginPct":52,"shipping":"₮5,536","customs":"₮1,422","packaging":"₮1,300","totalCost":"₮33,970","netProfit":"₮36,930"},"Underwear Bra Travel Case":{"cost":"₮10,118","price":"₮55,900","costN":10118,"priceN":55900,"shippingN":3713,"customsN":808,"packagingN":1570,"totalCostN":16209,"netProfitN":39691,"netMarginPct":71,"shipping":"₮3,713","customs":"₮808","packaging":"₮1,570","totalCost":"₮16,209","netProfit":"₮39,691"},"Snap Button Kit Sewing":{"cost":"₮6,847","price":"₮70,900","costN":6847,"priceN":70900,"shippingN":5438,"customsN":613,"packagingN":908,"totalCostN":13806,"netProfitN":57094,"netMarginPct":81,"shipping":"₮5,438","customs":"₮613","packaging":"₮908","totalCost":"₮13,806","netProfit":"₮57,094"},"Clothes Rack Garment Display":{"cost":"₮20,579","price":"₮55,900","costN":20579,"priceN":55900,"shippingN":4561,"customsN":1753,"packagingN":1053,"totalCostN":27946,"netProfitN":27954,"netMarginPct":50,"shipping":"₮4,561","customs":"₮1,753","packaging":"₮1,053","totalCost":"₮27,946","netProfit":"₮27,954"},"Pet Camera Treat Dispenser":{"cost":"₮19,106","price":"₮70,900","costN":19106,"priceN":70900,"shippingN":5502,"customsN":1132,"packagingN":1055,"totalCostN":26795,"netProfitN":44105,"netMarginPct":62,"shipping":"₮5,502","customs":"₮1,132","packaging":"₮1,055","totalCost":"₮26,795","netProfit":"₮44,105"},"Slow Feeder Bowl Dog":{"cost":"₮19,212","price":"₮70,900","costN":19212,"priceN":70900,"shippingN":3774,"customsN":1554,"packagingN":1028,"totalCostN":25568,"netProfitN":45332,"netMarginPct":64,"shipping":"₮3,774","customs":"₮1,554","packaging":"₮1,028","totalCost":"₮25,568","netProfit":"₮45,332"},"Calming Anxiety Vest Dog":{"cost":"₮25,506","price":"₮70,900","costN":25506,"priceN":70900,"shippingN":4983,"customsN":1966,"packagingN":871,"totalCostN":33326,"netProfitN":37574,"netMarginPct":53,"shipping":"₮4,983","customs":"₮1,966","packaging":"₮871","totalCost":"₮33,326","netProfit":"₮37,574"},"Pet DNA Test Kit":{"cost":"₮23,285","price":"₮70,900","costN":23285,"priceN":70900,"shippingN":3561,"customsN":1355,"packagingN":1452,"totalCostN":29653,"netProfitN":41247,"netMarginPct":58,"shipping":"₮3,561","customs":"₮1,355","packaging":"₮1,452","totalCost":"₮29,653","netProfit":"₮41,247"},"Automatic Laser Cat Toy":{"cost":"₮20,021","price":"₮55,900","costN":20021,"priceN":55900,"shippingN":3029,"customsN":1013,"packagingN":1513,"totalCostN":25576,"netProfitN":30324,"netMarginPct":54,"shipping":"₮3,029","customs":"₮1,013","packaging":"₮1,513","totalCost":"₮25,576","netProfit":"₮30,324"},"Dog Seat Belt Car Harness":{"cost":"₮18,328","price":"₮70,900","costN":18328,"priceN":70900,"shippingN":4233,"customsN":976,"packagingN":732,"totalCostN":24269,"netProfitN":46631,"netMarginPct":66,"shipping":"₮4,233","customs":"₮976","packaging":"₮732","totalCost":"₮24,269","netProfit":"₮46,631"},"Cat Wall Shelves Climbing":{"cost":"₮7,779","price":"₮55,900","costN":7779,"priceN":55900,"shippingN":3611,"customsN":505,"packagingN":670,"totalCostN":12565,"netProfitN":43335,"netMarginPct":78,"shipping":"₮3,611","customs":"₮505","packaging":"₮670","totalCost":"₮12,565","netProfit":"₮43,335"},"Pet Water Fountain Stainless":{"cost":"₮14,876","price":"₮70,900","costN":14876,"priceN":70900,"shippingN":4369,"customsN":1177,"packagingN":849,"totalCostN":21271,"netProfitN":49629,"netMarginPct":70,"shipping":"₮4,369","customs":"₮1,177","packaging":"₮849","totalCost":"₮21,271","netProfit":"₮49,629"},"Deshedding Grooming Glove":{"cost":"₮27,230","price":"₮70,900","costN":27230,"priceN":70900,"shippingN":5427,"customsN":2026,"packagingN":1304,"totalCostN":35987,"netProfitN":34913,"netMarginPct":49,"shipping":"₮5,427","customs":"₮2,026","packaging":"₮1,304","totalCost":"₮35,987","netProfit":"₮34,913"},"Dog Paw Cleaner Cup":{"cost":"₮18,838","price":"₮70,900","costN":18838,"priceN":70900,"shippingN":5472,"customsN":1148,"packagingN":572,"totalCostN":26030,"netProfitN":44870,"netMarginPct":63,"shipping":"₮5,472","customs":"₮1,148","packaging":"₮572","totalCost":"₮26,030","netProfit":"₮44,870"},"Pet Stroller Foldable":{"cost":"₮22,373","price":"₮60,900","costN":22373,"priceN":60900,"shippingN":4183,"customsN":1040,"packagingN":1480,"totalCostN":29076,"netProfitN":31824,"netMarginPct":52,"shipping":"₮4,183","customs":"₮1,040","packaging":"₮1,480","totalCost":"₮29,076","netProfit":"₮31,824"},"Fish Tank LED Filter Combo":{"cost":"₮15,227","price":"₮70,900","costN":15227,"priceN":70900,"shippingN":4591,"customsN":855,"packagingN":540,"totalCostN":21213,"netProfitN":49687,"netMarginPct":70,"shipping":"₮4,591","customs":"₮855","packaging":"₮540","totalCost":"₮21,213","netProfit":"₮49,687"},"Bird Cage Accessories Set":{"cost":"₮26,944","price":"₮70,900","costN":26944,"priceN":70900,"shippingN":4685,"customsN":2324,"packagingN":1515,"totalCostN":35468,"netProfitN":35432,"netMarginPct":50,"shipping":"₮4,685","customs":"₮2,324","packaging":"₮1,515","totalCost":"₮35,468","netProfit":"₮35,432"},"Dog Cooling Mat Gel":{"cost":"₮19,018","price":"₮55,900","costN":19018,"priceN":55900,"shippingN":3490,"customsN":980,"packagingN":753,"totalCostN":24241,"netProfitN":31659,"netMarginPct":57,"shipping":"₮3,490","customs":"₮980","packaging":"₮753","totalCost":"₮24,241","netProfit":"₮31,659"},"Pet First Aid Kit":{"cost":"₮25,079","price":"₮70,900","costN":25079,"priceN":70900,"shippingN":5347,"customsN":2060,"packagingN":1738,"totalCostN":34224,"netProfitN":36676,"netMarginPct":52,"shipping":"₮5,347","customs":"₮2,060","packaging":"₮1,738","totalCost":"₮34,224","netProfit":"₮36,676"},"Interactive Puzzle Toy Dog":{"cost":"₮11,651","price":"₮55,900","costN":11651,"priceN":55900,"shippingN":4884,"customsN":960,"packagingN":1039,"totalCostN":18534,"netProfitN":37366,"netMarginPct":67,"shipping":"₮4,884","customs":"₮960","packaging":"₮1,039","totalCost":"₮18,534","netProfit":"₮37,366"},"Cat Tunnel Crinkle Play":{"cost":"₮15,120","price":"₮70,900","costN":15120,"priceN":70900,"shippingN":3725,"customsN":1039,"packagingN":1354,"totalCostN":21238,"netProfitN":49662,"netMarginPct":70,"shipping":"₮3,725","customs":"₮1,039","packaging":"₮1,354","totalCost":"₮21,238","netProfit":"₮49,662"},"Dog Snuffle Mat Feeding":{"cost":"₮5,277","price":"₮55,900","costN":5277,"priceN":55900,"shippingN":5152,"customsN":302,"packagingN":1750,"totalCostN":12481,"netProfitN":43419,"netMarginPct":78,"shipping":"₮5,152","customs":"₮302","packaging":"₮1,750","totalCost":"₮12,481","netProfit":"₮43,419"},"Hamster Wheel Silent":{"cost":"₮8,497","price":"₮65,900","costN":8497,"priceN":65900,"shippingN":4016,"customsN":712,"packagingN":552,"totalCostN":13777,"netProfitN":52123,"netMarginPct":79,"shipping":"₮4,016","customs":"₮712","packaging":"₮552","totalCost":"₮13,777","netProfit":"₮52,123"},"Pet Nail Grinder Electric":{"cost":"₮24,590","price":"₮70,900","costN":24590,"priceN":70900,"shippingN":4539,"customsN":1064,"packagingN":1424,"totalCostN":31617,"netProfitN":39283,"netMarginPct":55,"shipping":"₮4,539","customs":"₮1,064","packaging":"₮1,424","totalCost":"₮31,617","netProfit":"₮39,283"},"Dog Toothbrush Finger Set":{"cost":"₮8,891","price":"₮70,900","costN":8891,"priceN":70900,"shippingN":3991,"customsN":595,"packagingN":1103,"totalCostN":14580,"netProfitN":56320,"netMarginPct":79,"shipping":"₮3,991","customs":"₮595","packaging":"₮1,103","totalCost":"₮14,580","netProfit":"₮56,320"},"GPS Pet Tracker Collar":{"cost":"₮4,466","price":"₮55,900","costN":4466,"priceN":55900,"shippingN":3193,"customsN":355,"packagingN":1422,"totalCostN":9436,"netProfitN":46464,"netMarginPct":83,"shipping":"₮3,193","customs":"₮355","packaging":"₮1,422","totalCost":"₮9,436","netProfit":"₮46,464"},"Pet Odor Enzyme Spray":{"cost":"₮15,048","price":"₮70,900","costN":15048,"priceN":70900,"shippingN":4022,"customsN":922,"packagingN":1488,"totalCostN":21480,"netProfitN":49420,"netMarginPct":70,"shipping":"₮4,022","customs":"₮922","packaging":"₮1,488","totalCost":"₮21,480","netProfit":"₮49,420"},"Automatic Pet Feeder WiFi":{"cost":"₮4,569","price":"₮50,900","costN":4569,"priceN":50900,"shippingN":4844,"customsN":341,"packagingN":1065,"totalCostN":10819,"netProfitN":40081,"netMarginPct":79,"shipping":"₮4,844","customs":"₮341","packaging":"₮1,065","totalCost":"₮10,819","netProfit":"₮40,081"},"Dog Life Jacket Swimming":{"cost":"₮22,080","price":"₮70,900","costN":22080,"priceN":70900,"shippingN":3716,"customsN":1070,"packagingN":876,"totalCostN":27742,"netProfitN":43158,"netMarginPct":61,"shipping":"₮3,716","customs":"₮1,070","packaging":"₮876","totalCost":"₮27,742","netProfit":"₮43,158"},"Car Vacuum Cordless Wet-Dry":{"cost":"₮12,464","price":"₮70,900","costN":12464,"priceN":70900,"shippingN":5305,"customsN":887,"packagingN":1576,"totalCostN":20232,"netProfitN":50668,"netMarginPct":71,"shipping":"₮5,305","customs":"₮887","packaging":"₮1,576","totalCost":"₮20,232","netProfit":"₮50,668"},"Dash Cam Front Rear Dual":{"cost":"₮8,865","price":"₮70,900","costN":8865,"priceN":70900,"shippingN":4885,"customsN":432,"packagingN":1525,"totalCostN":15707,"netProfitN":55193,"netMarginPct":78,"shipping":"₮4,885","customs":"₮432","packaging":"₮1,525","totalCost":"₮15,707","netProfit":"₮55,193"},"Car Organizer Back Seat":{"cost":"₮4,872","price":"₮50,900","costN":4872,"priceN":50900,"shippingN":4298,"customsN":392,"packagingN":1160,"totalCostN":10722,"netProfitN":40178,"netMarginPct":79,"shipping":"₮4,298","customs":"₮392","packaging":"₮1,160","totalCost":"₮10,722","netProfit":"₮40,178"},"Trunk Organizer Collapsible":{"cost":"₮17,506","price":"₮55,900","costN":17506,"priceN":55900,"shippingN":4656,"customsN":722,"packagingN":1596,"totalCostN":24480,"netProfitN":31420,"netMarginPct":56,"shipping":"₮4,656","customs":"₮722","packaging":"₮1,596","totalCost":"₮24,480","netProfit":"₮31,420"},"Car Air Purifier Ionizer":{"cost":"₮26,558","price":"₮70,900","costN":26558,"priceN":70900,"shippingN":3912,"customsN":2042,"packagingN":830,"totalCostN":33342,"netProfitN":37558,"netMarginPct":53,"shipping":"₮3,912","customs":"₮2,042","packaging":"₮830","totalCost":"₮33,342","netProfit":"₮37,558"},"Heated Car Seat Cushion":{"cost":"₮25,705","price":"₮70,900","costN":25705,"priceN":70900,"shippingN":4407,"customsN":1432,"packagingN":1360,"totalCostN":32904,"netProfitN":37996,"netMarginPct":54,"shipping":"₮4,407","customs":"₮1,432","packaging":"₮1,360","totalCost":"₮32,904","netProfit":"₮37,996"},"Car Cup Holder Expander":{"cost":"₮2,819","price":"₮35,900","costN":2819,"priceN":35900,"shippingN":3962,"customsN":143,"packagingN":1037,"totalCostN":7961,"netProfitN":27939,"netMarginPct":78,"shipping":"₮3,962","customs":"₮143","packaging":"₮1,037","totalCost":"₮7,961","netProfit":"₮27,939"},"Jump Starter Portable Battery":{"cost":"₮11,236","price":"₮65,900","costN":11236,"priceN":65900,"shippingN":3686,"customsN":876,"packagingN":852,"totalCostN":16650,"netProfitN":49250,"netMarginPct":75,"shipping":"₮3,686","customs":"₮876","packaging":"₮852","totalCost":"₮16,650","netProfit":"₮49,250"},"Car Blind Spot Mirror":{"cost":"₮26,844","price":"₮70,900","costN":26844,"priceN":70900,"shippingN":4534,"customsN":1940,"packagingN":723,"totalCostN":34041,"netProfitN":36859,"netMarginPct":52,"shipping":"₮4,534","customs":"₮1,940","packaging":"₮723","totalCost":"₮34,041","netProfit":"₮36,859"},"Tire Inflator Portable Digital":{"cost":"₮10,016","price":"₮70,900","costN":10016,"priceN":70900,"shippingN":3956,"customsN":745,"packagingN":1107,"totalCostN":15824,"netProfitN":55076,"netMarginPct":78,"shipping":"₮3,956","customs":"₮745","packaging":"₮1,107","totalCost":"₮15,824","netProfit":"₮55,076"},"Car Seat Gap Filler":{"cost":"₮22,308","price":"₮70,900","costN":22308,"priceN":70900,"shippingN":4698,"customsN":1107,"packagingN":884,"totalCostN":28997,"netProfitN":41903,"netMarginPct":59,"shipping":"₮4,698","customs":"₮1,107","packaging":"₮884","totalCost":"₮28,997","netProfit":"₮41,903"},"Steering Wheel Desk Tray":{"cost":"₮14,074","price":"₮55,900","costN":14074,"priceN":55900,"shippingN":3487,"customsN":708,"packagingN":830,"totalCostN":19099,"netProfitN":36801,"netMarginPct":66,"shipping":"₮3,487","customs":"₮708","packaging":"₮830","totalCost":"₮19,099","netProfit":"₮36,801"},"Car Window Shade UV Foldable":{"cost":"₮25,162","price":"₮70,900","costN":25162,"priceN":70900,"shippingN":4198,"customsN":1620,"packagingN":1114,"totalCostN":32094,"netProfitN":38806,"netMarginPct":55,"shipping":"₮4,198","customs":"₮1,620","packaging":"₮1,114","totalCost":"₮32,094","netProfit":"₮38,806"},"GPS Tracker Hidden Magnetic":{"cost":"₮13,448","price":"₮55,900","costN":13448,"priceN":55900,"shippingN":3102,"customsN":1099,"packagingN":857,"totalCostN":18506,"netProfitN":37394,"netMarginPct":67,"shipping":"₮3,102","customs":"₮1,099","packaging":"₮857","totalCost":"₮18,506","netProfit":"₮37,394"},"Car Door Edge Guard":{"cost":"₮5,875","price":"₮55,900","costN":5875,"priceN":55900,"shippingN":3586,"customsN":488,"packagingN":1086,"totalCostN":11035,"netProfitN":44865,"netMarginPct":80,"shipping":"₮3,586","customs":"₮488","packaging":"₮1,086","totalCost":"₮11,035","netProfit":"₮44,865"},"Windshield Cleaner Tool Long":{"cost":"₮4,730","price":"₮65,900","costN":4730,"priceN":65900,"shippingN":4164,"customsN":193,"packagingN":1391,"totalCostN":10478,"netProfitN":55422,"netMarginPct":84,"shipping":"₮4,164","customs":"₮193","packaging":"₮1,391","totalCost":"₮10,478","netProfit":"₮55,422"},"Emergency Car Escape Tool":{"cost":"₮11,227","price":"₮70,900","costN":11227,"priceN":70900,"shippingN":4230,"customsN":775,"packagingN":890,"totalCostN":17122,"netProfitN":53778,"netMarginPct":76,"shipping":"₮4,230","customs":"₮775","packaging":"₮890","totalCost":"₮17,122","netProfit":"₮53,778"},"Car Key Signal Blocker Pouch":{"cost":"₮3,021","price":"₮45,900","costN":3021,"priceN":45900,"shippingN":5125,"customsN":172,"packagingN":1056,"totalCostN":9374,"netProfitN":36526,"netMarginPct":80,"shipping":"₮5,125","customs":"₮172","packaging":"₮1,056","totalCost":"₮9,374","netProfit":"₮36,526"},"Steering Wheel Lock Bar":{"cost":"₮4,514","price":"₮50,900","costN":4514,"priceN":50900,"shippingN":5535,"customsN":249,"packagingN":1013,"totalCostN":11311,"netProfitN":39589,"netMarginPct":78,"shipping":"₮5,535","customs":"₮249","packaging":"₮1,013","totalCost":"₮11,311","netProfit":"₮39,589"},"Car Logo LED Puddle Light":{"cost":"₮16,403","price":"₮70,900","costN":16403,"priceN":70900,"shippingN":4269,"customsN":1149,"packagingN":556,"totalCostN":22377,"netProfitN":48523,"netMarginPct":68,"shipping":"₮4,269","customs":"₮1,149","packaging":"₮556","totalCost":"₮22,377","netProfit":"₮48,523"},"Auto Window Tint Film":{"cost":"₮3,912","price":"₮40,900","costN":3912,"priceN":40900,"shippingN":4677,"customsN":217,"packagingN":1135,"totalCostN":9941,"netProfitN":30959,"netMarginPct":76,"shipping":"₮4,677","customs":"₮217","packaging":"₮1,135","totalCost":"₮9,941","netProfit":"₮30,959"},"Retractable Cargo Net Trunk":{"cost":"₮8,580","price":"₮70,900","costN":8580,"priceN":70900,"shippingN":4033,"customsN":348,"packagingN":1377,"totalCostN":14338,"netProfitN":56562,"netMarginPct":80,"shipping":"₮4,033","customs":"₮348","packaging":"₮1,377","totalCost":"₮14,338","netProfit":"₮56,562"},"Car Ambient LED Strip Kit":{"cost":"₮9,412","price":"₮70,900","costN":9412,"priceN":70900,"shippingN":4353,"customsN":561,"packagingN":1105,"totalCostN":15431,"netProfitN":55469,"netMarginPct":78,"shipping":"₮4,353","customs":"₮561","packaging":"₮1,105","totalCost":"₮15,431","netProfit":"₮55,469"},"Dashboard Camera Hardwire Kit":{"cost":"₮17,086","price":"₮70,900","costN":17086,"priceN":70900,"shippingN":4990,"customsN":1443,"packagingN":684,"totalCostN":24203,"netProfitN":46697,"netMarginPct":66,"shipping":"₮4,990","customs":"₮1,443","packaging":"₮684","totalCost":"₮24,203","netProfit":"₮46,697"},"Car Phone Holder Windshield":{"cost":"₮14,546","price":"₮55,900","costN":14546,"priceN":55900,"shippingN":3056,"customsN":1158,"packagingN":1044,"totalCostN":19804,"netProfitN":36096,"netMarginPct":65,"shipping":"₮3,056","customs":"₮1,158","packaging":"₮1,044","totalCost":"₮19,804","netProfit":"₮36,096"},"Packing Cubes Set 6pc":{"cost":"₮18,293","price":"₮70,900","costN":18293,"priceN":70900,"shippingN":4460,"customsN":1079,"packagingN":1346,"totalCostN":25178,"netProfitN":45722,"netMarginPct":64,"shipping":"₮4,460","customs":"₮1,079","packaging":"₮1,346","totalCost":"₮25,178","netProfit":"₮45,722"},"Luggage Scale Digital":{"cost":"₮6,797","price":"₮60,900","costN":6797,"priceN":60900,"shippingN":5355,"customsN":300,"packagingN":1515,"totalCostN":13967,"netProfitN":46933,"netMarginPct":77,"shipping":"₮5,355","customs":"₮300","packaging":"₮1,515","totalCost":"₮13,967","netProfit":"₮46,933"},"RFID Blocking Wallet Slim":{"cost":"₮9,231","price":"₮70,900","costN":9231,"priceN":70900,"shippingN":4872,"customsN":715,"packagingN":1402,"totalCostN":16220,"netProfitN":54680,"netMarginPct":77,"shipping":"₮4,872","customs":"₮715","packaging":"₮1,402","totalCost":"₮16,220","netProfit":"₮54,680"},"Travel Adapter Universal":{"cost":"₮17,320","price":"₮70,900","costN":17320,"priceN":70900,"shippingN":3792,"customsN":1502,"packagingN":1191,"totalCostN":23805,"netProfitN":47095,"netMarginPct":66,"shipping":"₮3,792","customs":"₮1,502","packaging":"₮1,191","totalCost":"₮23,805","netProfit":"₮47,095"},"Inflatable Travel Pillow Neck":{"cost":"₮21,830","price":"₮70,900","costN":21830,"priceN":70900,"shippingN":3425,"customsN":1057,"packagingN":948,"totalCostN":27260,"netProfitN":43640,"netMarginPct":62,"shipping":"₮3,425","customs":"₮1,057","packaging":"₮948","totalCost":"₮27,260","netProfit":"₮43,640"},"Shoe Bag Travel Set":{"cost":"₮4,117","price":"₮55,900","costN":4117,"priceN":55900,"shippingN":3971,"customsN":237,"packagingN":1774,"totalCostN":10099,"netProfitN":45801,"netMarginPct":82,"shipping":"₮3,971","customs":"₮237","packaging":"₮1,774","totalCost":"₮10,099","netProfit":"₮45,801"},"Money Belt Hidden Waist":{"cost":"₮21,589","price":"₮70,900","costN":21589,"priceN":70900,"shippingN":5285,"customsN":970,"packagingN":640,"totalCostN":28484,"netProfitN":42416,"netMarginPct":60,"shipping":"₮5,285","customs":"₮970","packaging":"₮640","totalCost":"₮28,484","netProfit":"₮42,416"},"Passport Holder Neck Pouch":{"cost":"₮12,254","price":"₮55,900","costN":12254,"priceN":55900,"shippingN":3745,"customsN":625,"packagingN":1628,"totalCostN":18252,"netProfitN":37648,"netMarginPct":67,"shipping":"₮3,745","customs":"₮625","packaging":"₮1,628","totalCost":"₮18,252","netProfit":"₮37,648"},"Compression Travel Bag Set":{"cost":"₮21,478","price":"₮55,900","costN":21478,"priceN":55900,"shippingN":3732,"customsN":1036,"packagingN":1544,"totalCostN":27790,"netProfitN":28110,"netMarginPct":50,"shipping":"₮3,732","customs":"₮1,036","packaging":"₮1,544","totalCost":"₮27,790","netProfit":"₮28,110"},"Portable Clothes Washing Bag":{"cost":"₮8,166","price":"₮55,900","costN":8166,"priceN":55900,"shippingN":4269,"customsN":584,"packagingN":984,"totalCostN":14003,"netProfitN":41897,"netMarginPct":75,"shipping":"₮4,269","customs":"₮584","packaging":"₮984","totalCost":"₮14,003","netProfit":"₮41,897"},"Silicone Travel Bottles Set":{"cost":"₮11,426","price":"₮70,900","costN":11426,"priceN":70900,"shippingN":3333,"customsN":927,"packagingN":1283,"totalCostN":16969,"netProfitN":53931,"netMarginPct":76,"shipping":"₮3,333","customs":"₮927","packaging":"₮1,283","totalCost":"₮16,969","netProfit":"₮53,931"},"Beach Waterproof Dry Bag":{"cost":"₮22,794","price":"₮55,900","costN":22794,"priceN":55900,"shippingN":3287,"customsN":1145,"packagingN":720,"totalCostN":27946,"netProfitN":27954,"netMarginPct":50,"shipping":"₮3,287","customs":"₮1,145","packaging":"₮720","totalCost":"₮27,946","netProfit":"₮27,954"},"Travel Towel Microfiber Fast Dry":{"cost":"₮6,607","price":"₮70,900","costN":6607,"priceN":70900,"shippingN":4287,"customsN":315,"packagingN":1206,"totalCostN":12415,"netProfitN":58485,"netMarginPct":82,"shipping":"₮4,287","customs":"₮315","packaging":"₮1,206","totalCost":"₮12,415","netProfit":"₮58,485"},"Anti-Theft Backpack Cut-Proof":{"cost":"₮5,145","price":"₮70,900","costN":5145,"priceN":70900,"shippingN":5220,"customsN":457,"packagingN":987,"totalCostN":11809,"netProfitN":59091,"netMarginPct":83,"shipping":"₮5,220","customs":"₮457","packaging":"₮987","totalCost":"₮11,809","netProfit":"₮59,091"},"Travel Jewelry Organizer Roll":{"cost":"₮22,171","price":"₮55,900","costN":22171,"priceN":55900,"shippingN":4472,"customsN":1601,"packagingN":1011,"totalCostN":29255,"netProfitN":26645,"netMarginPct":48,"shipping":"₮4,472","customs":"₮1,601","packaging":"₮1,011","totalCost":"₮29,255","netProfit":"₮26,645"},"Portable Laundry Clothesline":{"cost":"₮27,494","price":"₮70,900","costN":27494,"priceN":70900,"shippingN":4956,"customsN":1865,"packagingN":1428,"totalCostN":35743,"netProfitN":35157,"netMarginPct":50,"shipping":"₮4,956","customs":"₮1,865","packaging":"₮1,428","totalCost":"₮35,743","netProfit":"₮35,157"},"Scarf Travel Blanket Dual":{"cost":"₮12,905","price":"₮70,900","costN":12905,"priceN":70900,"shippingN":4573,"customsN":1061,"packagingN":618,"totalCostN":19157,"netProfitN":51743,"netMarginPct":73,"shipping":"₮4,573","customs":"₮1,061","packaging":"₮618","totalCost":"₮19,157","netProfit":"₮51,743"},"Waterproof Phone Case Diving":{"cost":"₮11,272","price":"₮55,900","costN":11272,"priceN":55900,"shippingN":3208,"customsN":590,"packagingN":1132,"totalCostN":16202,"netProfitN":39698,"netMarginPct":71,"shipping":"₮3,208","customs":"₮590","packaging":"₮1,132","totalCost":"₮16,202","netProfit":"₮39,698"},"Neck Fan Wearable Hands-Free":{"cost":"₮15,436","price":"₮70,900","costN":15436,"priceN":70900,"shippingN":5092,"customsN":1331,"packagingN":1683,"totalCostN":23542,"netProfitN":47358,"netMarginPct":67,"shipping":"₮5,092","customs":"₮1,331","packaging":"₮1,683","totalCost":"₮23,542","netProfit":"₮47,358"},"Travel Document Organizer Wallet":{"cost":"₮16,956","price":"₮55,900","costN":16956,"priceN":55900,"shippingN":4335,"customsN":949,"packagingN":765,"totalCostN":23005,"netProfitN":32895,"netMarginPct":59,"shipping":"₮4,335","customs":"₮949","packaging":"₮765","totalCost":"₮23,005","netProfit":"₮32,895"},"Resistance Band Set Loop":{"cost":"₮15,267","price":"₮50,900","costN":15267,"priceN":50900,"shippingN":4857,"customsN":911,"packagingN":1394,"totalCostN":22429,"netProfitN":28471,"netMarginPct":56,"shipping":"₮4,857","customs":"₮911","packaging":"₮1,394","totalCost":"₮22,429","netProfit":"₮28,471"},"Ab Roller Wheel Foldable":{"cost":"₮7,756","price":"₮50,900","costN":7756,"priceN":50900,"shippingN":3853,"customsN":418,"packagingN":1037,"totalCostN":13064,"netProfitN":37836,"netMarginPct":74,"shipping":"₮3,853","customs":"₮418","packaging":"₮1,037","totalCost":"₮13,064","netProfit":"₮37,836"},"Massage Gun Mini Pocket":{"cost":"₮45,088","price":"₮200,900","costN":45088,"priceN":200900,"shippingN":8795,"customsN":3485,"packagingN":1667,"totalCostN":59035,"netProfitN":141865,"netMarginPct":71,"shipping":"₮8,795","customs":"₮3,485","packaging":"₮1,667","totalCost":"₮59,035","netProfit":"₮141,865"},"Speed Jump Rope Digital":{"cost":"₮6,522","price":"₮50,900","costN":6522,"priceN":50900,"shippingN":3208,"customsN":472,"packagingN":1362,"totalCostN":11564,"netProfitN":39336,"netMarginPct":77,"shipping":"₮3,208","customs":"₮472","packaging":"₮1,362","totalCost":"₮11,564","netProfit":"₮39,336"},"Wrist Wraps Weightlifting":{"cost":"₮6,876","price":"₮50,900","costN":6876,"priceN":50900,"shippingN":4143,"customsN":373,"packagingN":1021,"totalCostN":12413,"netProfitN":38487,"netMarginPct":76,"shipping":"₮4,143","customs":"₮373","packaging":"₮1,021","totalCost":"₮12,413","netProfit":"₮38,487"},"Foam Roller Vibrating Electric":{"cost":"₮10,140","price":"₮40,900","costN":10140,"priceN":40900,"shippingN":3730,"customsN":906,"packagingN":1684,"totalCostN":16460,"netProfitN":24440,"netMarginPct":60,"shipping":"₮3,730","customs":"₮906","packaging":"₮1,684","totalCost":"₮16,460","netProfit":"₮24,440"},"Pull-Up Bar Doorframe":{"cost":"₮59,602","price":"₮220,900","costN":59602,"priceN":220900,"shippingN":8212,"customsN":3114,"packagingN":1035,"totalCostN":71963,"netProfitN":148937,"netMarginPct":67,"shipping":"₮8,212","customs":"₮3,114","packaging":"₮1,035","totalCost":"₮71,963","netProfit":"₮148,937"},"Martial Arts Focus Mitts":{"cost":"₮24,795","price":"₮70,900","costN":24795,"priceN":70900,"shippingN":3792,"customsN":2026,"packagingN":1514,"totalCostN":32127,"netProfitN":38773,"netMarginPct":55,"shipping":"₮3,792","customs":"₮2,026","packaging":"₮1,514","totalCost":"₮32,127","netProfit":"₮38,773"},"Swim Buoy Safety Float":{"cost":"₮13,132","price":"₮50,900","costN":13132,"priceN":50900,"shippingN":4892,"customsN":1068,"packagingN":827,"totalCostN":19919,"netProfitN":30981,"netMarginPct":61,"shipping":"₮4,892","customs":"₮1,068","packaging":"₮827","totalCost":"₮19,919","netProfit":"₮30,981"},"Running Belt Hydration Phone":{"cost":"₮14,812","price":"₮70,900","costN":14812,"priceN":70900,"shippingN":3415,"customsN":639,"packagingN":943,"totalCostN":19809,"netProfitN":51091,"netMarginPct":72,"shipping":"₮3,415","customs":"₮639","packaging":"₮943","totalCost":"₮19,809","netProfit":"₮51,091"},"Yoga Wheel Cork":{"cost":"₮14,275","price":"₮50,900","costN":14275,"priceN":50900,"shippingN":4901,"customsN":572,"packagingN":911,"totalCostN":20659,"netProfitN":30241,"netMarginPct":59,"shipping":"₮4,901","customs":"₮572","packaging":"₮911","totalCost":"₮20,659","netProfit":"₮30,241"},"Climbing Finger Trainer":{"cost":"₮11,356","price":"₮50,900","costN":11356,"priceN":50900,"shippingN":4166,"customsN":669,"packagingN":649,"totalCostN":16840,"netProfitN":34060,"netMarginPct":67,"shipping":"₮4,166","customs":"₮669","packaging":"₮649","totalCost":"₮16,840","netProfit":"₮34,060"},"Balance Board Wobble":{"cost":"₮12,516","price":"₮50,900","costN":12516,"priceN":50900,"shippingN":5060,"customsN":766,"packagingN":1734,"totalCostN":20076,"netProfitN":30824,"netMarginPct":61,"shipping":"₮5,060","customs":"₮766","packaging":"₮1,734","totalCost":"₮20,076","netProfit":"₮30,824"},"Knee Brace Compression Sleeve":{"cost":"₮10,980","price":"₮70,900","costN":10980,"priceN":70900,"shippingN":4110,"customsN":847,"packagingN":1346,"totalCostN":17283,"netProfitN":53617,"netMarginPct":76,"shipping":"₮4,110","customs":"₮847","packaging":"₮1,346","totalCost":"₮17,283","netProfit":"₮53,617"},"Battle Rope Training Set":{"cost":"₮145,735","price":"₮290,900","costN":145735,"priceN":290900,"shippingN":8919,"customsN":8281,"packagingN":1707,"totalCostN":164642,"netProfitN":126258,"netMarginPct":43,"shipping":"₮8,919","customs":"₮8,281","packaging":"₮1,707","totalCost":"₮164,642","netProfit":"₮126,258"},"Suspension Trainer TRX Style":{"cost":"₮5,824","price":"₮50,900","costN":5824,"priceN":50900,"shippingN":5037,"customsN":387,"packagingN":1329,"totalCostN":12577,"netProfitN":38323,"netMarginPct":75,"shipping":"₮5,037","customs":"₮387","packaging":"₮1,329","totalCost":"₮12,577","netProfit":"₮38,323"},"Soccer Rebounder Net":{"cost":"₮6,003","price":"₮70,900","costN":6003,"priceN":70900,"shippingN":4584,"customsN":478,"packagingN":1464,"totalCostN":12529,"netProfitN":58371,"netMarginPct":82,"shipping":"₮4,584","customs":"₮478","packaging":"₮1,464","totalCost":"₮12,529","netProfit":"₮58,371"},"Archery Target Set":{"cost":"₮20,992","price":"₮70,900","costN":20992,"priceN":70900,"shippingN":3872,"customsN":1510,"packagingN":1114,"totalCostN":27488,"netProfitN":43412,"netMarginPct":61,"shipping":"₮3,872","customs":"₮1,510","packaging":"₮1,114","totalCost":"₮27,488","netProfit":"₮43,412"},"Padel Racket Beginner Set":{"cost":"₮19,608","price":"₮55,900","costN":19608,"priceN":55900,"shippingN":3486,"customsN":1712,"packagingN":570,"totalCostN":25376,"netProfitN":30524,"netMarginPct":55,"shipping":"₮3,486","customs":"₮1,712","packaging":"₮570","totalCost":"₮25,376","netProfit":"₮30,524"},"Cold Plunge Portable Tub":{"cost":"₮104,030","price":"₮350,900","costN":104030,"priceN":350900,"shippingN":23199,"customsN":8624,"packagingN":1601,"totalCostN":137454,"netProfitN":213446,"netMarginPct":61,"shipping":"₮23,199","customs":"₮8,624","packaging":"₮1,601","totalCost":"₮137,454","netProfit":"₮213,446"},"Ankle Weights Adjustable":{"cost":"₮8,972","price":"₮50,900","costN":8972,"priceN":50900,"shippingN":4337,"customsN":397,"packagingN":1561,"totalCostN":15267,"netProfitN":35633,"netMarginPct":70,"shipping":"₮4,337","customs":"₮397","packaging":"₮1,561","totalCost":"₮15,267","netProfit":"₮35,633"},"Grip Strength Trainer Adjustable":{"cost":"₮9,258","price":"₮50,900","costN":9258,"priceN":50900,"shippingN":3513,"customsN":802,"packagingN":1670,"totalCostN":15243,"netProfitN":35657,"netMarginPct":70,"shipping":"₮3,513","customs":"₮802","packaging":"₮1,670","totalCost":"₮15,243","netProfit":"₮35,657"},"Pickleball Paddle Beginner":{"cost":"₮13,589","price":"₮50,900","costN":13589,"priceN":50900,"shippingN":5126,"customsN":967,"packagingN":1142,"totalCostN":20824,"netProfitN":30076,"netMarginPct":59,"shipping":"₮5,126","customs":"₮967","packaging":"₮1,142","totalCost":"₮20,824","netProfit":"₮30,076"},"Swim Paddles Fingertip":{"cost":"₮3,299","price":"₮45,900","costN":3299,"priceN":45900,"shippingN":4588,"customsN":241,"packagingN":803,"totalCostN":8931,"netProfitN":36969,"netMarginPct":81,"shipping":"₮4,588","customs":"₮241","packaging":"₮803","totalCost":"₮8,931","netProfit":"₮36,969"},"Sled Push Training":{"cost":"₮8,655","price":"₮50,900","costN":8655,"priceN":50900,"shippingN":3615,"customsN":454,"packagingN":980,"totalCostN":13704,"netProfitN":37196,"netMarginPct":73,"shipping":"₮3,615","customs":"₮454","packaging":"₮980","totalCost":"₮13,704","netProfit":"₮37,196"},"Camping Hammock Ultralight":{"cost":"₮8,798","price":"₮70,900","costN":8798,"priceN":70900,"shippingN":5579,"customsN":658,"packagingN":1126,"totalCostN":16161,"netProfitN":54739,"netMarginPct":77,"shipping":"₮5,579","customs":"₮658","packaging":"₮1,126","totalCost":"₮16,161","netProfit":"₮54,739"},"Waterproof Matches Stormproof":{"cost":"₮12,835","price":"₮55,900","costN":12835,"priceN":55900,"shippingN":4466,"customsN":932,"packagingN":1789,"totalCostN":20022,"netProfitN":35878,"netMarginPct":64,"shipping":"₮4,466","customs":"₮932","packaging":"₮1,789","totalCost":"₮20,022","netProfit":"₮35,878"},"Portable Campfire Grill Grate":{"cost":"₮7,413","price":"₮70,900","costN":7413,"priceN":70900,"shippingN":3569,"customsN":419,"packagingN":1562,"totalCostN":12963,"netProfitN":57937,"netMarginPct":82,"shipping":"₮3,569","customs":"₮419","packaging":"₮1,562","totalCost":"₮12,963","netProfit":"₮57,937"},"Solar Lantern Collapsible":{"cost":"₮16,002","price":"₮70,900","costN":16002,"priceN":70900,"shippingN":3631,"customsN":1216,"packagingN":633,"totalCostN":21482,"netProfitN":49418,"netMarginPct":70,"shipping":"₮3,631","customs":"₮1,216","packaging":"₮633","totalCost":"₮21,482","netProfit":"₮49,418"},"Trekking Pole Collapsible":{"cost":"₮26,930","price":"₮70,900","costN":26930,"priceN":70900,"shippingN":4927,"customsN":1378,"packagingN":1504,"totalCostN":34739,"netProfitN":36161,"netMarginPct":51,"shipping":"₮4,927","customs":"₮1,378","packaging":"₮1,504","totalCost":"₮34,739","netProfit":"₮36,161"},"Bug Zapper Racket Electric":{"cost":"₮13,257","price":"₮55,900","costN":13257,"priceN":55900,"shippingN":3273,"customsN":837,"packagingN":1775,"totalCostN":19142,"netProfitN":36758,"netMarginPct":66,"shipping":"₮3,273","customs":"₮837","packaging":"₮1,775","totalCost":"₮19,142","netProfit":"₮36,758"},"Portable Fire Starter Flint":{"cost":"₮23,194","price":"₮70,900","costN":23194,"priceN":70900,"shippingN":3894,"customsN":1356,"packagingN":1018,"totalCostN":29462,"netProfitN":41438,"netMarginPct":58,"shipping":"₮3,894","customs":"₮1,356","packaging":"₮1,018","totalCost":"₮29,462","netProfit":"₮41,438"},"Headlamp Rechargeable LED":{"cost":"₮8,857","price":"₮70,900","costN":8857,"priceN":70900,"shippingN":4800,"customsN":792,"packagingN":1209,"totalCostN":15658,"netProfitN":55242,"netMarginPct":78,"shipping":"₮4,800","customs":"₮792","packaging":"₮1,209","totalCost":"₮15,658","netProfit":"₮55,242"},"Emergency Mylar Blanket Set":{"cost":"₮24,270","price":"₮70,900","costN":24270,"priceN":70900,"shippingN":4054,"customsN":977,"packagingN":1447,"totalCostN":30748,"netProfitN":40152,"netMarginPct":57,"shipping":"₮4,054","customs":"₮977","packaging":"₮1,447","totalCost":"₮30,748","netProfit":"₮40,152"},"Paracord Bracelet Survival":{"cost":"₮23,820","price":"₮70,900","costN":23820,"priceN":70900,"shippingN":4100,"customsN":1479,"packagingN":1155,"totalCostN":30554,"netProfitN":40346,"netMarginPct":57,"shipping":"₮4,100","customs":"₮1,479","packaging":"₮1,155","totalCost":"₮30,554","netProfit":"₮40,346"},"Fishing Rod Ultralight Telescopic":{"cost":"₮6,716","price":"₮70,900","costN":6716,"priceN":70900,"shippingN":5040,"customsN":287,"packagingN":1754,"totalCostN":13797,"netProfitN":57103,"netMarginPct":81,"shipping":"₮5,040","customs":"₮287","packaging":"₮1,754","totalCost":"₮13,797","netProfit":"₮57,103"},"Night Vision Monocular":{"cost":"₮23,411","price":"₮70,900","costN":23411,"priceN":70900,"shippingN":4688,"customsN":1584,"packagingN":1617,"totalCostN":31300,"netProfitN":39600,"netMarginPct":56,"shipping":"₮4,688","customs":"₮1,584","packaging":"₮1,617","totalCost":"₮31,300","netProfit":"₮39,600"},"Portable Shower Solar Bag":{"cost":"₮5,218","price":"₮55,900","costN":5218,"priceN":55900,"shippingN":4215,"customsN":265,"packagingN":1593,"totalCostN":11291,"netProfitN":44609,"netMarginPct":80,"shipping":"₮4,215","customs":"₮265","packaging":"₮1,593","totalCost":"₮11,291","netProfit":"₮44,609"},"Outdoor Knife Multitool":{"cost":"₮15,774","price":"₮70,900","costN":15774,"priceN":70900,"shippingN":4393,"customsN":1172,"packagingN":1133,"totalCostN":22472,"netProfitN":48428,"netMarginPct":68,"shipping":"₮4,393","customs":"₮1,172","packaging":"₮1,133","totalCost":"₮22,472","netProfit":"₮48,428"},"Windproof Lighter Plasma":{"cost":"₮7,413","price":"₮65,900","costN":7413,"priceN":65900,"shippingN":5563,"customsN":507,"packagingN":1135,"totalCostN":14618,"netProfitN":51282,"netMarginPct":78,"shipping":"₮5,563","customs":"₮507","packaging":"₮1,135","totalCost":"₮14,618","netProfit":"₮51,282"},"Hiking Gaiters Waterproof":{"cost":"₮25,144","price":"₮70,900","costN":25144,"priceN":70900,"shippingN":5493,"customsN":2143,"packagingN":1483,"totalCostN":34263,"netProfitN":36637,"netMarginPct":52,"shipping":"₮5,493","customs":"₮2,143","packaging":"₮1,483","totalCost":"₮34,263","netProfit":"₮36,637"},"Water Purification Tablets":{"cost":"₮9,407","price":"₮70,900","costN":9407,"priceN":70900,"shippingN":4071,"customsN":579,"packagingN":849,"totalCostN":14906,"netProfitN":55994,"netMarginPct":79,"shipping":"₮4,071","customs":"₮579","packaging":"₮849","totalCost":"₮14,906","netProfit":"₮55,994"},"Portable Espresso Maker":{"cost":"₮26,578","price":"₮70,900","costN":26578,"priceN":70900,"shippingN":3350,"customsN":2203,"packagingN":792,"totalCostN":32923,"netProfitN":37977,"netMarginPct":54,"shipping":"₮3,350","customs":"₮2,203","packaging":"₮792","totalCost":"₮32,923","netProfit":"₮37,977"},"Magnetic Compass Sighting":{"cost":"₮26,823","price":"₮70,900","costN":26823,"priceN":70900,"shippingN":3440,"customsN":1121,"packagingN":815,"totalCostN":32199,"netProfitN":38701,"netMarginPct":55,"shipping":"₮3,440","customs":"₮1,121","packaging":"₮815","totalCost":"₮32,199","netProfit":"₮38,701"},"Dry Bag Roll Top 20L":{"cost":"₮13,035","price":"₮55,900","costN":13035,"priceN":55900,"shippingN":3229,"customsN":730,"packagingN":1482,"totalCostN":18476,"netProfitN":37424,"netMarginPct":67,"shipping":"₮3,229","customs":"₮730","packaging":"₮1,482","totalCost":"₮18,476","netProfit":"₮37,424"},"Campfire Popcorn Popper":{"cost":"₮4,751","price":"₮60,900","costN":4751,"priceN":60900,"shippingN":4500,"customsN":229,"packagingN":528,"totalCostN":10008,"netProfitN":50892,"netMarginPct":84,"shipping":"₮4,500","customs":"₮229","packaging":"₮528","totalCost":"₮10,008","netProfit":"₮50,892"},"Bear Spray Deterrent":{"cost":"₮8,020","price":"₮70,900","costN":8020,"priceN":70900,"shippingN":5202,"customsN":521,"packagingN":1701,"totalCostN":15444,"netProfitN":55456,"netMarginPct":78,"shipping":"₮5,202","customs":"₮521","packaging":"₮1,701","totalCost":"₮15,444","netProfit":"₮55,456"},"Snowshoe Binding Set":{"cost":"₮8,041","price":"₮55,900","costN":8041,"priceN":55900,"shippingN":3487,"customsN":619,"packagingN":1450,"totalCostN":13597,"netProfitN":42303,"netMarginPct":76,"shipping":"₮3,487","customs":"₮619","packaging":"₮1,450","totalCost":"₮13,597","netProfit":"₮42,303"},"Bouldering Crash Pad Mini":{"cost":"₮3,267","price":"₮30,900","costN":3267,"priceN":30900,"shippingN":3074,"customsN":238,"packagingN":1423,"totalCostN":8002,"netProfitN":22898,"netMarginPct":74,"shipping":"₮3,074","customs":"₮238","packaging":"₮1,423","totalCost":"₮8,002","netProfit":"₮22,898"},"Foldable Camping Chair":{"cost":"₮11,497","price":"₮70,900","costN":11497,"priceN":70900,"shippingN":5531,"customsN":627,"packagingN":1336,"totalCostN":18991,"netProfitN":51909,"netMarginPct":73,"shipping":"₮5,531","customs":"₮627","packaging":"₮1,336","totalCost":"₮18,991","netProfit":"₮51,909"},"Resin Art Starter Kit":{"cost":"₮8,118","price":"₮65,900","costN":8118,"priceN":65900,"shippingN":4759,"customsN":592,"packagingN":593,"totalCostN":14062,"netProfitN":51838,"netMarginPct":79,"shipping":"₮4,759","customs":"₮592","packaging":"₮593","totalCost":"₮14,062","netProfit":"₮51,838"},"Diamond Painting Large Set":{"cost":"₮19,668","price":"₮70,900","costN":19668,"priceN":70900,"shippingN":3578,"customsN":1734,"packagingN":1443,"totalCostN":26423,"netProfitN":44477,"netMarginPct":63,"shipping":"₮3,578","customs":"₮1,734","packaging":"₮1,443","totalCost":"₮26,423","netProfit":"₮44,477"},"Lino Printing Kit":{"cost":"₮6,562","price":"₮60,900","costN":6562,"priceN":60900,"shippingN":3423,"customsN":399,"packagingN":1604,"totalCostN":11988,"netProfitN":48912,"netMarginPct":80,"shipping":"₮3,423","customs":"₮399","packaging":"₮1,604","totalCost":"₮11,988","netProfit":"₮48,912"},"Macrame Cord Kit Beginner":{"cost":"₮20,759","price":"₮70,900","costN":20759,"priceN":70900,"shippingN":4247,"customsN":1342,"packagingN":1619,"totalCostN":27967,"netProfitN":42933,"netMarginPct":61,"shipping":"₮4,247","customs":"₮1,342","packaging":"₮1,619","totalCost":"₮27,967","netProfit":"₮42,933"},"Lock Pick Set Practice":{"cost":"₮8,610","price":"₮70,900","costN":8610,"priceN":70900,"shippingN":3646,"customsN":349,"packagingN":1676,"totalCostN":14281,"netProfitN":56619,"netMarginPct":80,"shipping":"₮3,646","customs":"₮349","packaging":"₮1,676","totalCost":"₮14,281","netProfit":"₮56,619"},"Calligraphy Pen Dip Set":{"cost":"₮5,376","price":"₮50,900","costN":5376,"priceN":50900,"shippingN":4474,"customsN":235,"packagingN":593,"totalCostN":10678,"netProfitN":40222,"netMarginPct":79,"shipping":"₮4,474","customs":"₮235","packaging":"₮593","totalCost":"₮10,678","netProfit":"₮40,222"},"Polymer Clay Starter Set":{"cost":"₮4,998","price":"₮50,900","costN":4998,"priceN":50900,"shippingN":5015,"customsN":414,"packagingN":800,"totalCostN":11227,"netProfitN":39673,"netMarginPct":78,"shipping":"₮5,015","customs":"₮414","packaging":"₮800","totalCost":"₮11,227","netProfit":"₮39,673"},"Leather Craft Tool Set":{"cost":"₮23,831","price":"₮70,900","costN":23831,"priceN":70900,"shippingN":4228,"customsN":1118,"packagingN":1778,"totalCostN":30955,"netProfitN":39945,"netMarginPct":56,"shipping":"₮4,228","customs":"₮1,118","packaging":"₮1,778","totalCost":"₮30,955","netProfit":"₮39,945"},"Soap Making Kit Shea":{"cost":"₮4,096","price":"₮45,900","costN":4096,"priceN":45900,"shippingN":3522,"customsN":278,"packagingN":1222,"totalCostN":9118,"netProfitN":36782,"netMarginPct":80,"shipping":"₮3,522","customs":"₮278","packaging":"₮1,222","totalCost":"₮9,118","netProfit":"₮36,782"},"Kintsugi Repair Kit Gold":{"cost":"₮23,022","price":"₮70,900","costN":23022,"priceN":70900,"shippingN":4206,"customsN":1144,"packagingN":1459,"totalCostN":29831,"netProfitN":41069,"netMarginPct":58,"shipping":"₮4,206","customs":"₮1,144","packaging":"₮1,459","totalCost":"₮29,831","netProfit":"₮41,069"},"Wood Burning Pyrography Kit":{"cost":"₮12,101","price":"₮70,900","costN":12101,"priceN":70900,"shippingN":5340,"customsN":810,"packagingN":1684,"totalCostN":19935,"netProfitN":50965,"netMarginPct":72,"shipping":"₮5,340","customs":"₮810","packaging":"₮1,684","totalCost":"₮19,935","netProfit":"₮50,965"},"Embroidery Hoop Starter Kit":{"cost":"₮7,015","price":"₮60,900","costN":7015,"priceN":60900,"shippingN":4589,"customsN":510,"packagingN":805,"totalCostN":12919,"netProfitN":47981,"netMarginPct":79,"shipping":"₮4,589","customs":"₮510","packaging":"₮805","totalCost":"₮12,919","netProfit":"₮47,981"},"Terrarium Building Kit":{"cost":"₮5,516","price":"₮60,900","costN":5516,"priceN":60900,"shippingN":3912,"customsN":429,"packagingN":1053,"totalCostN":10910,"netProfitN":49990,"netMarginPct":82,"shipping":"₮3,912","customs":"₮429","packaging":"₮1,053","totalCost":"₮10,910","netProfit":"₮49,990"},"Acrylic Pour Painting Kit":{"cost":"₮23,233","price":"₮70,900","costN":23233,"priceN":70900,"shippingN":4530,"customsN":2034,"packagingN":1793,"totalCostN":31590,"netProfitN":39310,"netMarginPct":55,"shipping":"₮4,530","customs":"₮2,034","packaging":"₮1,793","totalCost":"₮31,590","netProfit":"₮39,310"},"Jigsaw Puzzle 2000pc":{"cost":"₮14,137","price":"₮55,900","costN":14137,"priceN":55900,"shippingN":4111,"customsN":1224,"packagingN":769,"totalCostN":20241,"netProfitN":35659,"netMarginPct":64,"shipping":"₮4,111","customs":"₮1,224","packaging":"₮769","totalCost":"₮20,241","netProfit":"₮35,659"},"Metal Detector Entry Level":{"cost":"₮11,723","price":"₮70,900","costN":11723,"priceN":70900,"shippingN":4419,"customsN":720,"packagingN":877,"totalCostN":17739,"netProfitN":53161,"netMarginPct":75,"shipping":"₮4,419","customs":"₮720","packaging":"₮877","totalCost":"₮17,739","netProfit":"₮53,161"},"Plant Press Flower Drying":{"cost":"₮19,938","price":"₮70,900","costN":19938,"priceN":70900,"shippingN":4807,"customsN":1154,"packagingN":579,"totalCostN":26478,"netProfitN":44422,"netMarginPct":63,"shipping":"₮4,807","customs":"₮1,154","packaging":"₮579","totalCost":"₮26,478","netProfit":"₮44,422"},"Ukulele Beginner Bundle":{"cost":"₮14,100","price":"₮70,900","costN":14100,"priceN":70900,"shippingN":5276,"customsN":1164,"packagingN":1037,"totalCostN":21577,"netProfitN":49323,"netMarginPct":70,"shipping":"₮5,276","customs":"₮1,164","packaging":"₮1,037","totalCost":"₮21,577","netProfit":"₮49,323"},"Sticker Vinyl Cutting Machine":{"cost":"₮1,766","price":"₮55,900","costN":1766,"priceN":55900,"shippingN":4138,"customsN":73,"packagingN":1730,"totalCostN":7707,"netProfitN":48193,"netMarginPct":86,"shipping":"₮4,138","customs":"₮73","packaging":"₮1,730","totalCost":"₮7,707","netProfit":"₮48,193"},"Seed Bead Loom Kit":{"cost":"₮22,046","price":"₮70,900","costN":22046,"priceN":70900,"shippingN":4498,"customsN":1574,"packagingN":614,"totalCostN":28732,"netProfitN":42168,"netMarginPct":59,"shipping":"₮4,498","customs":"₮1,574","packaging":"₮614","totalCost":"₮28,732","netProfit":"₮42,168"},"Mushroom Growing Kit Hobby":{"cost":"₮18,774","price":"₮70,900","costN":18774,"priceN":70900,"shippingN":4445,"customsN":842,"packagingN":903,"totalCostN":24964,"netProfitN":45936,"netMarginPct":65,"shipping":"₮4,445","customs":"₮842","packaging":"₮903","totalCost":"₮24,964","netProfit":"₮45,936"},"Luggage Tag Personalized":{"cost":"₮26,068","price":"₮70,900","costN":26068,"priceN":70900,"shippingN":3587,"customsN":1460,"packagingN":548,"totalCostN":31663,"netProfitN":39237,"netMarginPct":55,"shipping":"₮3,587","customs":"₮1,460","packaging":"₮548","totalCost":"₮31,663","netProfit":"₮39,237"},"Foldable Tote Bag Travel":{"cost":"₮9,486","price":"₮55,900","costN":9486,"priceN":55900,"shippingN":2954,"customsN":437,"packagingN":1780,"totalCostN":14657,"netProfitN":41243,"netMarginPct":74,"shipping":"₮2,954","customs":"₮437","packaging":"₮1,780","totalCost":"₮14,657","netProfit":"₮41,243"},"Jigsaw Puzzle 1000pc":{"cost":"₮3,109","price":"₮55,900","costN":3109,"priceN":55900,"shippingN":4763,"customsN":187,"packagingN":1662,"totalCostN":9721,"netProfitN":46179,"netMarginPct":83,"shipping":"₮4,763","customs":"₮187","packaging":"₮1,662","totalCost":"₮9,721","netProfit":"₮46,179"},"Luggage Packing Folders":{"cost":"₮4,323","price":"₮45,900","costN":4323,"priceN":45900,"shippingN":3680,"customsN":229,"packagingN":1670,"totalCostN":9902,"netProfitN":35998,"netMarginPct":78,"shipping":"₮3,680","customs":"₮229","packaging":"₮1,670","totalCost":"₮9,902","netProfit":"₮35,998"}};
+const RATINGS_DATA={"Magnetic Phone Mount Dashboard":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Power Bank 20000mAh":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Smart Ring NFC Payment":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Foldable Bluetooth Keyboard":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wireless Earbuds Bone Conduction":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"LED Pixel Art Display Board":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Thermal Label Printer Mini":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Smart Watch Budget Fitness":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Retractable USB-C Cable Reel":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Action Camera Accessories Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Monitor USB-C":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Fingerprint Padlock Smart":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Mini Drone Pocket Foldable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wireless Charging Stand 3in1":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Handheld Game Console Retro":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Solar Power Bank Charger":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bluetooth Tracker Card Slim":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Projector Pico":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Smart Audio Sunglasses":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Keyboard Mechanical Compact":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Phone Grip Expanding Stand":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Digital Voice Recorder Mini":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"LED Gaming Mouse Pad XL":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Air Pump Electric":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wireless Presenter Remote":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Charging Cable Organizer Roll":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"RGB Desk Fan Mini USB":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Smart IR Remote Blaster":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Smart Pen Digitizer Writing":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Laptop Cooling Pad":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Magnetic Sunglasses Clip-On":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Invisible Bra Strapless Silicone":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Magnetic Clasp Bracelet Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Shoe Stretcher Adjustable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Anti-Blister Heel Pad":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Tie Dye Kit Premium":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Leather Belt Hole Punch":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Heat Transfer Vinyl Roll":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Fabric Shaver":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Clip-On Collar Extender Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Magnetic Jewelry Clasp Converter":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Shoe Deodorizer Spray":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Velvet Hangers Slim Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Steamer Travel Mini":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Hat Shaper Block Steaming":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Vintage Scarf Ring Clip":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Shoe Tree Adjustable Cedar":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Iron-On Patch Set Embroidered":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Silicone Ring Set Athletic":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Compression Socks Performance":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Flat Cap Newsboy Hat":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Zipper Pull Replacement Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Underwear Bra Travel Case":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Snap Button Kit Sewing":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Clothes Rack Garment Display":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet Camera Treat Dispenser":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Slow Feeder Bowl Dog":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Calming Anxiety Vest Dog":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet DNA Test Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Automatic Laser Cat Toy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dog Seat Belt Car Harness":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Cat Wall Shelves Climbing":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet Water Fountain Stainless":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Deshedding Grooming Glove":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dog Paw Cleaner Cup":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet Stroller Foldable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Fish Tank LED Filter Combo":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bird Cage Accessories Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dog Cooling Mat Gel":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet First Aid Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Interactive Puzzle Toy Dog":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Cat Tunnel Crinkle Play":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dog Snuffle Mat Feeding":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Hamster Wheel Silent":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet Nail Grinder Electric":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dog Toothbrush Finger Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"GPS Pet Tracker Collar":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pet Odor Enzyme Spray":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Automatic Pet Feeder WiFi":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dog Life Jacket Swimming":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Vacuum Cordless Wet-Dry":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dash Cam Front Rear Dual":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Organizer Back Seat":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Trunk Organizer Collapsible":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Air Purifier Ionizer":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Heated Car Seat Cushion":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Cup Holder Expander":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Jump Starter Portable Battery":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Blind Spot Mirror":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Tire Inflator Portable Digital":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Seat Gap Filler":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Steering Wheel Desk Tray":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Window Shade UV Foldable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"GPS Tracker Hidden Magnetic":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Door Edge Guard":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Windshield Cleaner Tool Long":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Emergency Car Escape Tool":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Key Signal Blocker Pouch":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Steering Wheel Lock Bar":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Logo LED Puddle Light":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Auto Window Tint Film":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Retractable Cargo Net Trunk":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Ambient LED Strip Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dashboard Camera Hardwire Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Phone Holder Windshield":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Packing Cubes Set 6pc":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Luggage Scale Digital":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"RFID Blocking Wallet Slim":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Travel Adapter Universal":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Inflatable Travel Pillow Neck":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Shoe Bag Travel Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Money Belt Hidden Waist":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Passport Holder Neck Pouch":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Compression Travel Bag Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Clothes Washing Bag":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Silicone Travel Bottles Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Beach Waterproof Dry Bag":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Travel Towel Microfiber Fast Dry":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Anti-Theft Backpack Cut-Proof":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Travel Jewelry Organizer Roll":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Laundry Clothesline":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Scarf Travel Blanket Dual":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Waterproof Phone Case Diving":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Neck Fan Wearable Hands-Free":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Travel Document Organizer Wallet":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Resistance Band Set Loop":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Ab Roller Wheel Foldable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Massage Gun Mini Pocket":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Speed Jump Rope Digital":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wrist Wraps Weightlifting":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Foam Roller Vibrating Electric":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pull-Up Bar Doorframe":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Martial Arts Focus Mitts":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Swim Buoy Safety Float":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Running Belt Hydration Phone":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Yoga Wheel Cork":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Climbing Finger Trainer":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Balance Board Wobble":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Knee Brace Compression Sleeve":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Battle Rope Training Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Suspension Trainer TRX Style":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Soccer Rebounder Net":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Archery Target Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Padel Racket Beginner Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Cold Plunge Portable Tub":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Ankle Weights Adjustable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Grip Strength Trainer Adjustable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pickleball Paddle Beginner":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Swim Paddles Fingertip":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sled Push Training":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Camping Hammock Ultralight":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Waterproof Matches Stormproof":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Campfire Grill Grate":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Solar Lantern Collapsible":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Trekking Pole Collapsible":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bug Zapper Racket Electric":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Fire Starter Flint":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Headlamp Rechargeable LED":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Emergency Mylar Blanket Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Paracord Bracelet Survival":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Fishing Rod Ultralight Telescopic":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Night Vision Monocular":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Shower Solar Bag":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Outdoor Knife Multitool":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Windproof Lighter Plasma":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Hiking Gaiters Waterproof":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Water Purification Tablets":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Espresso Maker":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Magnetic Compass Sighting":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dry Bag Roll Top 20L":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Campfire Popcorn Popper":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bear Spray Deterrent":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Snowshoe Binding Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bouldering Crash Pad Mini":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Foldable Camping Chair":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Resin Art Starter Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Diamond Painting Large Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Lino Printing Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Macrame Cord Kit Beginner":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Lock Pick Set Practice":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Calligraphy Pen Dip Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Polymer Clay Starter Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Leather Craft Tool Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Soap Making Kit Shea":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kintsugi Repair Kit Gold":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wood Burning Pyrography Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Embroidery Hoop Starter Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Terrarium Building Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Acrylic Pour Painting Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Jigsaw Puzzle 2000pc":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Metal Detector Entry Level":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Plant Press Flower Drying":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Ukulele Beginner Bundle":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sticker Vinyl Cutting Machine":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Seed Bead Loom Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Mushroom Growing Kit Hobby":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Luggage Tag Personalized":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Foldable Tote Bag Travel":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Jigsaw Puzzle 1000pc":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Luggage Packing Folders":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"}};
+const PRODUCTS = [
+  // Electronics
+  "Magnetic Phone Mount Dashboard",
+  "Portable Power Bank 20000mAh",
+  "Smart Ring NFC Payment",
+  "Foldable Bluetooth Keyboard",
+  "Wireless Earbuds Bone Conduction",
+  "LED Pixel Art Display Board",
+  "Thermal Label Printer Mini",
+  "Smart Watch Budget Fitness",
+  "Retractable USB-C Cable Reel",
+  "Action Camera Accessories Kit",
+  "Portable Monitor USB-C",
+  "Fingerprint Padlock Smart",
+  "Mini Drone Pocket Foldable",
+  "Wireless Charging Stand 3in1",
+  "Handheld Game Console Retro",
+  "Solar Power Bank Charger",
+  "Bluetooth Tracker Card Slim",
+  "Portable Projector Pico",
+  "Smart Audio Sunglasses",
+  "Keyboard Mechanical Compact",
+  "Phone Grip Expanding Stand",
+  "Digital Voice Recorder Mini",
+  "LED Gaming Mouse Pad XL",
+  "Portable Air Pump Electric",
+  "Wireless Presenter Remote",
+  "Charging Cable Organizer Roll",
+  "RGB Desk Fan Mini USB",
+  "Smart IR Remote Blaster",
+  "Smart Pen Digitizer Writing",
+  "Portable Laptop Cooling Pad",
+  // Fashion
+  "Magnetic Sunglasses Clip-On",
+  "Invisible Bra Strapless Silicone",
+  "Magnetic Clasp Bracelet Set",
+  "Shoe Stretcher Adjustable",
+  "Anti-Blister Heel Pad",
+  "Tie Dye Kit Premium",
+  "Leather Belt Hole Punch",
+  "Heat Transfer Vinyl Roll",
+  "Portable Fabric Shaver",
+  "Clip-On Collar Extender Set",
+  "Magnetic Jewelry Clasp Converter",
+  "Shoe Deodorizer Spray",
+  "Velvet Hangers Slim Set",
+  "Portable Steamer Travel Mini",
+  "Hat Shaper Block Steaming",
+  "Vintage Scarf Ring Clip",
+  "Shoe Tree Adjustable Cedar",
+  "Iron-On Patch Set Embroidered",
+  "Silicone Ring Set Athletic",
+  "Compression Socks Performance",
+  "Flat Cap Newsboy Hat",
+  "Zipper Pull Replacement Kit",
+  "Underwear Bra Travel Case",
+  "Snap Button Kit Sewing",
+  "Clothes Rack Garment Display",
+  // Pet
+  "Pet Camera Treat Dispenser",
+  "Slow Feeder Bowl Dog",
+  "Calming Anxiety Vest Dog",
+  "Pet DNA Test Kit",
+  "Automatic Laser Cat Toy",
+  "Dog Seat Belt Car Harness",
+  "Cat Wall Shelves Climbing",
+  "Pet Water Fountain Stainless",
+  "Deshedding Grooming Glove",
+  "Dog Paw Cleaner Cup",
+  "Pet Stroller Foldable",
+  "Fish Tank LED Filter Combo",
+  "Bird Cage Accessories Set",
+  "Dog Cooling Mat Gel",
+  "Pet First Aid Kit",
+  "Interactive Puzzle Toy Dog",
+  "Cat Tunnel Crinkle Play",
+  "Dog Snuffle Mat Feeding",
+  "Hamster Wheel Silent",
+  "Pet Nail Grinder Electric",
+  "Dog Toothbrush Finger Set",
+  "GPS Pet Tracker Collar",
+  "Pet Odor Enzyme Spray",
+  "Automatic Pet Feeder WiFi",
+  "Dog Life Jacket Swimming",
+  // Car
+  "Car Vacuum Cordless Wet-Dry",
+  "Dash Cam Front Rear Dual",
+  "Car Organizer Back Seat",
+  "Trunk Organizer Collapsible",
+  "Car Air Purifier Ionizer",
+  "Heated Car Seat Cushion",
+  "Car Cup Holder Expander",
+  "Jump Starter Portable Battery",
+  "Car Blind Spot Mirror",
+  "Tire Inflator Portable Digital",
+  "Car Seat Gap Filler",
+  "Steering Wheel Desk Tray",
+  "Car Window Shade UV Foldable",
+  "GPS Tracker Hidden Magnetic",
+  "Car Door Edge Guard",
+  "Windshield Cleaner Tool Long",
+  "Emergency Car Escape Tool",
+  "Car Key Signal Blocker Pouch",
+  "Steering Wheel Lock Bar",
+  "Car Logo LED Puddle Light",
+  "Auto Window Tint Film",
+  "Retractable Cargo Net Trunk",
+  "Car Ambient LED Strip Kit",
+  "Dashboard Camera Hardwire Kit",
+  "Car Phone Holder Windshield",
+  // Travel
+  "Packing Cubes Set 6pc",
+  "Luggage Scale Digital",
+  "RFID Blocking Wallet Slim",
+  "Travel Adapter Universal",
+  "Inflatable Travel Pillow Neck",
+  "Shoe Bag Travel Set",
+  "Money Belt Hidden Waist",
+  "Passport Holder Neck Pouch",
+  "Compression Travel Bag Set",
+  "Portable Clothes Washing Bag",
+  "Silicone Travel Bottles Set",
+  "Beach Waterproof Dry Bag",
+  "Travel Towel Microfiber Fast Dry",
+  "Anti-Theft Backpack Cut-Proof",
+  "Travel Jewelry Organizer Roll",
+  "Portable Laundry Clothesline",
+  "Scarf Travel Blanket Dual",
+  "Waterproof Phone Case Diving",
+  "Neck Fan Wearable Hands-Free",
+  "Travel Document Organizer Wallet",
+  // Sports
+  "Resistance Band Set Loop",
+  "Ab Roller Wheel Foldable",
+  "Massage Gun Mini Pocket",
+  "Speed Jump Rope Digital",
+  "Wrist Wraps Weightlifting",
+  "Foam Roller Vibrating Electric",
+  "Pull-Up Bar Doorframe",
+  "Martial Arts Focus Mitts",
+  "Swim Buoy Safety Float",
+  "Running Belt Hydration Phone",
+  "Yoga Wheel Cork",
+  "Climbing Finger Trainer",
+  "Balance Board Wobble",
+  "Knee Brace Compression Sleeve",
+  "Battle Rope Training Set",
+  "Suspension Trainer TRX Style",
+  "Soccer Rebounder Net",
+  "Archery Target Set",
+  "Padel Racket Beginner Set",
+  "Cold Plunge Portable Tub",
+  "Ankle Weights Adjustable",
+  "Grip Strength Trainer Adjustable",
+  "Pickleball Paddle Beginner",
+  "Swim Paddles Fingertip",
+  "Sled Push Training",
+  // Outdoor
+  "Camping Hammock Ultralight",
+  "Waterproof Matches Stormproof",
+  "Portable Campfire Grill Grate",
+  "Solar Lantern Collapsible",
+  "Trekking Pole Collapsible",
+  "Bug Zapper Racket Electric",
+  "Portable Fire Starter Flint",
+  "Headlamp Rechargeable LED",
+  "Emergency Mylar Blanket Set",
+  "Paracord Bracelet Survival",
+  "Fishing Rod Ultralight Telescopic",
+  "Night Vision Monocular",
+  "Portable Shower Solar Bag",
+  "Outdoor Knife Multitool",
+  "Windproof Lighter Plasma",
+  "Hiking Gaiters Waterproof",
+  "Water Purification Tablets",
+  "Portable Espresso Maker",
+  "Magnetic Compass Sighting",
+  "Dry Bag Roll Top 20L",
+  "Campfire Popcorn Popper",
+  "Bear Spray Deterrent",
+  "Snowshoe Binding Set",
+  "Bouldering Crash Pad Mini",
+  "Foldable Camping Chair",
+  // Hobby
+  "Resin Art Starter Kit",
+  "Diamond Painting Large Set",
+  "Lino Printing Kit",
+  "Macrame Cord Kit Beginner",
+  "Lock Pick Set Practice",
+  "Calligraphy Pen Dip Set",
+  "Polymer Clay Starter Set",
+  "Leather Craft Tool Set",
+  "Soap Making Kit Shea",
+  "Kintsugi Repair Kit Gold",
+  "Wood Burning Pyrography Kit",
+  "Embroidery Hoop Starter Kit",
+  "Terrarium Building Kit",
+  "Acrylic Pour Painting Kit",
+  "Jigsaw Puzzle 2000pc",
+  "Metal Detector Entry Level",
+  "Plant Press Flower Drying",
+  "Ukulele Beginner Bundle",
+  "Sticker Vinyl Cutting Machine",
+  "Seed Bead Loom Kit",
+  "Mushroom Growing Kit Hobby",
+  // Travel
+  "Luggage Tag Personalized",
+  "Foldable Tote Bag Travel",
+  // Hobby
+  "Jigsaw Puzzle 1000pc",
+  // Travel
+  "Luggage Packing Folders",
+];
+const CAT_MAP = {"Magnetic Phone Mount Dashboard":"Electronics","Portable Power Bank 20000mAh":"Electronics","Smart Ring NFC Payment":"Electronics","Foldable Bluetooth Keyboard":"Electronics","Wireless Earbuds Bone Conduction":"Electronics","LED Pixel Art Display Board":"Electronics","Thermal Label Printer Mini":"Electronics","Smart Watch Budget Fitness":"Electronics","Retractable USB-C Cable Reel":"Electronics","Action Camera Accessories Kit":"Electronics","Portable Monitor USB-C":"Electronics","Fingerprint Padlock Smart":"Electronics","Mini Drone Pocket Foldable":"Electronics","Wireless Charging Stand 3in1":"Electronics","Handheld Game Console Retro":"Electronics","Solar Power Bank Charger":"Electronics","Bluetooth Tracker Card Slim":"Electronics","Portable Projector Pico":"Electronics","Smart Audio Sunglasses":"Electronics","Keyboard Mechanical Compact":"Electronics","Phone Grip Expanding Stand":"Electronics","Digital Voice Recorder Mini":"Electronics","LED Gaming Mouse Pad XL":"Electronics","Portable Air Pump Electric":"Electronics","Wireless Presenter Remote":"Electronics","Charging Cable Organizer Roll":"Electronics","RGB Desk Fan Mini USB":"Electronics","Smart IR Remote Blaster":"Electronics","Smart Pen Digitizer Writing":"Electronics","Portable Laptop Cooling Pad":"Electronics","Magnetic Sunglasses Clip-On":"Fashion","Invisible Bra Strapless Silicone":"Fashion","Magnetic Clasp Bracelet Set":"Fashion","Shoe Stretcher Adjustable":"Fashion","Anti-Blister Heel Pad":"Fashion","Tie Dye Kit Premium":"Fashion","Leather Belt Hole Punch":"Fashion","Heat Transfer Vinyl Roll":"Fashion","Portable Fabric Shaver":"Fashion","Clip-On Collar Extender Set":"Fashion","Magnetic Jewelry Clasp Converter":"Fashion","Shoe Deodorizer Spray":"Fashion","Velvet Hangers Slim Set":"Fashion","Portable Steamer Travel Mini":"Fashion","Hat Shaper Block Steaming":"Fashion","Vintage Scarf Ring Clip":"Fashion","Shoe Tree Adjustable Cedar":"Fashion","Iron-On Patch Set Embroidered":"Fashion","Silicone Ring Set Athletic":"Fashion","Compression Socks Performance":"Fashion","Flat Cap Newsboy Hat":"Fashion","Zipper Pull Replacement Kit":"Fashion","Underwear Bra Travel Case":"Fashion","Snap Button Kit Sewing":"Fashion","Clothes Rack Garment Display":"Fashion","Pet Camera Treat Dispenser":"Pet","Slow Feeder Bowl Dog":"Pet","Calming Anxiety Vest Dog":"Pet","Pet DNA Test Kit":"Pet","Automatic Laser Cat Toy":"Pet","Dog Seat Belt Car Harness":"Pet","Cat Wall Shelves Climbing":"Pet","Pet Water Fountain Stainless":"Pet","Deshedding Grooming Glove":"Pet","Dog Paw Cleaner Cup":"Pet","Pet Stroller Foldable":"Pet","Fish Tank LED Filter Combo":"Pet","Bird Cage Accessories Set":"Pet","Dog Cooling Mat Gel":"Pet","Pet First Aid Kit":"Pet","Interactive Puzzle Toy Dog":"Pet","Cat Tunnel Crinkle Play":"Pet","Dog Snuffle Mat Feeding":"Pet","Hamster Wheel Silent":"Pet","Pet Nail Grinder Electric":"Pet","Dog Toothbrush Finger Set":"Pet","GPS Pet Tracker Collar":"Pet","Pet Odor Enzyme Spray":"Pet","Automatic Pet Feeder WiFi":"Pet","Dog Life Jacket Swimming":"Pet","Car Vacuum Cordless Wet-Dry":"Car","Dash Cam Front Rear Dual":"Car","Car Organizer Back Seat":"Car","Trunk Organizer Collapsible":"Car","Car Air Purifier Ionizer":"Car","Heated Car Seat Cushion":"Car","Car Cup Holder Expander":"Car","Jump Starter Portable Battery":"Car","Car Blind Spot Mirror":"Car","Tire Inflator Portable Digital":"Car","Car Seat Gap Filler":"Car","Steering Wheel Desk Tray":"Car","Car Window Shade UV Foldable":"Car","GPS Tracker Hidden Magnetic":"Car","Car Door Edge Guard":"Car","Windshield Cleaner Tool Long":"Car","Emergency Car Escape Tool":"Car","Car Key Signal Blocker Pouch":"Car","Steering Wheel Lock Bar":"Car","Car Logo LED Puddle Light":"Car","Auto Window Tint Film":"Car","Retractable Cargo Net Trunk":"Car","Car Ambient LED Strip Kit":"Car","Dashboard Camera Hardwire Kit":"Car","Car Phone Holder Windshield":"Car","Packing Cubes Set 6pc":"Travel","Luggage Scale Digital":"Travel","RFID Blocking Wallet Slim":"Travel","Travel Adapter Universal":"Travel","Inflatable Travel Pillow Neck":"Travel","Shoe Bag Travel Set":"Travel","Money Belt Hidden Waist":"Travel","Passport Holder Neck Pouch":"Travel","Compression Travel Bag Set":"Travel","Portable Clothes Washing Bag":"Travel","Silicone Travel Bottles Set":"Travel","Beach Waterproof Dry Bag":"Travel","Travel Towel Microfiber Fast Dry":"Travel","Anti-Theft Backpack Cut-Proof":"Travel","Travel Jewelry Organizer Roll":"Travel","Portable Laundry Clothesline":"Travel","Scarf Travel Blanket Dual":"Travel","Waterproof Phone Case Diving":"Travel","Neck Fan Wearable Hands-Free":"Travel","Travel Document Organizer Wallet":"Travel","Resistance Band Set Loop":"Sports","Ab Roller Wheel Foldable":"Sports","Massage Gun Mini Pocket":"Sports","Speed Jump Rope Digital":"Sports","Wrist Wraps Weightlifting":"Sports","Foam Roller Vibrating Electric":"Sports","Pull-Up Bar Doorframe":"Sports","Martial Arts Focus Mitts":"Sports","Swim Buoy Safety Float":"Sports","Running Belt Hydration Phone":"Sports","Yoga Wheel Cork":"Sports","Climbing Finger Trainer":"Sports","Balance Board Wobble":"Sports","Knee Brace Compression Sleeve":"Sports","Battle Rope Training Set":"Sports","Suspension Trainer TRX Style":"Sports","Soccer Rebounder Net":"Sports","Archery Target Set":"Sports","Padel Racket Beginner Set":"Sports","Cold Plunge Portable Tub":"Sports","Ankle Weights Adjustable":"Sports","Grip Strength Trainer Adjustable":"Sports","Pickleball Paddle Beginner":"Sports","Swim Paddles Fingertip":"Sports","Sled Push Training":"Sports","Camping Hammock Ultralight":"Outdoor","Waterproof Matches Stormproof":"Outdoor","Portable Campfire Grill Grate":"Outdoor","Solar Lantern Collapsible":"Outdoor","Trekking Pole Collapsible":"Outdoor","Bug Zapper Racket Electric":"Outdoor","Portable Fire Starter Flint":"Outdoor","Headlamp Rechargeable LED":"Outdoor","Emergency Mylar Blanket Set":"Outdoor","Paracord Bracelet Survival":"Outdoor","Fishing Rod Ultralight Telescopic":"Outdoor","Night Vision Monocular":"Outdoor","Portable Shower Solar Bag":"Outdoor","Outdoor Knife Multitool":"Outdoor","Windproof Lighter Plasma":"Outdoor","Hiking Gaiters Waterproof":"Outdoor","Water Purification Tablets":"Outdoor","Portable Espresso Maker":"Outdoor","Magnetic Compass Sighting":"Outdoor","Dry Bag Roll Top 20L":"Outdoor","Campfire Popcorn Popper":"Outdoor","Bear Spray Deterrent":"Outdoor","Snowshoe Binding Set":"Outdoor","Bouldering Crash Pad Mini":"Outdoor","Foldable Camping Chair":"Outdoor","Resin Art Starter Kit":"Hobby","Diamond Painting Large Set":"Hobby","Lino Printing Kit":"Hobby","Macrame Cord Kit Beginner":"Hobby","Lock Pick Set Practice":"Hobby","Calligraphy Pen Dip Set":"Hobby","Polymer Clay Starter Set":"Hobby","Leather Craft Tool Set":"Hobby","Soap Making Kit Shea":"Hobby","Kintsugi Repair Kit Gold":"Hobby","Wood Burning Pyrography Kit":"Hobby","Embroidery Hoop Starter Kit":"Hobby","Terrarium Building Kit":"Hobby","Acrylic Pour Painting Kit":"Hobby","Jigsaw Puzzle 2000pc":"Hobby","Metal Detector Entry Level":"Hobby","Plant Press Flower Drying":"Hobby","Ukulele Beginner Bundle":"Hobby","Sticker Vinyl Cutting Machine":"Hobby","Seed Bead Loom Kit":"Hobby","Mushroom Growing Kit Hobby":"Hobby","Luggage Tag Personalized":"Travel","Foldable Tote Bag Travel":"Travel","Jigsaw Puzzle 1000pc":"Hobby","Luggage Packing Folders":"Travel"};
+
+const RL={value:"Үнэ цэн",wow:"Wow Factor",saturation:"Өрсөлдөөн",easy:"Хялбар байдал",margin:"Ашиг",unique:"Өвөрмөц",problem:"Асуудал шийднэ"};
+const ROM={value:["good","notbad","bad"],wow:["wow","good","notyet","bad"],saturation:["notyet","notbad","bad"],easy:["vgood","good","notbad","bad"],margin:["5x","3x"],unique:["yes","no"],problem:["yes","no"]};
+const VL={good:"Сайн",wow:"Wow",notbad:"Дунд",bad:"Муу",yes:"Тийм",no:"Үгүй",notyet:"Одоохондоо үгүй",vgood:"Маш сайн","3x":"3x","5x":"5x"};
+
+let curFilter="all",curIdx=-1,curView="grid",userRatings={},userImages={},imgModalIdx=-1,pendingImg=null;
+
+function loadData(){try{userRatings=JSON.parse(localStorage.getItem('goods_v1_rat')||'{}')||{}}catch{userRatings={}}try{userImages=JSON.parse(localStorage.getItem('goods_v1_img')||'{}')||{}}catch{userImages={}}}
+function saveRat(){localStorage.setItem('goods_v1_rat',JSON.stringify(userRatings));}
+function saveImgs(){try{localStorage.setItem('goods_v1_img',JSON.stringify(userImages));}catch{alert('Storage дүүрлээ.');}}
+function getR(n){return Object.assign({},RATINGS_DATA[n]||{},userRatings[n]||{});}
+function getImg(n){return userImages[n]||null;}
+
+window.addEventListener('DOMContentLoaded',()=>{loadData();renderAll();updateStats();});
+
+function setFilter(btn,cat){document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');curFilter=cat;applyFilters();}
+function setView(v){curView=v;document.getElementById('vb-grid').classList.toggle('active',v==='grid');document.getElementById('vb-table').classList.toggle('active',v==='table');document.getElementById('view-grid').style.display=v==='grid'?'':'none';document.getElementById('view-table').style.display=v==='table'?'':'none';}
+
+function updateStats(){let rated=0,wow=0,fx=0;PRODUCTS.forEach(n=>{const r=getR(n);if(r.value)rated++;if(r.wow==='wow')wow++;if(r.margin==='5x')fx++;});document.getElementById('s-rated').textContent=rated;document.getElementById('s-wow').textContent=wow;document.getElementById('s-5x').textContent=fx;}
+function gProfit(n){var p=PRICE_DATA[n];return p&&p.netProfitN!==undefined?p.netProfitN:null;}
+function fMNT(n){return '₮'+n.toLocaleString();}
+function gPct(n){var p=PRICE_DATA[n];return p&&p.netMarginPct!==undefined?p.netMarginPct:0;}
+function chipC(v){return['good','wow','yes','vgood','5x'].includes(v)?'g':['notbad','notyet','3x'].includes(v)?'n':'b';}
+
+function renderAll(){renderGrid();renderTbl();}
+function renderGrid(){
+  const grid=document.getElementById('prod-grid');if(!grid)return;
+  grid.innerHTML=PRODUCTS.map((name,i)=>{
+    const cat=CAT_MAP[name]||'Goods',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—',costN:0,priceN:0};
+    const profit=gProfit(name),pct=gPct(name),emoji=CAT_EMOJI[cat]||'✨',grad=CAT_GRADIENT[cat]||'linear-gradient(135deg,#1a1a1a,#0a0a0a)';
+    const imgUrl=getImg(name);
+    const wow=R.wow==='wow'?'<div class="pc-wow wow">★ Wow</div>':'';
+    const imgH=imgUrl?`<img src="${imgUrl}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="pc-fb" style="display:none;position:absolute;inset:0;background:${grad};align-items:center;justify-content:center"><span style="font-size:40px;opacity:.6">${emoji}</span></div>`:`<div style="width:100%;height:100%;background:${grad};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><span style="font-size:40px;opacity:.6">${emoji}</span><span style="font-size:7px;color:#555;letter-spacing:2px;text-transform:uppercase">${cat}</span></div>`;
+    const chips=['value','saturation','margin'].map(k=>{const v=R[k];return v?`<span class="chip ${chipC(v)}">${RL[k]}: ${VL[v]}</span>`:'';}).join('');
+    return `<div class="pc" id="pc${i}" onclick="openPanel(${i})">
+      <div class="pc-img">${imgH}<div class="pc-overlay"></div><div class="pc-cat-tag">${cat}</div>${wow}<button class="img-edit-btn" onclick="openImgModal(${i},event)">✏️</button></div>
+      <div class="pc-body"><div class="pc-name">${name}</div>
+        <div class="pc-prices"><div class="pc-pc"><div class="pc-pl">Авах үнэ</div><div class="pc-pv">${p.cost}</div></div><div class="pc-pc"><div class="pc-pl">Зарах үнэ</div><div class="pc-pv">${p.price}</div></div></div>
+        <div class="pc-profit"><span class="pc-pl2">Цэвэр ашиг</span><span class="pc-pval">${profit?fMNT(profit)+(pct?' ('+pct+'%)':''):'—'}</span></div>
+      </div>
+      <div class="pc-chips">${chips}</div>
+      <button class="pc-open">Дэлгэрэнгүй <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </div>`;
+  }).join('');
+}
+function renderTbl(){
+  const tbody=document.getElementById('tbl-body');if(!tbody)return;
+  const lb=(cls,lbl,href)=>`<a class="lb ${cls}" href="${href}" target="_blank"><span class="dot"></span>${lbl}</a>`;
+  tbody.innerHTML=PRODUCTS.map((name,i)=>{
+    const cat=CAT_MAP[name]||'Goods',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—'},profit=gProfit(name),enc=encodeURIComponent(name);
+    const ratings=Object.keys(RL).map(k=>`<div class="rr"><span class="rk">${RL[k]}</span><span class="rb val-${R[k]}">${VL[R[k]]||'—'}</span></div>`).join('');
+    return `<tr onclick="openPanel(${i})" id="tr${i}"><td class="tnum">${String(i+1).padStart(3,'0')}</td><td><div class="tname">${name}</div><span class="tcat">${cat}</span></td><td class="tprice">${p.cost}</td><td class="tprice">${p.price}</td><td class="tprice tprofit">${profit?fMNT(profit):'—'}</td><td><div class="links-col">${lb('ali','Alibaba',`https://www.alibaba.com/trade/search?SearchText=${enc}`)}${lb('tik','TIK',`https://www.tiktok.com/search?q=${enc}`)}${lb('ig','IG',`https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/ /g,''))}`)}${lb('fb','FB',`https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=${enc}&search_type=keyword_unordered`)}${lb('amz','AMZ',`https://www.amazon.com/s?k=${enc}`)}</div></td><td><div class="rc">${ratings}</div></td></tr>`;
+  }).join('');
+}
+function openPanel(idx){
+  curIdx=idx;const name=PRODUCTS[idx],cat=CAT_MAP[name]||'Goods',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—',costN:0,priceN:0};
+  const profit=gProfit(name),pct=gPct(name),emoji=CAT_EMOJI[cat]||'✨',grad=CAT_GRADIENT[cat]||'linear-gradient(135deg,#1a1a1a,#0a0a0a)',imgUrl=getImg(name);
+  document.getElementById('p-name').textContent=name;document.getElementById('p-cat').textContent=cat;
+  const wrap=document.getElementById('p-img-wrap'),pImg=document.getElementById('p-img'),pFall=document.getElementById('p-fallback');
+  wrap.style.background=grad;
+  if(imgUrl){pImg.src=imgUrl;pImg.style.display='block';pFall.innerHTML=`<span style="font-size:52px;opacity:.4">${emoji}</span>`;}
+  else{pImg.style.display='none';pFall.style.display='flex';pFall.innerHTML=`<span style="font-size:64px;opacity:.5">${emoji}</span>`;}
+  document.getElementById('p-prices').innerHTML=pdPricesHTML(p,profit,pct);
+  const enc=encodeURIComponent(name);
+  document.getElementById('p-links').innerHTML=`<a class="lb ali" href="https://www.alibaba.com/trade/search?SearchText=${enc}" target="_blank"><span class="dot"></span>Alibaba</a><a class="lb tik" href="https://www.tiktok.com/search?q=${enc}" target="_blank"><span class="dot"></span>TikTok</a><a class="lb ig" href="https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/ /g,''))}" target="_blank"><span class="dot"></span>Instagram</a><a class="lb fb" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=${enc}&search_type=keyword_unordered" target="_blank"><span class="dot"></span>FB Ads</a><a class="lb amz" href="https://www.amazon.com/s?k=${enc}" target="_blank"><span class="dot"></span>Amazon</a>`;
+  let fh='';for(const [key,opts] of Object.entries(ROM)){const cur=R[key]||'';fh+=`<div class="rf"><label class="rfl">${RL[key]}</label><div class="ros">${opts.map(o=>`<button class="ro ${cur===o?'selected-'+o:''}" onclick="selOpt('${key}','${o}',this)">${VL[o]}</button>`).join('')}</div></div>`;}
+  fh+=`<div class="rf"><label class="rfl">Тэмдэглэл</label><textarea class="nf" id="nf" placeholder="Судалгааны тэмдэглэл...">${(userRatings[name]||{}).notes||''}</textarea></div>`;
+  document.getElementById('p-fields').innerHTML=fh;
+  document.getElementById('panel').classList.add('open');pdSyncWL(name);
+}
+function selOpt(key,val,btn){btn.closest('.ros').querySelectorAll('.ro').forEach(b=>b.className='ro');btn.className=`ro selected-${val}`;if(!userRatings[PRODUCTS[curIdx]])userRatings[PRODUCTS[curIdx]]={};userRatings[PRODUCTS[curIdx]][key]=val;}
+function saveRatings(){if(curIdx<0)return;const name=PRODUCTS[curIdx];if(!userRatings[name])userRatings[name]={};userRatings[name].notes=document.getElementById('nf').value;saveRat();renderAll();updateStats();closePanel();}
+function closePanel(){document.getElementById('panel').classList.remove('open');curIdx=-1;}
+function openImgModal(idx,e){if(e)e.stopPropagation();imgModalIdx=idx;pendingImg=null;document.getElementById('im-name').textContent=PRODUCTS[idx];setPrev(userImages[PRODUCTS[idx]]||null);document.getElementById('im-save').disabled=true;document.getElementById('im-file').value='';document.getElementById('img-modal').classList.add('open');}
+function closeImgModal(){document.getElementById('img-modal').classList.remove('open');imgModalIdx=-1;pendingImg=null;}
+function setPrev(d){const img=document.getElementById('im-img'),em=document.getElementById('im-empty');if(d){img.src=d;img.style.display='block';em.style.display='none';}else{img.style.display='none';em.style.display='flex';}}
+function handleFile(input){const file=input.files[0];if(file)procFile(file);}
+function handleDrop(e){e.preventDefault();document.getElementById('im-drop').classList.remove('drag-over');const file=e.dataTransfer.files[0];if(file&&file.type.startsWith('image/'))procFile(file);}
+function procFile(file){const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const MAX=600;let w=img.width,h=img.height;if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);pendingImg=c.toDataURL('image/jpeg',.82);setPrev(pendingImg);document.getElementById('im-save').disabled=false;};img.src=e.target.result;};reader.readAsDataURL(file);}
+function saveImg(){if(imgModalIdx<0||!pendingImg)return;userImages[PRODUCTS[imgModalIdx]]=pendingImg;saveImgs();const card=document.getElementById(`pc${imgModalIdx}`);if(card){let imgEl=card.querySelector('.pc-img img');const fb=card.querySelector('.pc-fb');if(!imgEl){imgEl=document.createElement('img');imgEl.style.cssText='width:100%;height:100%;object-fit:cover;transition:transform .4s';card.querySelector('.pc-img').prepend(imgEl);}imgEl.src=pendingImg;imgEl.style.display='block';if(fb)fb.style.display='none';}if(curIdx===imgModalIdx){const pImg=document.getElementById('p-img');if(pImg){pImg.src=pendingImg;pImg.style.display='block';}}closeImgModal();}
+function clearImg(){if(imgModalIdx<0)return;delete userImages[PRODUCTS[imgModalIdx]];saveImgs();pendingImg=null;setPrev(null);document.getElementById('im-save').disabled=true;document.getElementById('im-file').value='';renderGrid();}
+
+// ══ ProductDrop v8 extras ═══════════════════════════════════════════════════
+var pdOrig=[];
+var pdSort='default';
+var pdWLF=false;
+var PD_WL='pd_wl_v3';
+function pdGetWL(){try{return JSON.parse(localStorage.getItem(PD_WL)||'[]');}catch{return[];}}
+function pdSaveWL(a){try{localStorage.setItem(PD_WL,JSON.stringify(a));}catch{}}
+function pdIsWL(n){return pdGetWL().indexOf(n)>=0;}
+function toggleWL(name,btn){
+  var wl=pdGetWL(),i=wl.indexOf(name);
+  if(i>=0)wl.splice(i,1);else wl.push(name);
+  pdSaveWL(wl);pdSyncWL(name);pdStatWL();
+  if(pdWLF)applyFilters();
+}
+function pdSyncWL(name){
+  var b=document.getElementById('p-wl-btn');
+  if(!b)return;
+  var s=pdIsWL(name);b.textContent=s?'★ Хадгалсан':'☆ Хадгалах';b.classList.toggle('saved',s);
+}
+function pdStatWL(){var e=document.getElementById('s-wl');if(e)e.textContent=pdGetWL().length;}
+function setSort(t,btn){
+  var bs=document.querySelectorAll('#btn-top');
+  bs.forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  pdSort=t;applyFilters();
+}
+function setWLFilter(btn){
+  pdWLF=!pdWLF;if(btn)btn.classList.toggle('active',pdWLF);applyFilters();
+}
+function applyFilters(){
+  var q=(document.getElementById('si')||{value:''}).value.toLowerCase();
+  var wl=pdGetWL();
+  var sorted=pdOrig.slice();
+  if(pdSort==='profit'){
+    sorted.sort(function(a,b){return((PRICE_DATA[b]||{}).netProfitN||0)-((PRICE_DATA[a]||{}).netProfitN||0);});
+  }
+  var grid=document.getElementById('prod-grid');
+  if(grid){
+    if(pdSort==='profit'){sorted.forEach(function(name){var i=pdOrig.indexOf(name);var c=document.getElementById('pc'+i);if(c)grid.appendChild(c);});}
+    grid.querySelectorAll('.pc').forEach(function(card,i){
+      var n=pdOrig[i];if(!n){card.style.display='none';return;}
+      var cat=CAT_MAP[n]||'';
+      var ok=(curFilter==='all'||cat===curFilter)&&n.toLowerCase().includes(q)&&(!pdWLF||wl.indexOf(n)>=0);
+      card.style.display=ok?'':'none';
+    });
+  }
+  var tb=document.getElementById('tbl-body');
+  if(tb){
+    tb.querySelectorAll('tr').forEach(function(row,i){
+      var n=pdOrig[i];if(!n){row.style.display='none';return;}
+      var cat=CAT_MAP[n]||'';
+      var ok=(curFilter==='all'||cat===curFilter)&&n.toLowerCase().includes(q)&&(!pdWLF||wl.indexOf(n)>=0);
+      row.style.display=ok?'':'none';
+    });
+  }
+}
+function openCalc(idx){
+  if(idx===undefined||idx<0)return;
+  var p=PRICE_DATA[PRODUCTS[idx]]||{};
+  function sv(id,v){var e=document.getElementById(id);if(e)e.value=v||'';}
+  sv('pdc-cost',p.costN);sv('pdc-ship',p.shippingN);
+  sv('pdc-cust',p.customsN);sv('pdc-pkg',p.packagingN);
+  sv('pdc-price',p.priceN);
+  var q=document.getElementById('pdc-qty');if(q)q.value=1;
+  pdCalc();
+  var m=document.getElementById('pd-calc');if(m)m.classList.add('open');
+}
+function pdCloseCalc(){var m=document.getElementById('pd-calc');if(m)m.classList.remove('open');}
+function pdCalc(){
+  function g(id){return +(document.getElementById(id)||{value:0}).value||0;}
+  var c=g('pdc-cost'),s=g('pdc-ship'),cu=g('pdc-cust'),pk=g('pdc-pkg');
+  var pr=g('pdc-price'),qty=g('pdc-qty')||1;
+  var tc=c+s+cu+pk,up=pr-tc,mg=pr>0?Math.round((up/pr)*100):0,net=up*qty;
+  function fmt(n){return '₮'+Math.abs(Math.round(n)).toLocaleString();}
+  function sv(id,v,cl){var e=document.getElementById(id);if(e){e.textContent=v;if(cl)e.className='pdc-val '+cl;}}
+  sv('pdc-tc',tc>0?fmt(tc):'—');
+  sv('pdc-up',pr>0?(up>=0?fmt(up):'-'+fmt(up)):'—',up>=0?'p':'n');
+  sv('pdc-mg',pr>0?mg+'%':'—');
+  sv('pdc-net',pr>0?(net>=0?fmt(net):'-'+fmt(net)):'—',net>=0?'p':'n');
+}
+function pdPricesHTML(p,profit,pct){
+  var h='';
+  h+='<div class="p-pi"><div class="p-pil">Alibaba авах үнэ</div><div class="p-piv">'+(p.cost||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Тээвэр</div><div class="p-piv">'+(p.shipping||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Гааль+Татвар</div><div class="p-piv">'+(p.customs||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Боодол</div><div class="p-piv">'+(p.packaging||'—')+'</div></div>';
+  h+='<div class="p-pi full" style="background:rgba(255,184,0,.06)"><div class="p-pil">Нийт зардал</div><div class="p-piv" style="color:#ffb800">'+(p.totalCost||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Зарах үнэ</div><div class="p-piv">'+p.price+'</div></div>';
+  h+='<div class="p-pi full"><div class="p-pil">Цэвэр ашиг</div><div class="p-piv pr">'+(profit?(fMNT(profit)+(pct?' ('+pct+'%)':'')):'—')+'</div></div>';
+  return h;
+}
+(function init(){
+  if(typeof PRODUCTS!=='undefined')pdOrig=PRODUCTS.slice();
+  pdStatWL();
+})();
+
+</script>
+<div id="pd-calc">
+<div class="pdc-box">
+  <div class="pdc-hdr"><span class="pdc-ttl">🧮 Ашгийн тооцоолуур</span><button class="pdc-x" onclick="pdCloseCalc()">✕</button></div>
+  <div class="pdc-grid">
+    <div class="pdc-f"><label class="pdc-lbl">Alibaba авах үнэ ₮</label><input class="pdc-inp" id="pdc-cost" type="number" oninput="pdCalc()"></div>
+    <div class="pdc-f"><label class="pdc-lbl">Тээвэр ₮</label><input class="pdc-inp" id="pdc-ship" type="number" oninput="pdCalc()"></div>
+  </div>
+  <div class="pdc-grid">
+    <div class="pdc-f"><label class="pdc-lbl">Гааль / Татвар ₮</label><input class="pdc-inp" id="pdc-cust" type="number" oninput="pdCalc()"></div>
+    <div class="pdc-f"><label class="pdc-lbl">Боодол / Бусад ₮</label><input class="pdc-inp" id="pdc-pkg" type="number" oninput="pdCalc()"></div>
+  </div>
+  <div class="pdc-grid">
+    <div class="pdc-f"><label class="pdc-lbl">Зарах үнэ ₮</label><input class="pdc-inp" id="pdc-price" type="number" oninput="pdCalc()"></div>
+    <div class="pdc-f"><label class="pdc-lbl">Тоо (ширхэг)</label><input class="pdc-inp" id="pdc-qty" type="number" oninput="pdCalc()" value="1"></div>
+  </div>
+  <div class="pdc-res">
+    <div class="pdc-row"><span class="pdc-lbl2">Нийт зардал</span><span class="pdc-val" id="pdc-tc">—</span></div>
+    <div class="pdc-row"><span class="pdc-lbl2">1 ширхэгийн ашиг</span><span class="pdc-val" id="pdc-up">—</span></div>
+    <div class="pdc-row"><span class="pdc-lbl2">Ашгийн хувь</span><span class="pdc-val" id="pdc-mg">—</span></div>
+    <div class="pdc-row"><span class="pdc-lbl2" style="font-weight:600">Нийт ашиг (qty)</span><span class="pdc-val p" id="pdc-net">—</span></div>
+  </div>
+  <button class="pdc-btn" onclick="pdCloseCalc()">Хаах</button>
+</div>
+</div>
+</body>
+</html>

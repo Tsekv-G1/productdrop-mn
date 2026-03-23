@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids — ProductDrop.MN</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bg2:#121212;--bg3:#1a1a1a;--border:#222;--border2:#333;--text:#f0f0f0;--muted:#777;--muted2:#3a3a3a;--accent:#ce93d8;--accR:206,147,216;--warn:#ffaa00;--red:#ff5555;--tik:#69c9d0;--ig:#e1306c;--fb:#5890ff;--amz:#ffaa44;--ali:#ff6b35;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;font-size:13px;}
+.top-nav{position:sticky;top:0;background:rgba(10,10,10,.96);border-bottom:1px solid var(--border);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(16px);}
+.back-btn{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'DM Mono',monospace;transition:color .2s;text-decoration:none;}
+.back-btn:hover{color:var(--text);}
+.back-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;}
+.top-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:-.3px;color:var(--text);}
+.top-logo span{color:#ce93d8;}
+.cat-badge{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:2px;background:rgba(206,147,216,.08);color:#ce93d8;border:1px solid rgba(206,147,216,.2);}
+.header{background:var(--bg);border-bottom:1px solid var(--border);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;}
+.header-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:.15em;color:#fff;}
+.header-logo span{color:#ce93d8;}
+.header-meta{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+.stats-bar{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;gap:0;background:var(--bg2);overflow-x:auto;scrollbar-width:none;}
+.stats-bar::-webkit-scrollbar{display:none;}
+.st{display:flex;flex-direction:column;gap:2px;padding-right:16px;border-right:1px solid var(--border);margin-right:16px;flex-shrink:0;}
+.st:last-child{border-right:none;}
+.stv{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;}
+.stv.ac{color:#ce93d8;}
+.stl{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.toolbar{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap;align-items:center;background:var(--bg);}
+.sw{position:relative;flex-shrink:0;}
+.sw::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.5;}
+.si{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:8px 12px 8px 30px;outline:none;width:180px;}
+.si:focus{border-color:#ce93d8;}
+.fb{padding:5px 11px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;white-space:nowrap;}
+.fb:hover,.fb.active{border-color:#ce93d8;color:#ce93d8;background:rgba(206,147,216,.06);}
+.vt{margin-left:auto;display:flex;gap:3px;}
+.vb{width:28px;height:28px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;}
+.vb.active{border-color:#ce93d8;color:#ce93d8;background:rgba(206,147,216,.06);}
+.grid-wrap{padding:18px 18px 280px;}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:12px;}
+.pc{background:var(--bg2);border:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden;transition:border-color .2s,box-shadow .2s;cursor:pointer;position:relative;}
+.pc:hover{border-color:#ce93d8;box-shadow:0 0 0 1px rgba(206,147,216,.1),0 6px 24px rgba(0,0,0,.4);}
+.pc-img{width:100%;aspect-ratio:1/1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pc-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.pc:hover .pc-img img{transform:scale(1.05);}
+.pc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(0,0,0,.5));pointer-events:none;}
+.pc-cat-tag{position:absolute;top:8px;left:8px;font-size:7px;letter-spacing:1.2px;text-transform:uppercase;color:#ce93d8;background:rgba(0,0,0,.85);border:1px solid rgba(206,147,216,.15);padding:2px 7px;}
+.pc-wow{position:absolute;top:8px;right:8px;font-size:7px;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;}
+.pc-wow.wow{background:rgba(206,147,216,.12);color:#ce93d8;border:1px solid rgba(206,147,216,.25);}
+.img-edit-btn{position:absolute;bottom:6px;right:6px;z-index:5;background:rgba(0,0,0,.8);border:1px solid rgba(206,147,216,.2);color:#ce93d8;font-size:8px;padding:3px 8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Mono',monospace;opacity:0;transition:opacity .15s;}
+.pc:hover .img-edit-btn{opacity:1;}
+.pc-body{padding:12px 12px 0;}
+.pc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;line-height:1.35;margin-bottom:12px;min-height:32px;}
+.pc-prices{display:grid;grid-template-columns:1fr 1fr;background:var(--border);border:1px solid var(--border);}
+.pc-pc{background:var(--bg3);padding:8px 10px;}
+.pc-pc:first-child{border-right:1px solid var(--border);}
+.pc-pl{font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.pc-pv{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:-.5px;}
+.pc-profit{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(206,147,216,.04);border:1px solid rgba(206,147,216,.1);border-top:none;}
+.pc-pl2{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.pc-pval{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#ce93d8;}
+.pc-chips{padding:8px 12px 0;display:flex;flex-wrap:wrap;gap:3px;}
+.chip{font-size:7px;padding:2px 6px;border:1px solid var(--border2);color:var(--muted);}
+.chip.g{color:#ce93d8;border-color:rgba(206,147,216,.2);background:rgba(206,147,216,.04);}
+.chip.n{color:var(--warn);border-color:rgba(255,170,0,.2);}
+.chip.b{color:var(--red);border-color:rgba(255,68,68,.2);}
+.pc-open{width:100%;margin-top:10px;padding:9px;background:transparent;border:none;border-top:1px solid var(--border);color:#ce93d8;font-family:'Syne',sans-serif;font-weight:700;font-size:9px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;}
+.pc-open:hover{background:rgba(206,147,216,.06);}
+.pc-open svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;}
+.tbl-wrap{padding:0 20px 280px;}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:2px solid var(--border2);position:sticky;top:100px;background:var(--bg);z-index:50;}
+th{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:10px 8px;text-align:left;font-weight:400;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+tbody tr:hover{background:var(--bg2);}
+td{padding:11px 8px;font-size:11px;vertical-align:top;}
+.tnum{color:var(--muted);font-size:9px;width:32px;}
+.tname{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;min-width:140px;}
+.tcat{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#ce93d8;background:rgba(206,147,216,.06);padding:2px 7px;display:inline-block;border:1px solid rgba(206,147,216,.15);margin-top:3px;}
+.tprice{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;}
+.tprofit{color:#ce93d8;}
+.links-col{display:flex;flex-wrap:wrap;gap:3px;min-width:100px;}
+.lb{display:inline-flex;align-items:center;gap:3px;padding:4px 7px;font-size:8px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:1px solid var(--border2);color:#888;background:transparent;white-space:nowrap;font-family:'DM Mono',monospace;}
+.lb.ali{color:var(--ali);border-color:rgba(255,107,53,.25);}
+.lb.tik{color:var(--tik);border-color:rgba(105,201,208,.25);}
+.lb.ig{color:var(--ig);border-color:rgba(225,48,108,.25);}
+.lb.fb{color:var(--fb);border-color:rgba(88,144,255,.25);}
+.lb.amz{color:var(--amz);border-color:rgba(255,170,68,.25);}
+.dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.rc{display:flex;flex-direction:column;gap:3px;min-width:150px;}
+.rr{display:flex;align-items:center;gap:5px;}
+.rk{font-size:8px;color:#555;width:70px;flex-shrink:0;}
+.rb{font-size:9px;padding:1px 6px;border:1px solid #222;color:#444;}
+.rb.val-good,.rb.val-wow,.rb.val-yes,.rb.val-vgood,.rb.val-5x{color:#ce93d8;border-color:rgba(206,147,216,.25);}
+.rb.val-notbad,.rb.val-notyet,.rb.val-3x{color:var(--warn);border-color:rgba(255,170,0,.25);}
+.rb.val-bad,.rb.val-no{color:var(--red);border-color:rgba(255,68,68,.25);}
+/* IMG MODAL */
+#img-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+#img-modal.open{display:flex;}
+.im-box{width:min(460px,92vw);background:var(--bg2);border:1px solid var(--border2);position:relative;overflow:hidden;}
+.im-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#ce93d8;}
+.im-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.im-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;}
+.im-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;line-height:1;}
+.im-body{padding:18px;}
+.im-name{font-size:10px;color:#ce93d8;letter-spacing:.08em;margin-bottom:14px;font-family:'Syne',sans-serif;font-weight:700;line-height:1.4;}
+.im-prev{width:100%;aspect-ratio:4/3;background:var(--bg3);border:1px solid var(--border2);overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;}
+.im-prev img{width:100%;height:100%;object-fit:cover;}
+.im-empty{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;flex-direction:column;gap:6px;display:flex;}
+.im-empty span{font-size:28px;opacity:.3;}
+.im-drop{border:2px dashed var(--border2);padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px;position:relative;}
+.im-drop:hover,.im-drop.drag-over{border-color:#ce93d8;}
+.im-drop-icon{font-size:24px;margin-bottom:6px;opacity:.5;}
+.im-drop-text{font-size:10px;color:var(--muted);line-height:1.6;}
+.im-drop-text strong{color:#ce93d8;}
+.im-file{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.im-actions{display:flex;gap:7px;}
+.im-save{flex:1;padding:11px;background:#ce93d8;color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:9px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
+.im-save:hover{opacity:.85;}
+.im-save:disabled{opacity:.35;cursor:not-allowed;}
+.im-clear{padding:11px 14px;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.im-clear:hover{border-color:var(--red);color:var(--red);}
+.p-img-edit{position:absolute;top:10px;left:10px;z-index:10;background:rgba(0,0,0,.65);border:1px solid rgba(206,147,216,.2);color:#ce93d8;font-size:8px;padding:4px 9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Mono',monospace;backdrop-filter:blur(6px);}
+/* PANEL */
+#panel{position:fixed;right:0;top:0;bottom:0;width:min(460px,100vw);background:var(--bg2);border-left:1px solid var(--border2);z-index:200;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+#panel.open{transform:translateX(0);}
+.p-img-wrap{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;flex-shrink:0;}
+.p-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.p-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;opacity:.4;}
+.p-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,10,10,.9));}
+.p-info{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;}
+.p-name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;line-height:1.3;margin-bottom:3px;}
+.p-cat{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#ce93d8;}
+.p-close{position:absolute;top:10px;right:10px;width:30px;height:30px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);color:var(--text);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);z-index:10;}
+.p-close:hover{background:rgba(255,85,85,.2);color:var(--red);}
+.p-body{padding:16px 18px 22px;}
+.p-prices{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:16px;}
+.p-pi{background:var(--bg3);padding:10px 12px;}
+.p-pil{font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.p-piv{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;letter-spacing:-.5px;}
+.p-piv.pr{color:#ce93d8;}
+.p-sec{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;margin-top:3px;}
+.p-links{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.rf{margin-bottom:12px;}
+.rfl{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block;}
+.ros{display:flex;gap:4px;flex-wrap:wrap;}
+.ro{padding:5px 10px;font-size:9px;letter-spacing:.06em;border:1px solid var(--border2);background:transparent;color:#666;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+.ro:hover{border-color:#ce93d8;color:#ce93d8;}
+.ro.selected-good,.ro.selected-wow,.ro.selected-yes,.ro.selected-vgood,.ro.selected-5x{background:rgba(206,147,216,.1);border-color:#ce93d8;color:#ce93d8;}
+.ro.selected-notbad,.ro.selected-notyet,.ro.selected-3x{background:rgba(255,170,0,.08);border-color:var(--warn);color:var(--warn);}
+.ro.selected-bad,.ro.selected-no{background:rgba(255,68,68,.08);border-color:var(--red);color:var(--red);}
+.nf{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:10px;resize:vertical;min-height:68px;outline:none;margin-top:5px;line-height:1.6;}
+.nf:focus{border-color:#ce93d8;}
+.save-btn{width:100%;padding:12px;background:#ce93d8;color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:7px;transition:opacity .2s;}
+.save-btn:hover{opacity:.85;}
+@media(max-width:768px){
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:9px;}
+  .grid-wrap{padding:12px 12px 280px;}
+  .tbl-wrap table{display:none;}
+  #panel{width:100vw;}
+  .toolbar{padding:9px 12px;gap:6px;}
+  .si{width:100%;}
+  .vt{display:none;}
+}
+
+/* ── Toolbar single-row fix ── */
+.toolbar{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;
+  gap:4px!important;padding:8px 16px!important;scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch;}
+.toolbar::-webkit-scrollbar{display:none!important;}
+.fb{padding:5px 10px!important;font-size:8px!important;letter-spacing:.06em!important;white-space:nowrap!important;flex-shrink:0!important;}
+.sw{flex-shrink:0!important;min-width:120px!important;}
+.si{width:120px!important;}
+.vt{margin-left:auto!important;flex-shrink:0!important;display:flex!important;gap:3px!important;}
+/* ── Card price display ── */
+.pc-prices{display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:8px 10px!important;background:rgba(0,0,0,.3)!important;border:none!important;
+  border-top:1px solid var(--border)!important;}
+.pc-pc{background:transparent!important;padding:0!important;border:none!important;}
+.pc-pc:first-child{border-right:none!important;}
+.pc-pl{font-size:7px!important;letter-spacing:.1em!important;color:var(--muted)!important;margin-bottom:1px!important;}
+.pc-pv{font-family:'Syne',sans-serif!important;font-weight:800!important;font-size:12px!important;}
+.pc-pv.buy{font-size:10px!important;color:var(--muted)!important;font-weight:400!important;}
+.pc-profit{padding:7px 10px!important;border-top:1px solid rgba(255,255,255,.05)!important;
+  display:flex!important;justify-content:space-between!important;align-items:center!important;}
+.pc-pl2{font-size:7px!important;letter-spacing:.1em!important;color:var(--muted)!important;}
+.pc-pval{font-family:'Syne',sans-serif!important;font-weight:800!important;font-size:13px!important;}
+/* ── Panel p-prices ── */
+.p-prices{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1px!important;
+  background:var(--border)!important;margin-bottom:14px!important;}
+.p-pi.full{grid-column:1/-1!important;}
+.p-pi{background:var(--bg3,#1a1a1a)!important;padding:8px 10px!important;}
+.p-pil{font-size:7px!important;letter-spacing:.12em!important;text-transform:uppercase!important;
+  color:var(--muted)!important;margin-bottom:3px!important;}
+.p-piv{font-family:'Syne',sans-serif!important;font-weight:800!important;font-size:14px!important;}
+.p-piv.pr{color:var(--accent,#c8ff00)!important;}
+
+.p-extra-btn{width:100%;margin-top:5px;padding:10px;border:none;font-family:'Syne',sans-serif;
+  font-weight:700;font-size:9px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.p-extra-btn.wl{background:transparent;border:1px solid var(--border2,#333);color:var(--muted,#777);}
+.p-extra-btn.wl:hover,.p-extra-btn.wl.saved{border-color:var(--accent,#c8ff00);color:var(--accent,#c8ff00);background:rgba(200,255,0,.06);}
+.p-extra-btn.calc{margin-top:4px;background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.2);color:var(--accent,#c8ff00);}
+
+#pd-calc{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.82);opacity:0;pointer-events:none;transition:opacity .2s;}
+#pd-calc.open{opacity:1;pointer-events:all;}
+.pdc-box{background:var(--bg2,#121212);border:1px solid var(--border2,#333);
+  width:min(440px,94vw);padding:22px 18px;position:relative;max-height:88vh;overflow-y:auto;}
+.pdc-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,#c8ff00);}
+.pdc-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.pdc-ttl{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:-.2px;}
+.pdc-x{background:none;border:none;color:var(--muted,#777);cursor:pointer;font-size:17px;padding:0;}
+.pdc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+.pdc-f{display:flex;flex-direction:column;gap:3px;}
+.pdc-lbl{font-size:8px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted,#777);}
+.pdc-inp{background:var(--bg3,#1a1a1a);border:1px solid var(--border2,#333);
+  color:var(--text,#f0f0f0);font-family:'DM Mono',monospace;font-size:13px;padding:7px 9px;outline:none;width:100%;}
+.pdc-inp:focus{border-color:var(--accent,#c8ff00);}
+.pdc-res{background:rgba(200,255,0,.04);border:1px solid rgba(200,255,0,.1);padding:12px;margin-top:9px;}
+.pdc-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;}
+.pdc-row+.pdc-row{border-top:1px solid rgba(255,255,255,.04);}
+.pdc-row:last-child{padding-top:9px;border-top:1px solid rgba(200,255,0,.2);margin-top:3px;}
+.pdc-lbl2{color:var(--muted,#777);}
+.pdc-val{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;}
+.pdc-val.p{color:var(--accent,#c8ff00);}
+.pdc-val.n{color:#ff4444;}
+.pdc-btn{width:100%;margin-top:11px;padding:11px;background:var(--accent,#c8ff00);color:#000;border:none;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+
+
+/* ── Readable number font override ── */
+.pc-pv, .stv, .sb-v, .p-piv, .pc-pval, .pdc-val, .cm-res-val {
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: 700 !important;
+}
+.pc-pval { font-size: 14px !important; }
+.pc-pv   { font-size: 13px !important; letter-spacing: -0.3px !important; }
+
+</style>
+</head>
+<body>
+<script>
+// ── INLINE AUTH ──
+const APP_PASSWORD="Drop2025#";
+const SESSION_KEY="pd_sess_v2";
+const SESSION_TTL=30*24*60*60*1000;
+function pdChkSess(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");return s&&s.e>Date.now();}catch{return false;}}
+function pdStartSess(){localStorage.setItem(SESSION_KEY,JSON.stringify({e:Date.now()+SESSION_TTL}));}
+function pdEndSess(){localStorage.removeItem(SESSION_KEY);}
+// Redirect if not logged in
+if(!pdChkSess()){ window.location.replace('../index.html'); }
+</script>
+
+<div class="top-nav">
+  <a class="back-btn" href="../index.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Буцах</a>
+  <div class="top-logo">PRODUCT<span>DROP</span>.MN</div>
+  <span class="cat-badge">Kids</span>
+</div>
+
+<div class="header">
+  <div class="header-logo">KIDS<span>.</span></div>
+  <div class="header-meta">Product Research · v1</div>
+</div>
+<div class="stats-bar">
+  <div class="st"><div class="stv ac">200</div><div class="stl">Нийт бараа</div></div>
+  <div class="st"><div class="stv">Kids</div><div class="stl">Категори</div></div>
+  <div class="st"><div class="stv" id="s-rated">0</div><div class="stl">Үнэлсэн</div></div>
+  <div class="st"><div class="stv" id="s-wow">0</div><div class="stl">Wow</div></div>
+  <div class="st"><div class="stv" id="s-5x">0</div><div class="stl">5x Ашиг</div></div>
+  <div class="st"><div class="stv" id="s-wl">0</div><div class="stl">★ Хадгалсан</div></div>
+</div>
+<div class="toolbar">
+  <div class="sw"><input class="si" id="si" type="text" placeholder="Хайх..." oninput="applyFilters()"></div>
+  <button class="fb active" onclick="setFilter(this,'all')">Бүгд</button><button class="fb" onclick="setFilter(this,'Baby')">Нярай</button><button class="fb" onclick="setFilter(this,'Learning')">Сурах</button><button class="fb" onclick="setFilter(this,'Outdoor Play')">Гадаа тоглоом</button><button class="fb" onclick="setFilter(this,'Creative')">Урлаг</button><button class="fb" onclick="setFilter(this,'Safety')">Аюулгүй байдал</button><button class="fb" onclick="setFilter(this,'Feeding')">Хооллолт</button><button class="fb" onclick="setFilter(this,'Sleep')">Унтлага</button><button class="fb" onclick="setFilter(this,'Bath')">Усан ванн</button><button class="fb" onclick="setFilter(this,'Teen')">Тийнэйжэр</button>
+  <button class="fb" id="btn-top" onclick="setSort('profit',this)">🔥 Топ</button>
+  <button class="fb" id="btn-wl" onclick="setWLFilter(this)">★</button>
+  <div class="vt">
+    <button class="vb active" id="vb-grid" onclick="setView('grid')">⊞</button>
+    <button class="vb" id="vb-table" onclick="setView('table')">☰</button>
+  </div>
+</div>
+<div class="grid-wrap" id="view-grid"><div class="prod-grid" id="prod-grid"></div></div>
+<div class="tbl-wrap" id="view-table" style="display:none;">
+  <table><thead><tr><th>#</th><th>Бараа</th><th>Категори</th><th>Авах</th><th>Зарах</th><th>Ашиг</th><th>Линк</th><th>Үнэлгээ</th></tr></thead><tbody id="tbl-body"></tbody></table>
+</div>
+
+<div id="img-modal">
+  <div class="im-box">
+    <div class="im-hdr"><div class="im-title">🖼 Зураг оруулах</div><button class="im-close" onclick="closeImgModal()">✕</button></div>
+    <div class="im-body">
+      <div class="im-name" id="im-name">—</div>
+      <div class="im-prev"><div class="im-empty" id="im-empty"><span>🖼</span>Зураг байхгүй</div><img id="im-img" src="" alt="" style="display:none;"></div>
+      <div class="im-drop" id="im-drop" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
+        <input type="file" class="im-file" id="im-file" accept="image/*" onchange="handleFile(this)">
+        <div class="im-drop-icon">📁</div>
+        <div class="im-drop-text"><strong>Файл сонгох</strong> эсвэл чирж тавих — JPG · PNG · WEBP</div>
+      </div>
+      <div class="im-actions">
+        <button class="im-save" id="im-save" onclick="saveImg()" disabled>Хадгалах</button>
+        <button class="im-clear" onclick="clearImg()">Устгах</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="panel">
+  <button class="p-close" onclick="closePanel()">✕</button>
+  <button class="p-img-edit" onclick="openImgModal(curIdx,event)">✏️ Зураг</button>
+  <div class="p-img-wrap" id="p-img-wrap">
+    <div class="p-fallback" id="p-fallback"></div>
+    <img id="p-img" src="" alt="" style="display:none;" onerror="this.style.display='none'">
+    <div class="p-overlay"></div>
+    <div class="p-info"><div class="p-name" id="p-name">—</div><div class="p-cat" id="p-cat">—</div></div>
+  </div>
+  <div class="p-body">
+    <div class="p-prices" id="p-prices"></div>
+    <div class="p-sec">Линкүүд</div>
+    <div class="p-links" id="p-links"></div>
+    <div class="p-sec">Үнэлгээ засах</div>
+    <div id="p-fields"></div>
+    <button class="save-btn" onclick="saveRatings()">Хадгалах</button><button id="p-wl-btn" class="p-extra-btn wl" onclick="toggleWL(PRODUCTS[curIdx],this)">☆ Хадгалах</button><button class="p-extra-btn calc" onclick="openCalc(curIdx)">🧮 Тооцоолуур</button>
+  </div>
+</div>
+
+<script>
+const CAT_EMOJI = {"Baby":"👶","Learning":"📚","Outdoor Play":"🌳","Creative":"🎨","Safety":"🛡️","Feeding":"🍼","Sleep":"💤","Bath":"🛁","Teen":"🎒"};
+const CAT_GRADIENT = {"Baby":"linear-gradient(135deg,#1a0d1a,#10080f)","Learning":"linear-gradient(135deg,#001520,#000d14)","Outdoor Play":"linear-gradient(135deg,#0d1a00,#080f00)","Creative":"linear-gradient(135deg,#1a0d00,#100800)","Safety":"linear-gradient(135deg,#001a10,#000f09)","Feeding":"linear-gradient(135deg,#1a1000,#100900)","Sleep":"linear-gradient(135deg,#0d0d1a,#080812)","Bath":"linear-gradient(135deg,#001520,#000d14)","Teen":"linear-gradient(135deg,#1a0d1f,#10080f)"};
+const PRICE_DATA={"Baby White Noise Machine":{"cost":"₮11,798","price":"₮70,900","costN":11798,"priceN":70900,"shippingN":5473,"customsN":645,"packagingN":1512,"totalCostN":19428,"netProfitN":51472,"netMarginPct":73,"shipping":"₮5,473","customs":"₮645","packaging":"₮1,512","totalCost":"₮19,428","netProfit":"₮51,472"},"Baby Nail File Electric":{"cost":"₮22,031","price":"₮70,900","costN":22031,"priceN":70900,"shippingN":5082,"customsN":1247,"packagingN":1004,"totalCostN":29364,"netProfitN":41536,"netMarginPct":59,"shipping":"₮5,082","customs":"₮1,247","packaging":"₮1,004","totalCost":"₮29,364","netProfit":"₮41,536"},"Baby Lounger Pillow Dock":{"cost":"₮9,726","price":"₮70,900","costN":9726,"priceN":70900,"shippingN":3712,"customsN":569,"packagingN":1504,"totalCostN":15511,"netProfitN":55389,"netMarginPct":78,"shipping":"₮3,712","customs":"₮569","packaging":"₮1,504","totalCost":"₮15,511","netProfit":"₮55,389"},"Smart Baby Scale WiFi":{"cost":"₮4,888","price":"₮65,900","costN":4888,"priceN":65900,"shippingN":4853,"customsN":257,"packagingN":864,"totalCostN":10862,"netProfitN":55038,"netMarginPct":84,"shipping":"₮4,853","customs":"₮257","packaging":"₮864","totalCost":"₮10,862","netProfit":"₮55,038"},"Baby Wrap Carrier Stretchy":{"cost":"₮25,860","price":"₮70,900","costN":25860,"priceN":70900,"shippingN":5152,"customsN":2163,"packagingN":1210,"totalCostN":34385,"netProfitN":36515,"netMarginPct":52,"shipping":"₮5,152","customs":"₮2,163","packaging":"₮1,210","totalCost":"₮34,385","netProfit":"₮36,515"},"Newborn Photo Prop Set":{"cost":"₮5,176","price":"₮70,900","costN":5176,"priceN":70900,"shippingN":5243,"customsN":386,"packagingN":1465,"totalCostN":12270,"netProfitN":58630,"netMarginPct":83,"shipping":"₮5,243","customs":"₮386","packaging":"₮1,465","totalCost":"₮12,270","netProfit":"₮58,630"},"Baby Milestone Cards Set":{"cost":"₮14,801","price":"₮70,900","costN":14801,"priceN":70900,"shippingN":5458,"customsN":848,"packagingN":1664,"totalCostN":22771,"netProfitN":48129,"netMarginPct":68,"shipping":"₮5,458","customs":"₮848","packaging":"₮1,664","totalCost":"₮22,771","netProfit":"₮48,129"},"Pacifier Clip Ribbon Set":{"cost":"₮4,801","price":"₮55,900","costN":4801,"priceN":55900,"shippingN":3518,"customsN":394,"packagingN":1359,"totalCostN":10072,"netProfitN":45828,"netMarginPct":82,"shipping":"₮3,518","customs":"₮394","packaging":"₮1,359","totalCost":"₮10,072","netProfit":"₮45,828"},"Baby Shusher Sound Device":{"cost":"₮11,849","price":"₮70,900","costN":11849,"priceN":70900,"shippingN":5512,"customsN":928,"packagingN":1214,"totalCostN":19503,"netProfitN":51397,"netMarginPct":72,"shipping":"₮5,512","customs":"₮928","packaging":"₮1,214","totalCost":"₮19,503","netProfit":"₮51,397"},"Infant Gas Relief Drops":{"cost":"₮10,790","price":"₮70,900","costN":10790,"priceN":70900,"shippingN":3992,"customsN":927,"packagingN":1530,"totalCostN":17239,"netProfitN":53661,"netMarginPct":76,"shipping":"₮3,992","customs":"₮927","packaging":"₮1,530","totalCost":"₮17,239","netProfit":"₮53,661"},"Baby Bath Seat Ring Support":{"cost":"₮19,421","price":"₮70,900","costN":19421,"priceN":70900,"shippingN":4075,"customsN":1595,"packagingN":1255,"totalCostN":26346,"netProfitN":44554,"netMarginPct":63,"shipping":"₮4,075","customs":"₮1,595","packaging":"₮1,255","totalCost":"₮26,346","netProfit":"₮44,554"},"Diaper Cream Organic":{"cost":"₮3,140","price":"₮40,900","costN":3140,"priceN":40900,"shippingN":3793,"customsN":145,"packagingN":1230,"totalCostN":8308,"netProfitN":32592,"netMarginPct":80,"shipping":"₮3,793","customs":"₮145","packaging":"₮1,230","totalCost":"₮8,308","netProfit":"₮32,592"},"Baby LED Night Light Portable":{"cost":"₮23,824","price":"₮70,900","costN":23824,"priceN":70900,"shippingN":3488,"customsN":1163,"packagingN":768,"totalCostN":29243,"netProfitN":41657,"netMarginPct":59,"shipping":"₮3,488","customs":"₮1,163","packaging":"₮768","totalCost":"₮29,243","netProfit":"₮41,657"},"Wearable Baby Monitor Smart":{"cost":"₮238,098","price":"₮470,900","costN":238098,"priceN":470900,"shippingN":16141,"customsN":17476,"packagingN":1410,"totalCostN":273125,"netProfitN":197775,"netMarginPct":42,"shipping":"₮16,141","customs":"₮17,476","packaging":"₮1,410","totalCost":"₮273,125","netProfit":"₮197,775"},"Baby Proofing Kit 30pc":{"cost":"₮12,637","price":"₮70,900","costN":12637,"priceN":70900,"shippingN":4961,"customsN":1052,"packagingN":1256,"totalCostN":19906,"netProfitN":50994,"netMarginPct":72,"shipping":"₮4,961","customs":"₮1,052","packaging":"₮1,256","totalCost":"₮19,906","netProfit":"₮50,994"},"Stroller Fan Clip-On":{"cost":"₮10,032","price":"₮60,900","costN":10032,"priceN":60900,"shippingN":3803,"customsN":482,"packagingN":1224,"totalCostN":15541,"netProfitN":45359,"netMarginPct":74,"shipping":"₮3,803","customs":"₮482","packaging":"₮1,224","totalCost":"₮15,541","netProfit":"₮45,359"},"Baby Food Maker Puree":{"cost":"₮14,537","price":"₮70,900","costN":14537,"priceN":70900,"shippingN":3649,"customsN":959,"packagingN":1558,"totalCostN":20703,"netProfitN":50197,"netMarginPct":71,"shipping":"₮3,649","customs":"₮959","packaging":"₮1,558","totalCost":"₮20,703","netProfit":"₮50,197"},"Swaddle Blanket Bamboo Set":{"cost":"₮15,448","price":"₮70,900","costN":15448,"priceN":70900,"shippingN":3391,"customsN":669,"packagingN":764,"totalCostN":20272,"netProfitN":50628,"netMarginPct":71,"shipping":"₮3,391","customs":"₮669","packaging":"₮764","totalCost":"₮20,272","netProfit":"₮50,628"},"Baby Nose Aspirator Frida":{"cost":"₮22,347","price":"₮70,900","costN":22347,"priceN":70900,"shippingN":3933,"customsN":1839,"packagingN":1706,"totalCostN":29825,"netProfitN":41075,"netMarginPct":58,"shipping":"₮3,933","customs":"₮1,839","packaging":"₮1,706","totalCost":"₮29,825","netProfit":"₮41,075"},"Diaper Pail Odor Seal":{"cost":"₮21,362","price":"₮70,900","costN":21362,"priceN":70900,"shippingN":4115,"customsN":1922,"packagingN":1154,"totalCostN":28553,"netProfitN":42347,"netMarginPct":60,"shipping":"₮4,115","customs":"₮1,922","packaging":"₮1,154","totalCost":"₮28,553","netProfit":"₮42,347"},"Baby Feeding Pillow Nursing":{"cost":"₮15,034","price":"₮70,900","costN":15034,"priceN":70900,"shippingN":5498,"customsN":936,"packagingN":1242,"totalCostN":22710,"netProfitN":48190,"netMarginPct":68,"shipping":"₮5,498","customs":"₮936","packaging":"₮1,242","totalCost":"₮22,710","netProfit":"₮48,190"},"Teething Toy Frozen Set":{"cost":"₮7,005","price":"₮55,900","costN":7005,"priceN":55900,"shippingN":3007,"customsN":297,"packagingN":1583,"totalCostN":11892,"netProfitN":44008,"netMarginPct":79,"shipping":"₮3,007","customs":"₮297","packaging":"₮1,583","totalCost":"₮11,892","netProfit":"₮44,008"},"Baby Swim Floatie Arm Bands":{"cost":"₮17,413","price":"₮70,900","costN":17413,"priceN":70900,"shippingN":4837,"customsN":1226,"packagingN":1743,"totalCostN":25219,"netProfitN":45681,"netMarginPct":64,"shipping":"₮4,837","customs":"₮1,226","packaging":"₮1,743","totalCost":"₮25,219","netProfit":"₮45,681"},"Infrared Baby Ear Thermometer":{"cost":"₮20,902","price":"₮70,900","costN":20902,"priceN":70900,"shippingN":3762,"customsN":1429,"packagingN":1792,"totalCostN":27885,"netProfitN":43015,"netMarginPct":61,"shipping":"₮3,762","customs":"₮1,429","packaging":"₮1,792","totalCost":"₮27,885","netProfit":"₮43,015"},"Baby Heartbeat Monitor Doppler":{"cost":"₮20,363","price":"₮70,900","costN":20363,"priceN":70900,"shippingN":5207,"customsN":1419,"packagingN":919,"totalCostN":27908,"netProfitN":42992,"netMarginPct":61,"shipping":"₮5,207","customs":"₮1,419","packaging":"₮919","totalCost":"₮27,908","netProfit":"₮42,992"},"Montessori Busy Board Toddler":{"cost":"₮11,627","price":"₮70,900","costN":11627,"priceN":70900,"shippingN":3695,"customsN":913,"packagingN":939,"totalCostN":17174,"netProfitN":53726,"netMarginPct":76,"shipping":"₮3,695","customs":"₮913","packaging":"₮939","totalCost":"₮17,174","netProfit":"₮53,726"},"Alphabet Learning Puzzle Foam":{"cost":"₮13,293","price":"₮55,900","costN":13293,"priceN":55900,"shippingN":3346,"customsN":845,"packagingN":1348,"totalCostN":18832,"netProfitN":37068,"netMarginPct":66,"shipping":"₮3,346","customs":"₮845","packaging":"₮1,348","totalCost":"₮18,832","netProfit":"₮37,068"},"Drawing Tablet LED Lightbox":{"cost":"₮20,976","price":"₮70,900","costN":20976,"priceN":70900,"shippingN":4928,"customsN":959,"packagingN":606,"totalCostN":27469,"netProfitN":43431,"netMarginPct":61,"shipping":"₮4,928","customs":"₮959","packaging":"₮606","totalCost":"₮27,469","netProfit":"₮43,431"},"Magnetic Building Tiles Set":{"cost":"₮13,782","price":"₮70,900","costN":13782,"priceN":70900,"shippingN":4115,"customsN":722,"packagingN":1079,"totalCostN":19698,"netProfitN":51202,"netMarginPct":72,"shipping":"₮4,115","customs":"₮722","packaging":"₮1,079","totalCost":"₮19,698","netProfit":"₮51,202"},"Kids Coding Robot Beginner":{"cost":"₮50,702","price":"₮140,900","costN":50702,"priceN":140900,"shippingN":14862,"customsN":3764,"packagingN":822,"totalCostN":70150,"netProfitN":70750,"netMarginPct":50,"shipping":"₮14,862","customs":"₮3,764","packaging":"₮822","totalCost":"₮70,150","netProfit":"₮70,750"},"Flash Card Learning Set":{"cost":"₮1,277","price":"₮40,900","costN":1277,"priceN":40900,"shippingN":3438,"customsN":66,"packagingN":1178,"totalCostN":5959,"netProfitN":34941,"netMarginPct":85,"shipping":"₮3,438","customs":"₮66","packaging":"₮1,178","totalCost":"₮5,959","netProfit":"₮34,941"},"Interactive Globe Kids":{"cost":"₮4,583","price":"₮55,900","costN":4583,"priceN":55900,"shippingN":5144,"customsN":370,"packagingN":532,"totalCostN":10629,"netProfitN":45271,"netMarginPct":81,"shipping":"₮5,144","customs":"₮370","packaging":"₮532","totalCost":"₮10,629","netProfit":"₮45,271"},"Telescope Kids Starter":{"cost":"₮37,715","price":"₮120,900","costN":37715,"priceN":120900,"shippingN":16361,"customsN":2851,"packagingN":1472,"totalCostN":58399,"netProfitN":62501,"netMarginPct":52,"shipping":"₮16,361","customs":"₮2,851","packaging":"₮1,472","totalCost":"₮58,399","netProfit":"₮62,501"},"Microscope Science Kit Kids":{"cost":"₮60,559","price":"₮180,900","costN":60559,"priceN":180900,"shippingN":16399,"customsN":4866,"packagingN":1426,"totalCostN":83250,"netProfitN":97650,"netMarginPct":54,"shipping":"₮16,399","customs":"₮4,866","packaging":"₮1,426","totalCost":"₮83,250","netProfit":"₮97,650"},"Math Manipulatives Set":{"cost":"₮15,268","price":"₮55,900","costN":15268,"priceN":55900,"shippingN":3757,"customsN":790,"packagingN":805,"totalCostN":20620,"netProfitN":35280,"netMarginPct":63,"shipping":"₮3,757","customs":"₮790","packaging":"₮805","totalCost":"₮20,620","netProfit":"₮35,280"},"Sight Words Game Cards":{"cost":"₮12,971","price":"₮70,900","costN":12971,"priceN":70900,"shippingN":3376,"customsN":568,"packagingN":1055,"totalCostN":17970,"netProfitN":52930,"netMarginPct":75,"shipping":"₮3,376","customs":"₮568","packaging":"₮1,055","totalCost":"₮17,970","netProfit":"₮52,930"},"Kids Musical Keyboard Piano":{"cost":"₮25,043","price":"₮70,900","costN":25043,"priceN":70900,"shippingN":4756,"customsN":1614,"packagingN":1251,"totalCostN":32664,"netProfitN":38236,"netMarginPct":54,"shipping":"₮4,756","customs":"₮1,614","packaging":"₮1,251","totalCost":"₮32,664","netProfit":"₮38,236"},"Dinosaur Excavation Kit":{"cost":"₮15,679","price":"₮70,900","costN":15679,"priceN":70900,"shippingN":4793,"customsN":837,"packagingN":1518,"totalCostN":22827,"netProfitN":48073,"netMarginPct":68,"shipping":"₮4,793","customs":"₮837","packaging":"₮1,518","totalCost":"₮22,827","netProfit":"₮48,073"},"Kids Walkie Talkie Set":{"cost":"₮12,636","price":"₮70,900","costN":12636,"priceN":70900,"shippingN":5098,"customsN":830,"packagingN":1217,"totalCostN":19781,"netProfitN":51119,"netMarginPct":72,"shipping":"₮5,098","customs":"₮830","packaging":"₮1,217","totalCost":"₮19,781","netProfit":"₮51,119"},"World Map Puzzle Large":{"cost":"₮11,773","price":"₮55,900","costN":11773,"priceN":55900,"shippingN":3930,"customsN":536,"packagingN":592,"totalCostN":16831,"netProfitN":39069,"netMarginPct":70,"shipping":"₮3,930","customs":"₮536","packaging":"₮592","totalCost":"₮16,831","netProfit":"₮39,069"},"Coding Activity Book Kids":{"cost":"₮8,205","price":"₮70,900","costN":8205,"priceN":70900,"shippingN":5175,"customsN":705,"packagingN":766,"totalCostN":14851,"netProfitN":56049,"netMarginPct":79,"shipping":"₮5,175","customs":"₮705","packaging":"₮766","totalCost":"₮14,851","netProfit":"₮56,049"},"Reading Tracker Sticker Chart":{"cost":"₮7,517","price":"₮55,900","costN":7517,"priceN":55900,"shippingN":3377,"customsN":642,"packagingN":695,"totalCostN":12231,"netProfitN":43669,"netMarginPct":78,"shipping":"₮3,377","customs":"₮642","packaging":"₮695","totalCost":"₮12,231","netProfit":"₮43,669"},"Science Experiment Kit 50":{"cost":"₮11,127","price":"₮70,900","costN":11127,"priceN":70900,"shippingN":5217,"customsN":995,"packagingN":1406,"totalCostN":18745,"netProfitN":52155,"netMarginPct":74,"shipping":"₮5,217","customs":"₮995","packaging":"₮1,406","totalCost":"₮18,745","netProfit":"₮52,155"},"Abacus Wooden Math Toy":{"cost":"₮11,047","price":"₮55,900","costN":11047,"priceN":55900,"shippingN":3514,"customsN":936,"packagingN":915,"totalCostN":16412,"netProfitN":39488,"netMarginPct":71,"shipping":"₮3,514","customs":"₮936","packaging":"₮915","totalCost":"₮16,412","netProfit":"₮39,488"},"Language Learning Cards Bilingual":{"cost":"₮25,914","price":"₮70,900","costN":25914,"priceN":70900,"shippingN":4946,"customsN":1643,"packagingN":1175,"totalCostN":33678,"netProfitN":37222,"netMarginPct":52,"shipping":"₮4,946","customs":"₮1,643","packaging":"₮1,175","totalCost":"₮33,678","netProfit":"₮37,222"},"Storybook Projector Night Light":{"cost":"₮97,811","price":"₮320,900","costN":97811,"priceN":320900,"shippingN":17368,"customsN":6011,"packagingN":855,"totalCostN":122045,"netProfitN":198855,"netMarginPct":62,"shipping":"₮17,368","customs":"₮6,011","packaging":"₮855","totalCost":"₮122,045","netProfit":"₮198,855"},"Kids Dry Erase Activity Mat":{"cost":"₮3,602","price":"₮45,900","costN":3602,"priceN":45900,"shippingN":4887,"customsN":174,"packagingN":630,"totalCostN":9293,"netProfitN":36607,"netMarginPct":80,"shipping":"₮4,887","customs":"₮174","packaging":"₮630","totalCost":"₮9,293","netProfit":"₮36,607"},"Puzzle Maze Ball Track":{"cost":"₮7,400","price":"₮55,900","costN":7400,"priceN":55900,"shippingN":2950,"customsN":375,"packagingN":1729,"totalCostN":12454,"netProfitN":43446,"netMarginPct":78,"shipping":"₮2,950","customs":"₮375","packaging":"₮1,729","totalCost":"₮12,454","netProfit":"₮43,446"},"Pattern Block Set Geometry":{"cost":"₮15,283","price":"₮70,900","costN":15283,"priceN":70900,"shippingN":4335,"customsN":1097,"packagingN":1280,"totalCostN":21995,"netProfitN":48905,"netMarginPct":69,"shipping":"₮4,335","customs":"₮1,097","packaging":"₮1,280","totalCost":"₮21,995","netProfit":"₮48,905"},"Kids Reading Pen Phonics":{"cost":"₮23,437","price":"₮70,900","costN":23437,"priceN":70900,"shippingN":5240,"customsN":1215,"packagingN":1567,"totalCostN":31459,"netProfitN":39441,"netMarginPct":56,"shipping":"₮5,240","customs":"₮1,215","packaging":"₮1,567","totalCost":"₮31,459","netProfit":"₮39,441"},"Sprinkler Pad Water Play":{"cost":"₮21,464","price":"₮55,900","costN":21464,"priceN":55900,"shippingN":3783,"customsN":880,"packagingN":846,"totalCostN":26973,"netProfitN":28927,"netMarginPct":52,"shipping":"₮3,783","customs":"₮880","packaging":"₮846","totalCost":"₮26,973","netProfit":"₮28,927"},"Kids Gardening Tool Set":{"cost":"₮6,866","price":"₮70,900","costN":6866,"priceN":70900,"shippingN":4046,"customsN":321,"packagingN":1370,"totalCostN":12603,"netProfitN":58297,"netMarginPct":82,"shipping":"₮4,046","customs":"₮321","packaging":"₮1,370","totalCost":"₮12,603","netProfit":"₮58,297"},"Archery Set Kids Foam":{"cost":"₮5,802","price":"₮45,900","costN":5802,"priceN":45900,"shippingN":3335,"customsN":288,"packagingN":1175,"totalCostN":10600,"netProfitN":35300,"netMarginPct":77,"shipping":"₮3,335","customs":"₮288","packaging":"₮1,175","totalCost":"₮10,600","netProfit":"₮35,300"},"Kids Balance Bike No Pedal":{"cost":"₮19,575","price":"₮70,900","costN":19575,"priceN":70900,"shippingN":4558,"customsN":980,"packagingN":1225,"totalCostN":26338,"netProfitN":44562,"netMarginPct":63,"shipping":"₮4,558","customs":"₮980","packaging":"₮1,225","totalCost":"₮26,338","netProfit":"₮44,562"},"Stomp Rocket Launcher":{"cost":"₮9,113","price":"₮55,900","costN":9113,"priceN":55900,"shippingN":3840,"customsN":371,"packagingN":526,"totalCostN":13850,"netProfitN":42050,"netMarginPct":75,"shipping":"₮3,840","customs":"₮371","packaging":"₮526","totalCost":"₮13,850","netProfit":"₮42,050"},"Giant Bubble Wand Set":{"cost":"₮23,255","price":"₮70,900","costN":23255,"priceN":70900,"shippingN":3887,"customsN":1359,"packagingN":585,"totalCostN":29086,"netProfitN":41814,"netMarginPct":59,"shipping":"₮3,887","customs":"₮1,359","packaging":"₮585","totalCost":"₮29,086","netProfit":"₮41,814"},"Pogo Stick Kids Beginner":{"cost":"₮13,946","price":"₮70,900","costN":13946,"priceN":70900,"shippingN":4763,"customsN":730,"packagingN":555,"totalCostN":19994,"netProfitN":50906,"netMarginPct":72,"shipping":"₮4,763","customs":"₮730","packaging":"₮555","totalCost":"₮19,994","netProfit":"₮50,906"},"Sack Race Set Party":{"cost":"₮6,526","price":"₮55,900","costN":6526,"priceN":55900,"shippingN":3331,"customsN":428,"packagingN":1294,"totalCostN":11579,"netProfitN":44321,"netMarginPct":79,"shipping":"₮3,331","customs":"₮428","packaging":"₮1,294","totalCost":"₮11,579","netProfit":"₮44,321"},"Bocce Ball Set Lawn":{"cost":"₮6,442","price":"₮70,900","costN":6442,"priceN":70900,"shippingN":4798,"customsN":305,"packagingN":1317,"totalCostN":12862,"netProfitN":58038,"netMarginPct":82,"shipping":"₮4,798","customs":"₮305","packaging":"₮1,317","totalCost":"₮12,862","netProfit":"₮58,038"},"Kids Snow Sled Fast":{"cost":"₮22,865","price":"₮70,900","costN":22865,"priceN":70900,"shippingN":4583,"customsN":1859,"packagingN":993,"totalCostN":30300,"netProfitN":40600,"netMarginPct":57,"shipping":"₮4,583","customs":"₮1,859","packaging":"₮993","totalCost":"₮30,300","netProfit":"₮40,600"},"Slip and Slide Water Run":{"cost":"₮16,762","price":"₮70,900","costN":16762,"priceN":70900,"shippingN":4938,"customsN":1160,"packagingN":1613,"totalCostN":24473,"netProfitN":46427,"netMarginPct":65,"shipping":"₮4,938","customs":"₮1,160","packaging":"₮1,613","totalCost":"₮24,473","netProfit":"₮46,427"},"Flying Disc Set Glow":{"cost":"₮4,840","price":"₮40,900","costN":4840,"priceN":40900,"shippingN":4247,"customsN":313,"packagingN":783,"totalCostN":10183,"netProfitN":30717,"netMarginPct":75,"shipping":"₮4,247","customs":"₮313","packaging":"₮783","totalCost":"₮10,183","netProfit":"₮30,717"},"Sandbox Table Outdoor":{"cost":"₮5,722","price":"₮55,900","costN":5722,"priceN":55900,"shippingN":5022,"customsN":349,"packagingN":1262,"totalCostN":12355,"netProfitN":43545,"netMarginPct":78,"shipping":"₮5,022","customs":"₮349","packaging":"₮1,262","totalCost":"₮12,355","netProfit":"₮43,545"},"Kite Delta Kids Easy":{"cost":"₮21,710","price":"₮70,900","costN":21710,"priceN":70900,"shippingN":4808,"customsN":1479,"packagingN":1367,"totalCostN":29364,"netProfitN":41536,"netMarginPct":59,"shipping":"₮4,808","customs":"₮1,479","packaging":"₮1,367","totalCost":"₮29,364","netProfit":"₮41,536"},"Soccer Goal Pop Up Mini":{"cost":"₮19,266","price":"₮70,900","costN":19266,"priceN":70900,"shippingN":4405,"customsN":1479,"packagingN":679,"totalCostN":25829,"netProfitN":45071,"netMarginPct":64,"shipping":"₮4,405","customs":"₮1,479","packaging":"₮679","totalCost":"₮25,829","netProfit":"₮45,071"},"Badminton Set Kids Yard":{"cost":"₮14,871","price":"₮70,900","costN":14871,"priceN":70900,"shippingN":4841,"customsN":1241,"packagingN":699,"totalCostN":21652,"netProfitN":49248,"netMarginPct":69,"shipping":"₮4,841","customs":"₮1,241","packaging":"₮699","totalCost":"₮21,652","netProfit":"₮49,248"},"Croquet Set Kids Classic":{"cost":"₮22,436","price":"₮70,900","costN":22436,"priceN":70900,"shippingN":4742,"customsN":1643,"packagingN":803,"totalCostN":29624,"netProfitN":41276,"netMarginPct":58,"shipping":"₮4,742","customs":"₮1,643","packaging":"₮803","totalCost":"₮29,624","netProfit":"₮41,276"},"Walkers Wooden Push Toy":{"cost":"₮12,532","price":"₮70,900","costN":12532,"priceN":70900,"shippingN":4370,"customsN":756,"packagingN":978,"totalCostN":18636,"netProfitN":52264,"netMarginPct":74,"shipping":"₮4,370","customs":"₮756","packaging":"₮978","totalCost":"₮18,636","netProfit":"₮52,264"},"Bug Catching Kit Outdoor":{"cost":"₮18,858","price":"₮70,900","costN":18858,"priceN":70900,"shippingN":4708,"customsN":878,"packagingN":1672,"totalCostN":26116,"netProfitN":44784,"netMarginPct":63,"shipping":"₮4,708","customs":"₮878","packaging":"₮1,672","totalCost":"₮26,116","netProfit":"₮44,784"},"Hopscotch Chalk Set":{"cost":"₮13,977","price":"₮55,900","costN":13977,"priceN":55900,"shippingN":4834,"customsN":869,"packagingN":1465,"totalCostN":21145,"netProfitN":34755,"netMarginPct":62,"shipping":"₮4,834","customs":"₮869","packaging":"₮1,465","totalCost":"₮21,145","netProfit":"₮34,755"},"Toss and Catch Ball Set":{"cost":"₮16,839","price":"₮70,900","costN":16839,"priceN":70900,"shippingN":4352,"customsN":802,"packagingN":1309,"totalCostN":23302,"netProfitN":47598,"netMarginPct":67,"shipping":"₮4,352","customs":"₮802","packaging":"₮1,309","totalCost":"₮23,302","netProfit":"₮47,598"},"Skateboard Beginner Kids":{"cost":"₮11,545","price":"₮70,900","costN":11545,"priceN":70900,"shippingN":4331,"customsN":656,"packagingN":1045,"totalCostN":17577,"netProfitN":53323,"netMarginPct":75,"shipping":"₮4,331","customs":"₮656","packaging":"₮1,045","totalCost":"₮17,577","netProfit":"₮53,323"},"T-Ball Tee Baseball Starter":{"cost":"₮19,871","price":"₮70,900","costN":19871,"priceN":70900,"shippingN":3803,"customsN":1429,"packagingN":849,"totalCostN":25952,"netProfitN":44948,"netMarginPct":63,"shipping":"₮3,803","customs":"₮1,429","packaging":"₮849","totalCost":"₮25,952","netProfit":"₮44,948"},"Frisbee Golf Disc Set":{"cost":"₮14,123","price":"₮70,900","costN":14123,"priceN":70900,"shippingN":4837,"customsN":570,"packagingN":911,"totalCostN":20441,"netProfitN":50459,"netMarginPct":71,"shipping":"₮4,837","customs":"₮570","packaging":"₮911","totalCost":"₮20,441","netProfit":"₮50,459"},"Ring Toss Outdoor Game":{"cost":"₮11,841","price":"₮70,900","costN":11841,"priceN":70900,"shippingN":4529,"customsN":969,"packagingN":682,"totalCostN":18021,"netProfitN":52879,"netMarginPct":75,"shipping":"₮4,529","customs":"₮969","packaging":"₮682","totalCost":"₮18,021","netProfit":"₮52,879"},"Kinetic Sand Mold Set":{"cost":"₮16,185","price":"₮70,900","costN":16185,"priceN":70900,"shippingN":5558,"customsN":812,"packagingN":982,"totalCostN":23537,"netProfitN":47363,"netMarginPct":67,"shipping":"₮5,558","customs":"₮812","packaging":"₮982","totalCost":"₮23,537","netProfit":"₮47,363"},"Kids Camera Digital Waterproof":{"cost":"₮37,196","price":"₮150,900","costN":37196,"priceN":150900,"shippingN":7651,"customsN":2906,"packagingN":574,"totalCostN":48327,"netProfitN":102573,"netMarginPct":68,"shipping":"₮7,651","customs":"₮2,906","packaging":"₮574","totalCost":"₮48,327","netProfit":"₮102,573"},"Slime Making Kit":{"cost":"₮10,122","price":"₮70,900","costN":10122,"priceN":70900,"shippingN":4376,"customsN":803,"packagingN":693,"totalCostN":15994,"netProfitN":54906,"netMarginPct":77,"shipping":"₮4,376","customs":"₮803","packaging":"₮693","totalCost":"₮15,994","netProfit":"₮54,906"},"Perler Bead Fuse Set":{"cost":"₮16,491","price":"₮70,900","costN":16491,"priceN":70900,"shippingN":4601,"customsN":1143,"packagingN":545,"totalCostN":22780,"netProfitN":48120,"netMarginPct":68,"shipping":"₮4,601","customs":"₮1,143","packaging":"₮545","totalCost":"₮22,780","netProfit":"₮48,120"},"Kids Craft Box Monthly":{"cost":"₮23,424","price":"₮70,900","costN":23424,"priceN":70900,"shippingN":4434,"customsN":994,"packagingN":1773,"totalCostN":30625,"netProfitN":40275,"netMarginPct":57,"shipping":"₮4,434","customs":"₮994","packaging":"₮1,773","totalCost":"₮30,625","netProfit":"₮40,275"},"Tie Dye Kit Kids":{"cost":"₮23,915","price":"₮70,900","costN":23915,"priceN":70900,"shippingN":4035,"customsN":1795,"packagingN":964,"totalCostN":30709,"netProfitN":40191,"netMarginPct":57,"shipping":"₮4,035","customs":"₮1,795","packaging":"₮964","totalCost":"₮30,709","netProfit":"₮40,191"},"Loom Bracelet Kit":{"cost":"₮11,715","price":"₮55,900","costN":11715,"priceN":55900,"shippingN":4985,"customsN":901,"packagingN":1388,"totalCostN":18989,"netProfitN":36911,"netMarginPct":66,"shipping":"₮4,985","customs":"₮901","packaging":"₮1,388","totalCost":"₮18,989","netProfit":"₮36,911"},"Origami Kit Kids Paper":{"cost":"₮4,879","price":"₮45,900","costN":4879,"priceN":45900,"shippingN":3144,"customsN":300,"packagingN":641,"totalCostN":8964,"netProfitN":36936,"netMarginPct":80,"shipping":"₮3,144","customs":"₮300","packaging":"₮641","totalCost":"₮8,964","netProfit":"₮36,936"},"Sewing Kit Kids Beginner":{"cost":"₮16,610","price":"₮70,900","costN":16610,"priceN":70900,"shippingN":5200,"customsN":1214,"packagingN":756,"totalCostN":23780,"netProfitN":47120,"netMarginPct":66,"shipping":"₮5,200","customs":"₮1,214","packaging":"₮756","totalCost":"₮23,780","netProfit":"₮47,120"},"Watercolor Painting Set Pro":{"cost":"₮14,774","price":"₮70,900","costN":14774,"priceN":70900,"shippingN":3380,"customsN":627,"packagingN":1742,"totalCostN":20523,"netProfitN":50377,"netMarginPct":71,"shipping":"₮3,380","customs":"₮627","packaging":"₮1,742","totalCost":"₮20,523","netProfit":"₮50,377"},"Clay Sculpting Set Kids":{"cost":"₮6,172","price":"₮55,900","costN":6172,"priceN":55900,"shippingN":4290,"customsN":385,"packagingN":1526,"totalCostN":12373,"netProfitN":43527,"netMarginPct":78,"shipping":"₮4,290","customs":"₮385","packaging":"₮1,526","totalCost":"₮12,373","netProfit":"₮43,527"},"Paint by Numbers Kids Canvas":{"cost":"₮9,827","price":"₮55,900","costN":9827,"priceN":55900,"shippingN":4140,"customsN":775,"packagingN":746,"totalCostN":15488,"netProfitN":40412,"netMarginPct":72,"shipping":"₮4,140","customs":"₮775","packaging":"₮746","totalCost":"₮15,488","netProfit":"₮40,412"},"Jewelry Making Kit Girls":{"cost":"₮20,372","price":"₮70,900","costN":20372,"priceN":70900,"shippingN":4662,"customsN":1029,"packagingN":1429,"totalCostN":27492,"netProfitN":43408,"netMarginPct":61,"shipping":"₮4,662","customs":"₮1,029","packaging":"₮1,429","totalCost":"₮27,492","netProfit":"₮43,408"},"Puppet Making Kit Felt":{"cost":"₮13,931","price":"₮55,900","costN":13931,"priceN":55900,"shippingN":3896,"customsN":887,"packagingN":571,"totalCostN":19285,"netProfitN":36615,"netMarginPct":66,"shipping":"₮3,896","customs":"₮887","packaging":"₮571","totalCost":"₮19,285","netProfit":"₮36,615"},"Rock Painting Kit Kids":{"cost":"₮11,972","price":"₮55,900","costN":11972,"priceN":55900,"shippingN":3865,"customsN":588,"packagingN":1519,"totalCostN":17944,"netProfitN":37956,"netMarginPct":68,"shipping":"₮3,865","customs":"₮588","packaging":"₮1,519","totalCost":"₮17,944","netProfit":"₮37,956"},"Scratch Art Sheets Rainbow":{"cost":"₮3,131","price":"₮50,900","costN":3131,"priceN":50900,"shippingN":4668,"customsN":186,"packagingN":1033,"totalCostN":9018,"netProfitN":41882,"netMarginPct":82,"shipping":"₮4,668","customs":"₮186","packaging":"₮1,033","totalCost":"₮9,018","netProfit":"₮41,882"},"Mosaic Tile Art Kit":{"cost":"₮7,622","price":"₮55,900","costN":7622,"priceN":55900,"shippingN":3018,"customsN":663,"packagingN":1729,"totalCostN":13032,"netProfitN":42868,"netMarginPct":77,"shipping":"₮3,018","customs":"₮663","packaging":"₮1,729","totalCost":"₮13,032","netProfit":"₮42,868"},"Decoupage Craft Set Kids":{"cost":"₮2,104","price":"₮25,900","costN":2104,"priceN":25900,"shippingN":2967,"customsN":140,"packagingN":525,"totalCostN":5736,"netProfitN":20164,"netMarginPct":78,"shipping":"₮2,967","customs":"₮140","packaging":"₮525","totalCost":"₮5,736","netProfit":"₮20,164"},"Wooden Birdhouse Paint Kit":{"cost":"₮18,916","price":"₮70,900","costN":18916,"priceN":70900,"shippingN":4232,"customsN":882,"packagingN":1570,"totalCostN":25600,"netProfitN":45300,"netMarginPct":64,"shipping":"₮4,232","customs":"₮882","packaging":"₮1,570","totalCost":"₮25,600","netProfit":"₮45,300"},"Cartoon Drawing Kit Guide":{"cost":"₮24,683","price":"₮70,900","costN":24683,"priceN":70900,"shippingN":5420,"customsN":1098,"packagingN":1016,"totalCostN":32217,"netProfitN":38683,"netMarginPct":55,"shipping":"₮5,420","customs":"₮1,098","packaging":"₮1,016","totalCost":"₮32,217","netProfit":"₮38,683"},"Sand Art Bottle Kit":{"cost":"₮13,657","price":"₮55,900","costN":13657,"priceN":55900,"shippingN":3855,"customsN":1215,"packagingN":1772,"totalCostN":20499,"netProfitN":35401,"netMarginPct":63,"shipping":"₮3,855","customs":"₮1,215","packaging":"₮1,772","totalCost":"₮20,499","netProfit":"₮35,401"},"Tie Dye Bag Canvas Kit":{"cost":"₮19,270","price":"₮55,900","costN":19270,"priceN":55900,"shippingN":4459,"customsN":1207,"packagingN":1398,"totalCostN":26334,"netProfitN":29566,"netMarginPct":53,"shipping":"₮4,459","customs":"₮1,207","packaging":"₮1,398","totalCost":"₮26,334","netProfit":"₮29,566"},"Weaving Loom Beginner":{"cost":"₮12,370","price":"₮70,900","costN":12370,"priceN":70900,"shippingN":4171,"customsN":989,"packagingN":1201,"totalCostN":18731,"netProfitN":52169,"netMarginPct":74,"shipping":"₮4,171","customs":"₮989","packaging":"₮1,201","totalCost":"₮18,731","netProfit":"₮52,169"},"Stamp Ink Pad Set Kids":{"cost":"₮10,786","price":"₮55,900","costN":10786,"priceN":55900,"shippingN":4310,"customsN":813,"packagingN":1325,"totalCostN":17234,"netProfitN":38666,"netMarginPct":69,"shipping":"₮4,310","customs":"₮813","packaging":"₮1,325","totalCost":"₮17,234","netProfit":"₮38,666"},"Enamel Pin Making Kit":{"cost":"₮19,861","price":"₮70,900","costN":19861,"priceN":70900,"shippingN":3729,"customsN":1520,"packagingN":1792,"totalCostN":26902,"netProfitN":43998,"netMarginPct":62,"shipping":"₮3,729","customs":"₮1,520","packaging":"₮1,792","totalCost":"₮26,902","netProfit":"₮43,998"},"GPS Kids Smartwatch":{"cost":"₮98,955","price":"₮200,900","costN":98955,"priceN":200900,"shippingN":7403,"customsN":7324,"packagingN":1514,"totalCostN":115196,"netProfitN":85704,"netMarginPct":43,"shipping":"₮7,403","customs":"₮7,324","packaging":"₮1,514","totalCost":"₮115,196","netProfit":"₮85,704"},"Baby Gate Extra Wide":{"cost":"₮6,232","price":"₮50,900","costN":6232,"priceN":50900,"shippingN":4652,"customsN":414,"packagingN":1337,"totalCostN":12635,"netProfitN":38265,"netMarginPct":75,"shipping":"₮4,652","customs":"₮414","packaging":"₮1,337","totalCost":"₮12,635","netProfit":"₮38,265"},"Cabinet Lock Magnetic":{"cost":"₮6,489","price":"₮55,900","costN":6489,"priceN":55900,"shippingN":3509,"customsN":376,"packagingN":1455,"totalCostN":11829,"netProfitN":44071,"netMarginPct":79,"shipping":"₮3,509","customs":"₮376","packaging":"₮1,455","totalCost":"₮11,829","netProfit":"₮44,071"},"Toilet Lock Baby Safety":{"cost":"₮9,664","price":"₮65,900","costN":9664,"priceN":65900,"shippingN":3443,"customsN":460,"packagingN":1033,"totalCostN":14600,"netProfitN":51300,"netMarginPct":78,"shipping":"₮3,443","customs":"₮460","packaging":"₮1,033","totalCost":"₮14,600","netProfit":"₮51,300"},"Stove Knob Cover Set":{"cost":"₮22,728","price":"₮55,900","costN":22728,"priceN":55900,"shippingN":4142,"customsN":1881,"packagingN":727,"totalCostN":29478,"netProfitN":26422,"netMarginPct":47,"shipping":"₮4,142","customs":"₮1,881","packaging":"₮727","totalCost":"₮29,478","netProfit":"₮26,422"},"Door Pinch Guard Foam":{"cost":"₮15,085","price":"₮55,900","costN":15085,"priceN":55900,"shippingN":2922,"customsN":1347,"packagingN":1022,"totalCostN":20376,"netProfitN":35524,"netMarginPct":64,"shipping":"₮2,922","customs":"₮1,347","packaging":"₮1,022","totalCost":"₮20,376","netProfit":"₮35,524"},"Pool Alarm Surface Sensor":{"cost":"₮26,907","price":"₮70,900","costN":26907,"priceN":70900,"shippingN":3522,"customsN":1409,"packagingN":555,"totalCostN":32393,"netProfitN":38507,"netMarginPct":54,"shipping":"₮3,522","customs":"₮1,409","packaging":"₮555","totalCost":"₮32,393","netProfit":"₮38,507"},"Baby Monitor Video Split":{"cost":"₮164,721","price":"₮420,900","costN":164721,"priceN":420900,"shippingN":14741,"customsN":14030,"packagingN":924,"totalCostN":194416,"netProfitN":226484,"netMarginPct":54,"shipping":"₮14,741","customs":"₮14,030","packaging":"₮924","totalCost":"₮194,416","netProfit":"₮226,484"},"Kids ID Bracelet Engraved":{"cost":"₮20,808","price":"₮70,900","costN":20808,"priceN":70900,"shippingN":4926,"customsN":1563,"packagingN":1417,"totalCostN":28714,"netProfitN":42186,"netMarginPct":60,"shipping":"₮4,926","customs":"₮1,563","packaging":"₮1,417","totalCost":"₮28,714","netProfit":"₮42,186"},"Outlet Cover Sliding Plate":{"cost":"₮12,686","price":"₮55,900","costN":12686,"priceN":55900,"shippingN":4946,"customsN":905,"packagingN":1429,"totalCostN":19966,"netProfitN":35934,"netMarginPct":64,"shipping":"₮4,946","customs":"₮905","packaging":"₮1,429","totalCost":"₮19,966","netProfit":"₮35,934"},"Furniture Anchor Anti-Tip":{"cost":"₮6,132","price":"₮50,900","costN":6132,"priceN":50900,"shippingN":3858,"customsN":310,"packagingN":1233,"totalCostN":11533,"netProfitN":39367,"netMarginPct":77,"shipping":"₮3,858","customs":"₮310","packaging":"₮1,233","totalCost":"₮11,533","netProfit":"₮39,367"},"Door Stop Floor Mount":{"cost":"₮13,124","price":"₮55,900","costN":13124,"priceN":55900,"shippingN":4687,"customsN":756,"packagingN":1287,"totalCostN":19854,"netProfitN":36046,"netMarginPct":64,"shipping":"₮4,687","customs":"₮756","packaging":"₮1,287","totalCost":"₮19,854","netProfit":"₮36,046"},"Car Seat Mirror Rear-View":{"cost":"₮10,786","price":"₮70,900","costN":10786,"priceN":70900,"shippingN":4330,"customsN":737,"packagingN":1173,"totalCostN":17026,"netProfitN":53874,"netMarginPct":76,"shipping":"₮4,330","customs":"₮737","packaging":"₮1,173","totalCost":"₮17,026","netProfit":"₮53,874"},"Reflective Safety Vest Kids":{"cost":"₮24,887","price":"₮70,900","costN":24887,"priceN":70900,"shippingN":4906,"customsN":1752,"packagingN":1150,"totalCostN":32695,"netProfitN":38205,"netMarginPct":54,"shipping":"₮4,906","customs":"₮1,752","packaging":"₮1,150","totalCost":"₮32,695","netProfit":"₮38,205"},"Bike Helmet Kids Adjustable":{"cost":"₮18,373","price":"₮70,900","costN":18373,"priceN":70900,"shippingN":4181,"customsN":1181,"packagingN":1192,"totalCostN":24927,"netProfitN":45973,"netMarginPct":65,"shipping":"₮4,181","customs":"₮1,181","packaging":"₮1,192","totalCost":"₮24,927","netProfit":"₮45,973"},"Window Safety Lock Restrictor":{"cost":"₮16,617","price":"₮70,900","costN":16617,"priceN":70900,"shippingN":3814,"customsN":1376,"packagingN":1484,"totalCostN":23291,"netProfitN":47609,"netMarginPct":67,"shipping":"₮3,814","customs":"₮1,376","packaging":"₮1,484","totalCost":"₮23,291","netProfit":"₮47,609"},"Non-Slip Rug Grip Pad":{"cost":"₮12,754","price":"₮55,900","costN":12754,"priceN":55900,"shippingN":4981,"customsN":537,"packagingN":680,"totalCostN":18952,"netProfitN":36948,"netMarginPct":66,"shipping":"₮4,981","customs":"₮537","packaging":"₮680","totalCost":"₮18,952","netProfit":"₮36,948"},"Bed Rail Side Guard":{"cost":"₮3,985","price":"₮40,900","costN":3985,"priceN":40900,"shippingN":3867,"customsN":321,"packagingN":726,"totalCostN":8899,"netProfitN":32001,"netMarginPct":78,"shipping":"₮3,867","customs":"₮321","packaging":"₮726","totalCost":"₮8,899","netProfit":"₮32,001"},"Kids Wristband Tracker Waterproof":{"cost":"₮16,624","price":"₮55,900","costN":16624,"priceN":55900,"shippingN":4154,"customsN":1220,"packagingN":774,"totalCostN":22772,"netProfitN":33128,"netMarginPct":59,"shipping":"₮4,154","customs":"₮1,220","packaging":"₮774","totalCost":"₮22,772","netProfit":"₮33,128"},"Table Edge Bumper Strip":{"cost":"₮20,313","price":"₮70,900","costN":20313,"priceN":70900,"shippingN":5037,"customsN":939,"packagingN":1303,"totalCostN":27592,"netProfitN":43308,"netMarginPct":61,"shipping":"₮5,037","customs":"₮939","packaging":"₮1,303","totalCost":"₮27,592","netProfit":"₮43,308"},"Suction Bowl Plate Baby":{"cost":"₮10,752","price":"₮70,900","costN":10752,"priceN":70900,"shippingN":5163,"customsN":797,"packagingN":667,"totalCostN":17379,"netProfitN":53521,"netMarginPct":75,"shipping":"₮5,163","customs":"₮797","packaging":"₮667","totalCost":"₮17,379","netProfit":"₮53,521"},"Baby Spoon Self-Feeding Set":{"cost":"₮4,298","price":"₮50,900","costN":4298,"priceN":50900,"shippingN":3524,"customsN":272,"packagingN":1079,"totalCostN":9173,"netProfitN":41727,"netMarginPct":82,"shipping":"₮3,524","customs":"₮272","packaging":"₮1,079","totalCost":"₮9,173","netProfit":"₮41,727"},"Silicone Bib Catchall Pocket":{"cost":"₮5,888","price":"₮55,900","costN":5888,"priceN":55900,"shippingN":4903,"customsN":383,"packagingN":1381,"totalCostN":12555,"netProfitN":43345,"netMarginPct":78,"shipping":"₮4,903","customs":"₮383","packaging":"₮1,381","totalCost":"₮12,555","netProfit":"₮43,345"},"Portable Booster Seat Clip":{"cost":"₮7,022","price":"₮40,900","costN":7022,"priceN":40900,"shippingN":3942,"customsN":421,"packagingN":834,"totalCostN":12219,"netProfitN":28681,"netMarginPct":70,"shipping":"₮3,942","customs":"₮421","packaging":"₮834","totalCost":"₮12,219","netProfit":"₮28,681"},"Baby Food Squeeze Pouch":{"cost":"₮12,675","price":"₮55,900","costN":12675,"priceN":55900,"shippingN":3287,"customsN":835,"packagingN":1104,"totalCostN":17901,"netProfitN":37999,"netMarginPct":68,"shipping":"₮3,287","customs":"₮835","packaging":"₮1,104","totalCost":"₮17,901","netProfit":"₮37,999"},"Baby Led Weaning Starter Kit":{"cost":"₮18,551","price":"₮70,900","costN":18551,"priceN":70900,"shippingN":5381,"customsN":1646,"packagingN":644,"totalCostN":26222,"netProfitN":44678,"netMarginPct":63,"shipping":"₮5,381","customs":"₮1,646","packaging":"₮644","totalCost":"₮26,222","netProfit":"₮44,678"},"Bottle Warmer Fast Electric":{"cost":"₮21,998","price":"₮70,900","costN":21998,"priceN":70900,"shippingN":5000,"customsN":999,"packagingN":778,"totalCostN":28775,"netProfitN":42125,"netMarginPct":59,"shipping":"₮5,000","customs":"₮999","packaging":"₮778","totalCost":"₮28,775","netProfit":"₮42,125"},"Formula Dispenser Portable":{"cost":"₮19,087","price":"₮70,900","costN":19087,"priceN":70900,"shippingN":5030,"customsN":1534,"packagingN":1244,"totalCostN":26895,"netProfitN":44005,"netMarginPct":62,"shipping":"₮5,030","customs":"₮1,534","packaging":"₮1,244","totalCost":"₮26,895","netProfit":"₮44,005"},"Kids Lunch Box Thermal":{"cost":"₮22,163","price":"₮70,900","costN":22163,"priceN":70900,"shippingN":5191,"customsN":1603,"packagingN":1699,"totalCostN":30656,"netProfitN":40244,"netMarginPct":57,"shipping":"₮5,191","customs":"₮1,603","packaging":"₮1,699","totalCost":"₮30,656","netProfit":"₮40,244"},"Toddler Cup Straw Sippy":{"cost":"₮22,878","price":"₮70,900","costN":22878,"priceN":70900,"shippingN":3767,"customsN":1846,"packagingN":1232,"totalCostN":29723,"netProfitN":41177,"netMarginPct":58,"shipping":"₮3,767","customs":"₮1,846","packaging":"₮1,232","totalCost":"₮29,723","netProfit":"₮41,177"},"High Chair Seat Cover":{"cost":"₮16,601","price":"₮55,900","costN":16601,"priceN":55900,"shippingN":5154,"customsN":1177,"packagingN":605,"totalCostN":23537,"netProfitN":32363,"netMarginPct":58,"shipping":"₮5,154","customs":"₮1,177","packaging":"₮605","totalCost":"₮23,537","netProfit":"₮32,363"},"Baby Fruit Feeder Pacifier":{"cost":"₮2,934","price":"₮35,900","costN":2934,"priceN":35900,"shippingN":3548,"customsN":167,"packagingN":1002,"totalCostN":7651,"netProfitN":28249,"netMarginPct":79,"shipping":"₮3,548","customs":"₮167","packaging":"₮1,002","totalCost":"₮7,651","netProfit":"₮28,249"},"Divided Snack Container Set":{"cost":"₮13,794","price":"₮55,900","costN":13794,"priceN":55900,"shippingN":3167,"customsN":1018,"packagingN":519,"totalCostN":18498,"netProfitN":37402,"netMarginPct":67,"shipping":"₮3,167","customs":"₮1,018","packaging":"₮519","totalCost":"₮18,498","netProfit":"₮37,402"},"Breast Milk Storage Bags":{"cost":"₮9,984","price":"₮55,900","costN":9984,"priceN":55900,"shippingN":4506,"customsN":479,"packagingN":1778,"totalCostN":16747,"netProfitN":39153,"netMarginPct":70,"shipping":"₮4,506","customs":"₮479","packaging":"₮1,778","totalCost":"₮16,747","netProfit":"₮39,153"},"Kids Smoothie Cup Straw":{"cost":"₮15,355","price":"₮70,900","costN":15355,"priceN":70900,"shippingN":3426,"customsN":1302,"packagingN":879,"totalCostN":20962,"netProfitN":49938,"netMarginPct":70,"shipping":"₮3,426","customs":"₮1,302","packaging":"₮879","totalCost":"₮20,962","netProfit":"₮49,938"},"Baby Cereal Feeding Spoon":{"cost":"₮2,643","price":"₮50,900","costN":2643,"priceN":50900,"shippingN":4935,"customsN":191,"packagingN":1057,"totalCostN":8826,"netProfitN":42074,"netMarginPct":83,"shipping":"₮4,935","customs":"₮191","packaging":"₮1,057","totalCost":"₮8,826","netProfit":"₮42,074"},"Snack Trap Travel Cup":{"cost":"₮13,651","price":"₮70,900","costN":13651,"priceN":70900,"shippingN":4244,"customsN":1038,"packagingN":1148,"totalCostN":20081,"netProfitN":50819,"netMarginPct":72,"shipping":"₮4,244","customs":"₮1,038","packaging":"₮1,148","totalCost":"₮20,081","netProfit":"₮50,819"},"Food Processor Baby Mini":{"cost":"₮89,559","price":"₮230,900","costN":89559,"priceN":230900,"shippingN":10392,"customsN":4867,"packagingN":1286,"totalCostN":106104,"netProfitN":124796,"netMarginPct":54,"shipping":"₮10,392","customs":"₮4,867","packaging":"₮1,286","totalCost":"₮106,104","netProfit":"₮124,796"},"Toddler Placemat Suction":{"cost":"₮3,798","price":"₮40,900","costN":3798,"priceN":40900,"shippingN":3655,"customsN":306,"packagingN":1172,"totalCostN":8931,"netProfitN":31969,"netMarginPct":78,"shipping":"₮3,655","customs":"₮306","packaging":"₮1,172","totalCost":"₮8,931","netProfit":"₮31,969"},"Baby Water Training Cup":{"cost":"₮22,707","price":"₮70,900","costN":22707,"priceN":70900,"shippingN":5384,"customsN":1379,"packagingN":769,"totalCostN":30239,"netProfitN":40661,"netMarginPct":57,"shipping":"₮5,384","customs":"₮1,379","packaging":"₮769","totalCost":"₮30,239","netProfit":"₮40,661"},"Baby Sleep Sack Wearable":{"cost":"₮6,956","price":"₮55,900","costN":6956,"priceN":55900,"shippingN":4769,"customsN":449,"packagingN":836,"totalCostN":13010,"netProfitN":42890,"netMarginPct":77,"shipping":"₮4,769","customs":"₮449","packaging":"₮836","totalCost":"₮13,010","netProfit":"₮42,890"},"Crib Mobile Musical Stars":{"cost":"₮13,499","price":"₮55,900","costN":13499,"priceN":55900,"shippingN":4296,"customsN":1033,"packagingN":1206,"totalCostN":20034,"netProfitN":35866,"netMarginPct":64,"shipping":"₮4,296","customs":"₮1,033","packaging":"₮1,206","totalCost":"₮20,034","netProfit":"₮35,866"},"Baby Bassinet Bedside":{"cost":"₮8,884","price":"₮70,900","costN":8884,"priceN":70900,"shippingN":5485,"customsN":753,"packagingN":1727,"totalCostN":16849,"netProfitN":54051,"netMarginPct":76,"shipping":"₮5,485","customs":"₮753","packaging":"₮1,727","totalCost":"₮16,849","netProfit":"₮54,051"},"Toddler Pillow Small":{"cost":"₮13,843","price":"₮70,900","costN":13843,"priceN":70900,"shippingN":3934,"customsN":615,"packagingN":921,"totalCostN":19313,"netProfitN":51587,"netMarginPct":73,"shipping":"₮3,934","customs":"₮615","packaging":"₮921","totalCost":"₮19,313","netProfit":"₮51,587"},"Baby Monitor Audio Only":{"cost":"₮57,726","price":"₮190,900","costN":57726,"priceN":190900,"shippingN":15848,"customsN":2659,"packagingN":1656,"totalCostN":77889,"netProfitN":113011,"netMarginPct":59,"shipping":"₮15,848","customs":"₮2,659","packaging":"₮1,656","totalCost":"₮77,889","netProfit":"₮113,011"},"Blackout Window Blind Portable":{"cost":"₮17,074","price":"₮70,900","costN":17074,"priceN":70900,"shippingN":5448,"customsN":1492,"packagingN":709,"totalCostN":24723,"netProfitN":46177,"netMarginPct":65,"shipping":"₮5,448","customs":"₮1,492","packaging":"₮709","totalCost":"₮24,723","netProfit":"₮46,177"},"Toddler Wake-Up Clock":{"cost":"₮13,341","price":"₮70,900","costN":13341,"priceN":70900,"shippingN":4405,"customsN":1037,"packagingN":894,"totalCostN":19677,"netProfitN":51223,"netMarginPct":72,"shipping":"₮4,405","customs":"₮1,037","packaging":"₮894","totalCost":"₮19,677","netProfit":"₮51,223"},"Baby Hammock Swing Indoor":{"cost":"₮4,366","price":"₮35,900","costN":4366,"priceN":35900,"shippingN":3679,"customsN":265,"packagingN":1096,"totalCostN":9406,"netProfitN":26494,"netMarginPct":74,"shipping":"₮3,679","customs":"₮265","packaging":"₮1,096","totalCost":"₮9,406","netProfit":"₮26,494"},"Crib Mattress Protector":{"cost":"₮3,925","price":"₮45,900","costN":3925,"priceN":45900,"shippingN":3165,"customsN":239,"packagingN":1209,"totalCostN":8538,"netProfitN":37362,"netMarginPct":81,"shipping":"₮3,165","customs":"₮239","packaging":"₮1,209","totalCost":"₮8,538","netProfit":"₮37,362"},"Night Terror Relief Oil":{"cost":"₮16,637","price":"₮70,900","costN":16637,"priceN":70900,"shippingN":4659,"customsN":895,"packagingN":1771,"totalCostN":23962,"netProfitN":46938,"netMarginPct":66,"shipping":"₮4,659","customs":"₮895","packaging":"₮1,771","totalCost":"₮23,962","netProfit":"₮46,938"},"Baby Rocking Bassinet Smart":{"cost":"₮3,531","price":"₮45,900","costN":3531,"priceN":45900,"shippingN":4623,"customsN":242,"packagingN":771,"totalCostN":9167,"netProfitN":36733,"netMarginPct":80,"shipping":"₮4,623","customs":"₮242","packaging":"₮771","totalCost":"₮9,167","netProfit":"₮36,733"},"Toddler Sleep Training Clock":{"cost":"₮23,066","price":"₮70,900","costN":23066,"priceN":70900,"shippingN":4598,"customsN":1234,"packagingN":584,"totalCostN":29482,"netProfitN":41418,"netMarginPct":58,"shipping":"₮4,598","customs":"₮1,234","packaging":"₮584","totalCost":"₮29,482","netProfit":"₮41,418"},"Crib Soother Projector":{"cost":"₮100,245","price":"₮280,900","costN":100245,"priceN":280900,"shippingN":16008,"customsN":7475,"packagingN":942,"totalCostN":124670,"netProfitN":156230,"netMarginPct":56,"shipping":"₮16,008","customs":"₮7,475","packaging":"₮942","totalCost":"₮124,670","netProfit":"₮156,230"},"Baby Flat Head Pillow":{"cost":"₮11,949","price":"₮70,900","costN":11949,"priceN":70900,"shippingN":5556,"customsN":1000,"packagingN":943,"totalCostN":19448,"netProfitN":51452,"netMarginPct":73,"shipping":"₮5,556","customs":"₮1,000","packaging":"₮943","totalCost":"₮19,448","netProfit":"₮51,452"},"Kid Sleeping Bag Camping":{"cost":"₮5,257","price":"₮45,900","costN":5257,"priceN":45900,"shippingN":3036,"customsN":301,"packagingN":1154,"totalCostN":9748,"netProfitN":36152,"netMarginPct":79,"shipping":"₮3,036","customs":"₮301","packaging":"₮1,154","totalCost":"₮9,748","netProfit":"₮36,152"},"Toddler Bed Rail Mesh":{"cost":"₮9,618","price":"₮70,900","costN":9618,"priceN":70900,"shippingN":4221,"customsN":721,"packagingN":766,"totalCostN":15326,"netProfitN":55574,"netMarginPct":78,"shipping":"₮4,221","customs":"₮721","packaging":"₮766","totalCost":"₮15,326","netProfit":"₮55,574"},"Baby Velcro Swaddle Wrap":{"cost":"₮14,903","price":"₮70,900","costN":14903,"priceN":70900,"shippingN":3533,"customsN":789,"packagingN":807,"totalCostN":20032,"netProfitN":50868,"netMarginPct":72,"shipping":"₮3,533","customs":"₮789","packaging":"₮807","totalCost":"₮20,032","netProfit":"₮50,868"},"Sleep Training Book Kids":{"cost":"₮4,042","price":"₮55,900","costN":4042,"priceN":55900,"shippingN":4037,"customsN":260,"packagingN":1450,"totalCostN":9789,"netProfitN":46111,"netMarginPct":82,"shipping":"₮4,037","customs":"₮260","packaging":"₮1,450","totalCost":"₮9,789","netProfit":"₮46,111"},"Anti-Roll Positioner Wedge":{"cost":"₮9,794","price":"₮70,900","costN":9794,"priceN":70900,"shippingN":4144,"customsN":646,"packagingN":1579,"totalCostN":16163,"netProfitN":54737,"netMarginPct":77,"shipping":"₮4,144","customs":"₮646","packaging":"₮1,579","totalCost":"₮16,163","netProfit":"₮54,737"},"Star Projector Night Light":{"cost":"₮344,064","price":"₮660,900","costN":344064,"priceN":660900,"shippingN":16188,"customsN":19690,"packagingN":1476,"totalCostN":381418,"netProfitN":279482,"netMarginPct":42,"shipping":"₮16,188","customs":"₮19,690","packaging":"₮1,476","totalCost":"₮381,418","netProfit":"₮279,482"},"Baby Bath Tub Infant Sink":{"cost":"₮24,199","price":"₮70,900","costN":24199,"priceN":70900,"shippingN":3463,"customsN":1687,"packagingN":973,"totalCostN":30322,"netProfitN":40578,"netMarginPct":57,"shipping":"₮3,463","customs":"₮1,687","packaging":"₮973","totalCost":"₮30,322","netProfit":"₮40,578"},"Bath Spout Cover Safety":{"cost":"₮20,391","price":"₮55,900","costN":20391,"priceN":55900,"shippingN":3417,"customsN":1574,"packagingN":740,"totalCostN":26122,"netProfitN":29778,"netMarginPct":53,"shipping":"₮3,417","customs":"₮1,574","packaging":"₮740","totalCost":"₮26,122","netProfit":"₮29,778"},"Bath Toy Organizer Mesh":{"cost":"₮3,490","price":"₮40,900","costN":3490,"priceN":40900,"shippingN":5032,"customsN":207,"packagingN":1206,"totalCostN":9935,"netProfitN":30965,"netMarginPct":76,"shipping":"₮5,032","customs":"₮207","packaging":"₮1,206","totalCost":"₮9,935","netProfit":"₮30,965"},"Squirt Toys Set Rubber":{"cost":"₮2,447","price":"₮35,900","costN":2447,"priceN":35900,"shippingN":3485,"customsN":133,"packagingN":945,"totalCostN":7010,"netProfitN":28890,"netMarginPct":80,"shipping":"₮3,485","customs":"₮133","packaging":"₮945","totalCost":"₮7,010","netProfit":"₮28,890"},"Bath Crayons Washable":{"cost":"₮15,373","price":"₮55,900","costN":15373,"priceN":55900,"shippingN":4084,"customsN":675,"packagingN":945,"totalCostN":21077,"netProfitN":34823,"netMarginPct":62,"shipping":"₮4,084","customs":"₮675","packaging":"₮945","totalCost":"₮21,077","netProfit":"₮34,823"},"Non-Slip Bath Mat Kids":{"cost":"₮9,783","price":"₮55,900","costN":9783,"priceN":55900,"shippingN":3050,"customsN":620,"packagingN":1018,"totalCostN":14471,"netProfitN":41429,"netMarginPct":74,"shipping":"₮3,050","customs":"₮620","packaging":"₮1,018","totalCost":"₮14,471","netProfit":"₮41,429"},"Waterfall Rinse Cup":{"cost":"₮7,143","price":"₮70,900","costN":7143,"priceN":70900,"shippingN":4169,"customsN":612,"packagingN":1552,"totalCostN":13476,"netProfitN":57424,"netMarginPct":81,"shipping":"₮4,169","customs":"₮612","packaging":"₮1,552","totalCost":"₮13,476","netProfit":"₮57,424"},"Bath Thermometer Duck":{"cost":"₮9,758","price":"₮55,900","costN":9758,"priceN":55900,"shippingN":3483,"customsN":631,"packagingN":1619,"totalCostN":15491,"netProfitN":40409,"netMarginPct":72,"shipping":"₮3,483","customs":"₮631","packaging":"₮1,619","totalCost":"₮15,491","netProfit":"₮40,409"},"Bath Time Book Waterproof":{"cost":"₮11,105","price":"₮70,900","costN":11105,"priceN":70900,"shippingN":3584,"customsN":538,"packagingN":771,"totalCostN":15998,"netProfitN":54902,"netMarginPct":77,"shipping":"₮3,584","customs":"₮538","packaging":"₮771","totalCost":"₮15,998","netProfit":"₮54,902"},"Color Changing Bath Tablets":{"cost":"₮3,167","price":"₮55,900","costN":3167,"priceN":55900,"shippingN":3970,"customsN":254,"packagingN":1782,"totalCostN":9173,"netProfitN":46727,"netMarginPct":84,"shipping":"₮3,970","customs":"₮254","packaging":"₮1,782","totalCost":"₮9,173","netProfit":"₮46,727"},"Bath Seat Ring Non-Slip":{"cost":"₮17,153","price":"₮70,900","costN":17153,"priceN":70900,"shippingN":5148,"customsN":1282,"packagingN":1767,"totalCostN":25350,"netProfitN":45550,"netMarginPct":64,"shipping":"₮5,148","customs":"₮1,282","packaging":"₮1,767","totalCost":"₮25,350","netProfit":"₮45,550"},"Hooded Towel Animal Kids":{"cost":"₮16,108","price":"₮70,900","costN":16108,"priceN":70900,"shippingN":4757,"customsN":1007,"packagingN":1285,"totalCostN":23157,"netProfitN":47743,"netMarginPct":67,"shipping":"₮4,757","customs":"₮1,007","packaging":"₮1,285","totalCost":"₮23,157","netProfit":"₮47,743"},"Baby Shampoo Brush Silicone":{"cost":"₮12,078","price":"₮70,900","costN":12078,"priceN":70900,"shippingN":3396,"customsN":1070,"packagingN":943,"totalCostN":17487,"netProfitN":53413,"netMarginPct":75,"shipping":"₮3,396","customs":"₮1,070","packaging":"₮943","totalCost":"₮17,487","netProfit":"₮53,413"},"Kids Electric Toothbrush Timer":{"cost":"₮20,339","price":"₮70,900","costN":20339,"priceN":70900,"shippingN":5274,"customsN":1764,"packagingN":721,"totalCostN":28098,"netProfitN":42802,"netMarginPct":60,"shipping":"₮5,274","customs":"₮1,764","packaging":"₮721","totalCost":"₮28,098","netProfit":"₮42,802"},"Bath Visor Sun Shield Hair":{"cost":"₮4,276","price":"₮35,900","costN":4276,"priceN":35900,"shippingN":3836,"customsN":250,"packagingN":521,"totalCostN":8883,"netProfitN":27017,"netMarginPct":75,"shipping":"₮3,836","customs":"₮250","packaging":"₮521","totalCost":"₮8,883","netProfit":"₮27,017"},"Acne Treatment System Teen":{"cost":"₮21,772","price":"₮70,900","costN":21772,"priceN":70900,"shippingN":3681,"customsN":1774,"packagingN":1797,"totalCostN":29024,"netProfitN":41876,"netMarginPct":59,"shipping":"₮3,681","customs":"₮1,774","packaging":"₮1,797","totalCost":"₮29,024","netProfit":"₮41,876"},"Study Planner Notebook Teen":{"cost":"₮13,481","price":"₮70,900","costN":13481,"priceN":70900,"shippingN":3658,"customsN":956,"packagingN":966,"totalCostN":19061,"netProfitN":51839,"netMarginPct":73,"shipping":"₮3,658","customs":"₮956","packaging":"₮966","totalCost":"₮19,061","netProfit":"₮51,839"},"Wireless Earbuds Teen Gift":{"cost":"₮34,727","price":"₮150,900","costN":34727,"priceN":150900,"shippingN":7339,"customsN":1849,"packagingN":843,"totalCostN":44758,"netProfitN":106142,"netMarginPct":70,"shipping":"₮7,339","customs":"₮1,849","packaging":"₮843","totalCost":"₮44,758","netProfit":"₮106,142"},"Skincare Starter Kit Teen":{"cost":"₮14,778","price":"₮70,900","costN":14778,"priceN":70900,"shippingN":4692,"customsN":789,"packagingN":549,"totalCostN":20808,"netProfitN":50092,"netMarginPct":71,"shipping":"₮4,692","customs":"₮789","packaging":"₮549","totalCost":"₮20,808","netProfit":"₮50,092"},"Phone Grip Stand Ring Teen":{"cost":"₮5,390","price":"₮55,900","costN":5390,"priceN":55900,"shippingN":3199,"customsN":365,"packagingN":697,"totalCostN":9651,"netProfitN":46249,"netMarginPct":83,"shipping":"₮3,199","customs":"₮365","packaging":"₮697","totalCost":"₮9,651","netProfit":"₮46,249"},"Bath Color Drops Fizzy":{"cost":"₮20,417","price":"₮70,900","costN":20417,"priceN":70900,"shippingN":3390,"customsN":1614,"packagingN":612,"totalCostN":26033,"netProfitN":44867,"netMarginPct":63,"shipping":"₮3,390","customs":"₮1,614","packaging":"₮612","totalCost":"₮26,033","netProfit":"₮44,867"},"Inflatable Bath Pillow Kids":{"cost":"₮18,494","price":"₮70,900","costN":18494,"priceN":70900,"shippingN":5116,"customsN":1009,"packagingN":1206,"totalCostN":25825,"netProfitN":45075,"netMarginPct":64,"shipping":"₮5,116","customs":"₮1,009","packaging":"₮1,206","totalCost":"₮25,825","netProfit":"₮45,075"},"Bath Puppet Wash Mitt":{"cost":"₮23,540","price":"₮70,900","costN":23540,"priceN":70900,"shippingN":3522,"customsN":1394,"packagingN":632,"totalCostN":29088,"netProfitN":41812,"netMarginPct":59,"shipping":"₮3,522","customs":"₮1,394","packaging":"₮632","totalCost":"₮29,088","netProfit":"₮41,812"},"Foldable Kids Bath Tub":{"cost":"₮5,368","price":"₮45,900","costN":5368,"priceN":45900,"shippingN":3682,"customsN":357,"packagingN":1503,"totalCostN":10910,"netProfitN":34990,"netMarginPct":76,"shipping":"₮3,682","customs":"₮357","packaging":"₮1,503","totalCost":"₮10,910","netProfit":"₮34,990"},"Soap Dispenser With Brush":{"cost":"₮6,832","price":"₮70,900","costN":6832,"priceN":70900,"shippingN":4947,"customsN":394,"packagingN":902,"totalCostN":13075,"netProfitN":57825,"netMarginPct":82,"shipping":"₮4,947","customs":"₮394","packaging":"₮902","totalCost":"₮13,075","netProfit":"₮57,825"},"Teen Acne Face Wash":{"cost":"₮18,827","price":"₮70,900","costN":18827,"priceN":70900,"shippingN":3561,"customsN":1434,"packagingN":1660,"totalCostN":25482,"netProfitN":45418,"netMarginPct":64,"shipping":"₮3,561","customs":"₮1,434","packaging":"₮1,660","totalCost":"₮25,482","netProfit":"₮45,418"},"Teen Period Care Kit":{"cost":"₮25,448","price":"₮70,900","costN":25448,"priceN":70900,"shippingN":4762,"customsN":1487,"packagingN":1763,"totalCostN":33460,"netProfitN":37440,"netMarginPct":53,"shipping":"₮4,762","customs":"₮1,487","packaging":"₮1,763","totalCost":"₮33,460","netProfit":"₮37,440"},"Teen Sleep Earplugs Set":{"cost":"₮25,577","price":"₮70,900","costN":25577,"priceN":70900,"shippingN":4851,"customsN":1487,"packagingN":1775,"totalCostN":33690,"netProfitN":37210,"netMarginPct":52,"shipping":"₮4,851","customs":"₮1,487","packaging":"₮1,775","totalCost":"₮33,690","netProfit":"₮37,210"},"Teen Journal Mindfulness":{"cost":"₮6,422","price":"₮70,900","costN":6422,"priceN":70900,"shippingN":4197,"customsN":348,"packagingN":717,"totalCostN":11684,"netProfitN":59216,"netMarginPct":84,"shipping":"₮4,197","customs":"₮348","packaging":"₮717","totalCost":"₮11,684","netProfit":"₮59,216"},"Teen Makeup Starter Kit":{"cost":"₮26,049","price":"₮70,900","costN":26049,"priceN":70900,"shippingN":4873,"customsN":2292,"packagingN":1334,"totalCostN":34548,"netProfitN":36352,"netMarginPct":51,"shipping":"₮4,873","customs":"₮2,292","packaging":"₮1,334","totalCost":"₮34,548","netProfit":"₮36,352"},"Baby Swimming Nappy":{"cost":"₮20,166","price":"₮70,900","costN":20166,"priceN":70900,"shippingN":5272,"customsN":822,"packagingN":1660,"totalCostN":27920,"netProfitN":42980,"netMarginPct":61,"shipping":"₮5,272","customs":"₮822","packaging":"₮1,660","totalCost":"₮27,920","netProfit":"₮42,980"},"Baby Carrier Hip Seat":{"cost":"₮7,789","price":"₮60,900","costN":7789,"priceN":60900,"shippingN":4911,"customsN":347,"packagingN":1636,"totalCostN":14683,"netProfitN":46217,"netMarginPct":76,"shipping":"₮4,911","customs":"₮347","packaging":"₮1,636","totalCost":"₮14,683","netProfit":"₮46,217"},"Baby Crawling Knee Pads":{"cost":"₮10,433","price":"₮55,900","costN":10433,"priceN":55900,"shippingN":4321,"customsN":804,"packagingN":1581,"totalCostN":17139,"netProfitN":38761,"netMarginPct":69,"shipping":"₮4,321","customs":"₮804","packaging":"₮1,581","totalCost":"₮17,139","netProfit":"₮38,761"},"Toddler Backpack Small":{"cost":"₮4,728","price":"₮60,900","costN":4728,"priceN":60900,"shippingN":5120,"customsN":192,"packagingN":1103,"totalCostN":11143,"netProfitN":49757,"netMarginPct":82,"shipping":"₮5,120","customs":"₮192","packaging":"₮1,103","totalCost":"₮11,143","netProfit":"₮49,757"},"Baby Sunscreen SPF50":{"cost":"₮21,502","price":"₮70,900","costN":21502,"priceN":70900,"shippingN":4561,"customsN":1504,"packagingN":1740,"totalCostN":29307,"netProfitN":41593,"netMarginPct":59,"shipping":"₮4,561","customs":"₮1,504","packaging":"₮1,740","totalCost":"₮29,307","netProfit":"₮41,593"},"Kids Umbrella Foldable":{"cost":"₮3,785","price":"₮45,900","costN":3785,"priceN":45900,"shippingN":5547,"customsN":198,"packagingN":862,"totalCostN":10392,"netProfitN":35508,"netMarginPct":77,"shipping":"₮5,547","customs":"₮198","packaging":"₮862","totalCost":"₮10,392","netProfit":"₮35,508"},"Kids Sunglasses UV400":{"cost":"₮21,933","price":"₮70,900","costN":21933,"priceN":70900,"shippingN":4039,"customsN":1651,"packagingN":1286,"totalCostN":28909,"netProfitN":41991,"netMarginPct":59,"shipping":"₮4,039","customs":"₮1,651","packaging":"₮1,286","totalCost":"₮28,909","netProfit":"₮41,991"},"Knee Pad Set Skating Kids":{"cost":"₮7,356","price":"₮55,900","costN":7356,"priceN":55900,"shippingN":4336,"customsN":549,"packagingN":603,"totalCostN":12844,"netProfitN":43056,"netMarginPct":77,"shipping":"₮4,336","customs":"₮549","packaging":"₮603","totalCost":"₮12,844","netProfit":"₮43,056"},"Life Jacket Kids Pool":{"cost":"₮22,156","price":"₮70,900","costN":22156,"priceN":70900,"shippingN":3566,"customsN":893,"packagingN":1223,"totalCostN":27838,"netProfitN":43062,"netMarginPct":61,"shipping":"₮3,566","customs":"₮893","packaging":"₮1,223","totalCost":"₮27,838","netProfit":"₮43,062"},"Wrist Leash Anti-Lost":{"cost":"₮17,493","price":"₮70,900","costN":17493,"priceN":70900,"shippingN":3760,"customsN":1530,"packagingN":1043,"totalCostN":23826,"netProfitN":47074,"netMarginPct":66,"shipping":"₮3,760","customs":"₮1,530","packaging":"₮1,043","totalCost":"₮23,826","netProfit":"₮47,074"}};
+const RATINGS_DATA={"Baby White Noise Machine":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Nail File Electric":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Lounger Pillow Dock":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Smart Baby Scale WiFi":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Wrap Carrier Stretchy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Newborn Photo Prop Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Milestone Cards Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pacifier Clip Ribbon Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Shusher Sound Device":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Infant Gas Relief Drops":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Bath Seat Ring Support":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Diaper Cream Organic":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby LED Night Light Portable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wearable Baby Monitor Smart":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Proofing Kit 30pc":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Stroller Fan Clip-On":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Food Maker Puree":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Swaddle Blanket Bamboo Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Nose Aspirator Frida":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Diaper Pail Odor Seal":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Feeding Pillow Nursing":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Teething Toy Frozen Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Swim Floatie Arm Bands":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Infrared Baby Ear Thermometer":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Heartbeat Monitor Doppler":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Montessori Busy Board Toddler":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Alphabet Learning Puzzle Foam":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Drawing Tablet LED Lightbox":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Magnetic Building Tiles Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Coding Robot Beginner":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Flash Card Learning Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Interactive Globe Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Telescope Kids Starter":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Microscope Science Kit Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Math Manipulatives Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sight Words Game Cards":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Musical Keyboard Piano":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Dinosaur Excavation Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Walkie Talkie Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"World Map Puzzle Large":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Coding Activity Book Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Reading Tracker Sticker Chart":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Science Experiment Kit 50":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Abacus Wooden Math Toy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Language Learning Cards Bilingual":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Storybook Projector Night Light":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Dry Erase Activity Mat":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Puzzle Maze Ball Track":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pattern Block Set Geometry":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Reading Pen Phonics":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sprinkler Pad Water Play":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Gardening Tool Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Archery Set Kids Foam":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Balance Bike No Pedal":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Stomp Rocket Launcher":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Giant Bubble Wand Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pogo Stick Kids Beginner":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sack Race Set Party":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bocce Ball Set Lawn":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Snow Sled Fast":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Slip and Slide Water Run":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Flying Disc Set Glow":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sandbox Table Outdoor":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kite Delta Kids Easy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Soccer Goal Pop Up Mini":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Badminton Set Kids Yard":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Croquet Set Kids Classic":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Walkers Wooden Push Toy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bug Catching Kit Outdoor":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Hopscotch Chalk Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toss and Catch Ball Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Skateboard Beginner Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"T-Ball Tee Baseball Starter":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Frisbee Golf Disc Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Ring Toss Outdoor Game":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kinetic Sand Mold Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Camera Digital Waterproof":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Slime Making Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Perler Bead Fuse Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Craft Box Monthly":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Tie Dye Kit Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Loom Bracelet Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Origami Kit Kids Paper":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sewing Kit Kids Beginner":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Watercolor Painting Set Pro":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Clay Sculpting Set Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Paint by Numbers Kids Canvas":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Jewelry Making Kit Girls":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Puppet Making Kit Felt":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Rock Painting Kit Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Scratch Art Sheets Rainbow":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Mosaic Tile Art Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Decoupage Craft Set Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wooden Birdhouse Paint Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Cartoon Drawing Kit Guide":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sand Art Bottle Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Tie Dye Bag Canvas Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Weaving Loom Beginner":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Stamp Ink Pad Set Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Enamel Pin Making Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"GPS Kids Smartwatch":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Gate Extra Wide":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Cabinet Lock Magnetic":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toilet Lock Baby Safety":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Stove Knob Cover Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Door Pinch Guard Foam":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Pool Alarm Surface Sensor":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Monitor Video Split":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids ID Bracelet Engraved":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Outlet Cover Sliding Plate":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Furniture Anchor Anti-Tip":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Door Stop Floor Mount":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Car Seat Mirror Rear-View":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Reflective Safety Vest Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bike Helmet Kids Adjustable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Window Safety Lock Restrictor":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Non-Slip Rug Grip Pad":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bed Rail Side Guard":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Wristband Tracker Waterproof":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Table Edge Bumper Strip":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Suction Bowl Plate Baby":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Spoon Self-Feeding Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Silicone Bib Catchall Pocket":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Portable Booster Seat Clip":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Food Squeeze Pouch":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Led Weaning Starter Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bottle Warmer Fast Electric":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Formula Dispenser Portable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Lunch Box Thermal":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Cup Straw Sippy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"High Chair Seat Cover":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Fruit Feeder Pacifier":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Divided Snack Container Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Breast Milk Storage Bags":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Smoothie Cup Straw":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Cereal Feeding Spoon":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Snack Trap Travel Cup":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Food Processor Baby Mini":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Placemat Suction":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Water Training Cup":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Sleep Sack Wearable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Crib Mobile Musical Stars":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Bassinet Bedside":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Pillow Small":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Monitor Audio Only":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Blackout Window Blind Portable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Wake-Up Clock":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Hammock Swing Indoor":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Crib Mattress Protector":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Night Terror Relief Oil":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Rocking Bassinet Smart":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Sleep Training Clock":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Crib Soother Projector":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Flat Head Pillow":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kid Sleeping Bag Camping":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Bed Rail Mesh":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Velcro Swaddle Wrap":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Sleep Training Book Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Anti-Roll Positioner Wedge":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Star Projector Night Light":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Bath Tub Infant Sink":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Spout Cover Safety":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Toy Organizer Mesh":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Squirt Toys Set Rubber":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Crayons Washable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Non-Slip Bath Mat Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Waterfall Rinse Cup":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Thermometer Duck":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Time Book Waterproof":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Color Changing Bath Tablets":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Seat Ring Non-Slip":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Hooded Towel Animal Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Shampoo Brush Silicone":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Electric Toothbrush Timer":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Visor Sun Shield Hair":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Acne Treatment System Teen":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Study Planner Notebook Teen":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wireless Earbuds Teen Gift":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Skincare Starter Kit Teen":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Phone Grip Stand Ring Teen":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Color Drops Fizzy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Inflatable Bath Pillow Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Bath Puppet Wash Mitt":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Foldable Kids Bath Tub":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Soap Dispenser With Brush":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Teen Acne Face Wash":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Teen Period Care Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Teen Sleep Earplugs Set":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Teen Journal Mindfulness":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Teen Makeup Starter Kit":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Swimming Nappy":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Carrier Hip Seat":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Crawling Knee Pads":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Toddler Backpack Small":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Baby Sunscreen SPF50":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Umbrella Foldable":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Kids Sunglasses UV400":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Knee Pad Set Skating Kids":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Life Jacket Kids Pool":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"},"Wrist Leash Anti-Lost":{value:"good",wow:"good",saturation:"notyet",easy:"vgood",margin:"5x",unique:"yes",problem:"yes"}};
+const PRODUCTS = [
+  // Baby
+  "Baby White Noise Machine",
+  "Baby Nail File Electric",
+  "Baby Lounger Pillow Dock",
+  "Smart Baby Scale WiFi",
+  "Baby Wrap Carrier Stretchy",
+  "Newborn Photo Prop Set",
+  "Baby Milestone Cards Set",
+  "Pacifier Clip Ribbon Set",
+  "Baby Shusher Sound Device",
+  "Infant Gas Relief Drops",
+  "Baby Bath Seat Ring Support",
+  "Diaper Cream Organic",
+  "Baby LED Night Light Portable",
+  "Wearable Baby Monitor Smart",
+  "Baby Proofing Kit 30pc",
+  "Stroller Fan Clip-On",
+  "Baby Food Maker Puree",
+  "Swaddle Blanket Bamboo Set",
+  "Baby Nose Aspirator Frida",
+  "Diaper Pail Odor Seal",
+  "Baby Feeding Pillow Nursing",
+  "Teething Toy Frozen Set",
+  "Baby Swim Floatie Arm Bands",
+  "Infrared Baby Ear Thermometer",
+  "Baby Heartbeat Monitor Doppler",
+  // Learning
+  "Montessori Busy Board Toddler",
+  "Alphabet Learning Puzzle Foam",
+  "Drawing Tablet LED Lightbox",
+  "Magnetic Building Tiles Set",
+  "Kids Coding Robot Beginner",
+  "Flash Card Learning Set",
+  "Interactive Globe Kids",
+  "Telescope Kids Starter",
+  "Microscope Science Kit Kids",
+  "Math Manipulatives Set",
+  "Sight Words Game Cards",
+  "Kids Musical Keyboard Piano",
+  "Dinosaur Excavation Kit",
+  "Kids Walkie Talkie Set",
+  "World Map Puzzle Large",
+  "Coding Activity Book Kids",
+  "Reading Tracker Sticker Chart",
+  "Science Experiment Kit 50",
+  "Abacus Wooden Math Toy",
+  "Language Learning Cards Bilingual",
+  "Storybook Projector Night Light",
+  "Kids Dry Erase Activity Mat",
+  "Puzzle Maze Ball Track",
+  "Pattern Block Set Geometry",
+  "Kids Reading Pen Phonics",
+  // Outdoor Play
+  "Sprinkler Pad Water Play",
+  "Kids Gardening Tool Set",
+  "Archery Set Kids Foam",
+  "Kids Balance Bike No Pedal",
+  "Stomp Rocket Launcher",
+  "Giant Bubble Wand Set",
+  "Pogo Stick Kids Beginner",
+  "Sack Race Set Party",
+  "Bocce Ball Set Lawn",
+  "Kids Snow Sled Fast",
+  "Slip and Slide Water Run",
+  "Flying Disc Set Glow",
+  "Sandbox Table Outdoor",
+  "Kite Delta Kids Easy",
+  "Soccer Goal Pop Up Mini",
+  "Badminton Set Kids Yard",
+  "Croquet Set Kids Classic",
+  "Walkers Wooden Push Toy",
+  "Bug Catching Kit Outdoor",
+  "Hopscotch Chalk Set",
+  "Toss and Catch Ball Set",
+  "Skateboard Beginner Kids",
+  "T-Ball Tee Baseball Starter",
+  "Frisbee Golf Disc Set",
+  "Ring Toss Outdoor Game",
+  // Creative
+  "Kinetic Sand Mold Set",
+  "Kids Camera Digital Waterproof",
+  "Slime Making Kit",
+  "Perler Bead Fuse Set",
+  "Kids Craft Box Monthly",
+  "Tie Dye Kit Kids",
+  "Loom Bracelet Kit",
+  "Origami Kit Kids Paper",
+  "Sewing Kit Kids Beginner",
+  "Watercolor Painting Set Pro",
+  "Clay Sculpting Set Kids",
+  "Paint by Numbers Kids Canvas",
+  "Jewelry Making Kit Girls",
+  "Puppet Making Kit Felt",
+  "Rock Painting Kit Kids",
+  "Scratch Art Sheets Rainbow",
+  "Mosaic Tile Art Kit",
+  "Decoupage Craft Set Kids",
+  "Wooden Birdhouse Paint Kit",
+  "Cartoon Drawing Kit Guide",
+  "Sand Art Bottle Kit",
+  "Tie Dye Bag Canvas Kit",
+  "Weaving Loom Beginner",
+  "Stamp Ink Pad Set Kids",
+  "Enamel Pin Making Kit",
+  // Safety
+  "GPS Kids Smartwatch",
+  "Baby Gate Extra Wide",
+  "Cabinet Lock Magnetic",
+  "Toilet Lock Baby Safety",
+  "Stove Knob Cover Set",
+  "Door Pinch Guard Foam",
+  "Pool Alarm Surface Sensor",
+  "Baby Monitor Video Split",
+  "Kids ID Bracelet Engraved",
+  "Outlet Cover Sliding Plate",
+  "Furniture Anchor Anti-Tip",
+  "Door Stop Floor Mount",
+  "Car Seat Mirror Rear-View",
+  "Reflective Safety Vest Kids",
+  "Bike Helmet Kids Adjustable",
+  "Window Safety Lock Restrictor",
+  "Non-Slip Rug Grip Pad",
+  "Bed Rail Side Guard",
+  "Kids Wristband Tracker Waterproof",
+  "Table Edge Bumper Strip",
+  // Feeding
+  "Suction Bowl Plate Baby",
+  "Baby Spoon Self-Feeding Set",
+  "Silicone Bib Catchall Pocket",
+  "Portable Booster Seat Clip",
+  "Baby Food Squeeze Pouch",
+  "Baby Led Weaning Starter Kit",
+  "Bottle Warmer Fast Electric",
+  "Formula Dispenser Portable",
+  "Kids Lunch Box Thermal",
+  "Toddler Cup Straw Sippy",
+  "High Chair Seat Cover",
+  "Baby Fruit Feeder Pacifier",
+  "Divided Snack Container Set",
+  "Breast Milk Storage Bags",
+  "Kids Smoothie Cup Straw",
+  "Baby Cereal Feeding Spoon",
+  "Snack Trap Travel Cup",
+  "Food Processor Baby Mini",
+  "Toddler Placemat Suction",
+  "Baby Water Training Cup",
+  // Sleep
+  "Baby Sleep Sack Wearable",
+  "Crib Mobile Musical Stars",
+  "Baby Bassinet Bedside",
+  "Toddler Pillow Small",
+  "Baby Monitor Audio Only",
+  "Blackout Window Blind Portable",
+  "Toddler Wake-Up Clock",
+  "Baby Hammock Swing Indoor",
+  "Crib Mattress Protector",
+  "Night Terror Relief Oil",
+  "Baby Rocking Bassinet Smart",
+  "Toddler Sleep Training Clock",
+  "Crib Soother Projector",
+  "Baby Flat Head Pillow",
+  "Kid Sleeping Bag Camping",
+  "Toddler Bed Rail Mesh",
+  "Baby Velcro Swaddle Wrap",
+  "Sleep Training Book Kids",
+  "Anti-Roll Positioner Wedge",
+  "Star Projector Night Light",
+  // Bath
+  "Baby Bath Tub Infant Sink",
+  "Bath Spout Cover Safety",
+  "Bath Toy Organizer Mesh",
+  "Squirt Toys Set Rubber",
+  "Bath Crayons Washable",
+  "Non-Slip Bath Mat Kids",
+  "Waterfall Rinse Cup",
+  "Bath Thermometer Duck",
+  "Bath Time Book Waterproof",
+  "Color Changing Bath Tablets",
+  "Bath Seat Ring Non-Slip",
+  "Hooded Towel Animal Kids",
+  "Baby Shampoo Brush Silicone",
+  "Kids Electric Toothbrush Timer",
+  "Bath Visor Sun Shield Hair",
+  // Teen
+  "Acne Treatment System Teen",
+  "Study Planner Notebook Teen",
+  "Wireless Earbuds Teen Gift",
+  "Skincare Starter Kit Teen",
+  "Phone Grip Stand Ring Teen",
+  // Bath
+  "Bath Color Drops Fizzy",
+  "Inflatable Bath Pillow Kids",
+  "Bath Puppet Wash Mitt",
+  "Foldable Kids Bath Tub",
+  "Soap Dispenser With Brush",
+  // Teen
+  "Teen Acne Face Wash",
+  "Teen Period Care Kit",
+  "Teen Sleep Earplugs Set",
+  "Teen Journal Mindfulness",
+  "Teen Makeup Starter Kit",
+  // Baby
+  "Baby Swimming Nappy",
+  "Baby Carrier Hip Seat",
+  "Baby Crawling Knee Pads",
+  "Toddler Backpack Small",
+  "Baby Sunscreen SPF50",
+  // Safety
+  "Kids Umbrella Foldable",
+  "Kids Sunglasses UV400",
+  "Knee Pad Set Skating Kids",
+  "Life Jacket Kids Pool",
+  "Wrist Leash Anti-Lost",
+];
+const CAT_MAP = {"Baby White Noise Machine":"Baby","Baby Nail File Electric":"Baby","Baby Lounger Pillow Dock":"Baby","Smart Baby Scale WiFi":"Baby","Baby Wrap Carrier Stretchy":"Baby","Newborn Photo Prop Set":"Baby","Baby Milestone Cards Set":"Baby","Pacifier Clip Ribbon Set":"Baby","Baby Shusher Sound Device":"Baby","Infant Gas Relief Drops":"Baby","Baby Bath Seat Ring Support":"Baby","Diaper Cream Organic":"Baby","Baby LED Night Light Portable":"Baby","Wearable Baby Monitor Smart":"Baby","Baby Proofing Kit 30pc":"Baby","Stroller Fan Clip-On":"Baby","Baby Food Maker Puree":"Baby","Swaddle Blanket Bamboo Set":"Baby","Baby Nose Aspirator Frida":"Baby","Diaper Pail Odor Seal":"Baby","Baby Feeding Pillow Nursing":"Baby","Teething Toy Frozen Set":"Baby","Baby Swim Floatie Arm Bands":"Baby","Infrared Baby Ear Thermometer":"Baby","Baby Heartbeat Monitor Doppler":"Baby","Montessori Busy Board Toddler":"Learning","Alphabet Learning Puzzle Foam":"Learning","Drawing Tablet LED Lightbox":"Learning","Magnetic Building Tiles Set":"Learning","Kids Coding Robot Beginner":"Learning","Flash Card Learning Set":"Learning","Interactive Globe Kids":"Learning","Telescope Kids Starter":"Learning","Microscope Science Kit Kids":"Learning","Math Manipulatives Set":"Learning","Sight Words Game Cards":"Learning","Kids Musical Keyboard Piano":"Learning","Dinosaur Excavation Kit":"Learning","Kids Walkie Talkie Set":"Learning","World Map Puzzle Large":"Learning","Coding Activity Book Kids":"Learning","Reading Tracker Sticker Chart":"Learning","Science Experiment Kit 50":"Learning","Abacus Wooden Math Toy":"Learning","Language Learning Cards Bilingual":"Learning","Storybook Projector Night Light":"Learning","Kids Dry Erase Activity Mat":"Learning","Puzzle Maze Ball Track":"Learning","Pattern Block Set Geometry":"Learning","Kids Reading Pen Phonics":"Learning","Sprinkler Pad Water Play":"Outdoor Play","Kids Gardening Tool Set":"Outdoor Play","Archery Set Kids Foam":"Outdoor Play","Kids Balance Bike No Pedal":"Outdoor Play","Stomp Rocket Launcher":"Outdoor Play","Giant Bubble Wand Set":"Outdoor Play","Pogo Stick Kids Beginner":"Outdoor Play","Sack Race Set Party":"Outdoor Play","Bocce Ball Set Lawn":"Outdoor Play","Kids Snow Sled Fast":"Outdoor Play","Slip and Slide Water Run":"Outdoor Play","Flying Disc Set Glow":"Outdoor Play","Sandbox Table Outdoor":"Outdoor Play","Kite Delta Kids Easy":"Outdoor Play","Soccer Goal Pop Up Mini":"Outdoor Play","Badminton Set Kids Yard":"Outdoor Play","Croquet Set Kids Classic":"Outdoor Play","Walkers Wooden Push Toy":"Outdoor Play","Bug Catching Kit Outdoor":"Outdoor Play","Hopscotch Chalk Set":"Outdoor Play","Toss and Catch Ball Set":"Outdoor Play","Skateboard Beginner Kids":"Outdoor Play","T-Ball Tee Baseball Starter":"Outdoor Play","Frisbee Golf Disc Set":"Outdoor Play","Ring Toss Outdoor Game":"Outdoor Play","Kinetic Sand Mold Set":"Creative","Kids Camera Digital Waterproof":"Creative","Slime Making Kit":"Creative","Perler Bead Fuse Set":"Creative","Kids Craft Box Monthly":"Creative","Tie Dye Kit Kids":"Creative","Loom Bracelet Kit":"Creative","Origami Kit Kids Paper":"Creative","Sewing Kit Kids Beginner":"Creative","Watercolor Painting Set Pro":"Creative","Clay Sculpting Set Kids":"Creative","Paint by Numbers Kids Canvas":"Creative","Jewelry Making Kit Girls":"Creative","Puppet Making Kit Felt":"Creative","Rock Painting Kit Kids":"Creative","Scratch Art Sheets Rainbow":"Creative","Mosaic Tile Art Kit":"Creative","Decoupage Craft Set Kids":"Creative","Wooden Birdhouse Paint Kit":"Creative","Cartoon Drawing Kit Guide":"Creative","Sand Art Bottle Kit":"Creative","Tie Dye Bag Canvas Kit":"Creative","Weaving Loom Beginner":"Creative","Stamp Ink Pad Set Kids":"Creative","Enamel Pin Making Kit":"Creative","GPS Kids Smartwatch":"Safety","Baby Gate Extra Wide":"Safety","Cabinet Lock Magnetic":"Safety","Toilet Lock Baby Safety":"Safety","Stove Knob Cover Set":"Safety","Door Pinch Guard Foam":"Safety","Pool Alarm Surface Sensor":"Safety","Baby Monitor Video Split":"Safety","Kids ID Bracelet Engraved":"Safety","Outlet Cover Sliding Plate":"Safety","Furniture Anchor Anti-Tip":"Safety","Door Stop Floor Mount":"Safety","Car Seat Mirror Rear-View":"Safety","Reflective Safety Vest Kids":"Safety","Bike Helmet Kids Adjustable":"Safety","Window Safety Lock Restrictor":"Safety","Non-Slip Rug Grip Pad":"Safety","Bed Rail Side Guard":"Safety","Kids Wristband Tracker Waterproof":"Safety","Table Edge Bumper Strip":"Safety","Suction Bowl Plate Baby":"Feeding","Baby Spoon Self-Feeding Set":"Feeding","Silicone Bib Catchall Pocket":"Feeding","Portable Booster Seat Clip":"Feeding","Baby Food Squeeze Pouch":"Feeding","Baby Led Weaning Starter Kit":"Feeding","Bottle Warmer Fast Electric":"Feeding","Formula Dispenser Portable":"Feeding","Kids Lunch Box Thermal":"Feeding","Toddler Cup Straw Sippy":"Feeding","High Chair Seat Cover":"Feeding","Baby Fruit Feeder Pacifier":"Feeding","Divided Snack Container Set":"Feeding","Breast Milk Storage Bags":"Feeding","Kids Smoothie Cup Straw":"Feeding","Baby Cereal Feeding Spoon":"Feeding","Snack Trap Travel Cup":"Feeding","Food Processor Baby Mini":"Feeding","Toddler Placemat Suction":"Feeding","Baby Water Training Cup":"Feeding","Baby Sleep Sack Wearable":"Sleep","Crib Mobile Musical Stars":"Sleep","Baby Bassinet Bedside":"Sleep","Toddler Pillow Small":"Sleep","Baby Monitor Audio Only":"Sleep","Blackout Window Blind Portable":"Sleep","Toddler Wake-Up Clock":"Sleep","Baby Hammock Swing Indoor":"Sleep","Crib Mattress Protector":"Sleep","Night Terror Relief Oil":"Sleep","Baby Rocking Bassinet Smart":"Sleep","Toddler Sleep Training Clock":"Sleep","Crib Soother Projector":"Sleep","Baby Flat Head Pillow":"Sleep","Kid Sleeping Bag Camping":"Sleep","Toddler Bed Rail Mesh":"Sleep","Baby Velcro Swaddle Wrap":"Sleep","Sleep Training Book Kids":"Sleep","Anti-Roll Positioner Wedge":"Sleep","Star Projector Night Light":"Sleep","Baby Bath Tub Infant Sink":"Bath","Bath Spout Cover Safety":"Bath","Bath Toy Organizer Mesh":"Bath","Squirt Toys Set Rubber":"Bath","Bath Crayons Washable":"Bath","Non-Slip Bath Mat Kids":"Bath","Waterfall Rinse Cup":"Bath","Bath Thermometer Duck":"Bath","Bath Time Book Waterproof":"Bath","Color Changing Bath Tablets":"Bath","Bath Seat Ring Non-Slip":"Bath","Hooded Towel Animal Kids":"Bath","Baby Shampoo Brush Silicone":"Bath","Kids Electric Toothbrush Timer":"Bath","Bath Visor Sun Shield Hair":"Bath","Acne Treatment System Teen":"Teen","Study Planner Notebook Teen":"Teen","Wireless Earbuds Teen Gift":"Teen","Skincare Starter Kit Teen":"Teen","Phone Grip Stand Ring Teen":"Teen","Bath Color Drops Fizzy":"Bath","Inflatable Bath Pillow Kids":"Bath","Bath Puppet Wash Mitt":"Bath","Foldable Kids Bath Tub":"Bath","Soap Dispenser With Brush":"Bath","Teen Acne Face Wash":"Teen","Teen Period Care Kit":"Teen","Teen Sleep Earplugs Set":"Teen","Teen Journal Mindfulness":"Teen","Teen Makeup Starter Kit":"Teen","Baby Swimming Nappy":"Baby","Baby Carrier Hip Seat":"Baby","Baby Crawling Knee Pads":"Baby","Toddler Backpack Small":"Baby","Baby Sunscreen SPF50":"Baby","Kids Umbrella Foldable":"Safety","Kids Sunglasses UV400":"Safety","Knee Pad Set Skating Kids":"Safety","Life Jacket Kids Pool":"Safety","Wrist Leash Anti-Lost":"Safety"};
+
+const RL={value:"Үнэ цэн",wow:"Wow Factor",saturation:"Өрсөлдөөн",easy:"Хялбар байдал",margin:"Ашиг",unique:"Өвөрмөц",problem:"Асуудал шийднэ"};
+const ROM={value:["good","notbad","bad"],wow:["wow","good","notyet","bad"],saturation:["notyet","notbad","bad"],easy:["vgood","good","notbad","bad"],margin:["5x","3x"],unique:["yes","no"],problem:["yes","no"]};
+const VL={good:"Сайн",wow:"Wow",notbad:"Дунд",bad:"Муу",yes:"Тийм",no:"Үгүй",notyet:"Одоохондоо үгүй",vgood:"Маш сайн","3x":"3x","5x":"5x"};
+
+let curFilter="all",curIdx=-1,curView="grid",userRatings={},userImages={},imgModalIdx=-1,pendingImg=null;
+
+function loadData(){try{userRatings=JSON.parse(localStorage.getItem('kids_v1_rat')||'{}')||{}}catch{userRatings={}}try{userImages=JSON.parse(localStorage.getItem('kids_v1_img')||'{}')||{}}catch{userImages={}}}
+function saveRat(){localStorage.setItem('kids_v1_rat',JSON.stringify(userRatings));}
+function saveImgs(){try{localStorage.setItem('kids_v1_img',JSON.stringify(userImages));}catch{alert('Storage дүүрлээ.');}}
+function getR(n){return Object.assign({},RATINGS_DATA[n]||{},userRatings[n]||{});}
+function getImg(n){return userImages[n]||null;}
+
+window.addEventListener('DOMContentLoaded',()=>{loadData();renderAll();updateStats();});
+
+function setFilter(btn,cat){document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');curFilter=cat;applyFilters();}
+function setView(v){curView=v;document.getElementById('vb-grid').classList.toggle('active',v==='grid');document.getElementById('vb-table').classList.toggle('active',v==='table');document.getElementById('view-grid').style.display=v==='grid'?'':'none';document.getElementById('view-table').style.display=v==='table'?'':'none';}
+
+function updateStats(){let rated=0,wow=0,fx=0;PRODUCTS.forEach(n=>{const r=getR(n);if(r.value)rated++;if(r.wow==='wow')wow++;if(r.margin==='5x')fx++;});document.getElementById('s-rated').textContent=rated;document.getElementById('s-wow').textContent=wow;document.getElementById('s-5x').textContent=fx;}
+function gProfit(n){var p=PRICE_DATA[n];return p&&p.netProfitN!==undefined?p.netProfitN:null;}
+function fMNT(n){return '₮'+n.toLocaleString();}
+function gPct(n){var p=PRICE_DATA[n];return p&&p.netMarginPct!==undefined?p.netMarginPct:0;}
+function chipC(v){return['good','wow','yes','vgood','5x'].includes(v)?'g':['notbad','notyet','3x'].includes(v)?'n':'b';}
+
+function renderAll(){renderGrid();renderTbl();}
+function renderGrid(){
+  const grid=document.getElementById('prod-grid');if(!grid)return;
+  grid.innerHTML=PRODUCTS.map((name,i)=>{
+    const cat=CAT_MAP[name]||'Kids',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—',costN:0,priceN:0};
+    const profit=gProfit(name),pct=gPct(name),emoji=CAT_EMOJI[cat]||'✨',grad=CAT_GRADIENT[cat]||'linear-gradient(135deg,#1a1a1a,#0a0a0a)';
+    const imgUrl=getImg(name);
+    const wow=R.wow==='wow'?'<div class="pc-wow wow">★ Wow</div>':'';
+    const imgH=imgUrl?`<img src="${imgUrl}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><div class="pc-fb" style="display:none;position:absolute;inset:0;background:${grad};align-items:center;justify-content:center"><span style="font-size:40px;opacity:.6">${emoji}</span></div>`:`<div style="width:100%;height:100%;background:${grad};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><span style="font-size:40px;opacity:.6">${emoji}</span><span style="font-size:7px;color:#555;letter-spacing:2px;text-transform:uppercase">${cat}</span></div>`;
+    const chips=['value','saturation','margin'].map(k=>{const v=R[k];return v?`<span class="chip ${chipC(v)}">${RL[k]}: ${VL[v]}</span>`:'';}).join('');
+    return `<div class="pc" id="pc${i}" onclick="openPanel(${i})">
+      <div class="pc-img">${imgH}<div class="pc-overlay"></div><div class="pc-cat-tag">${cat}</div>${wow}<button class="img-edit-btn" onclick="openImgModal(${i},event)">✏️</button></div>
+      <div class="pc-body"><div class="pc-name">${name}</div>
+        <div class="pc-prices"><div class="pc-pc"><div class="pc-pl">Авах үнэ</div><div class="pc-pv">${p.cost}</div></div><div class="pc-pc"><div class="pc-pl">Зарах үнэ</div><div class="pc-pv">${p.price}</div></div></div>
+        <div class="pc-profit"><span class="pc-pl2">Цэвэр ашиг</span><span class="pc-pval">${profit?fMNT(profit)+(pct?' ('+pct+'%)':''):'—'}</span></div>
+      </div>
+      <div class="pc-chips">${chips}</div>
+      <button class="pc-open">Дэлгэрэнгүй <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </div>`;
+  }).join('');
+}
+function renderTbl(){
+  const tbody=document.getElementById('tbl-body');if(!tbody)return;
+  const lb=(cls,lbl,href)=>`<a class="lb ${cls}" href="${href}" target="_blank"><span class="dot"></span>${lbl}</a>`;
+  tbody.innerHTML=PRODUCTS.map((name,i)=>{
+    const cat=CAT_MAP[name]||'Kids',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—'},profit=gProfit(name),enc=encodeURIComponent(name);
+    const ratings=Object.keys(RL).map(k=>`<div class="rr"><span class="rk">${RL[k]}</span><span class="rb val-${R[k]}">${VL[R[k]]||'—'}</span></div>`).join('');
+    return `<tr onclick="openPanel(${i})" id="tr${i}"><td class="tnum">${String(i+1).padStart(3,'0')}</td><td><div class="tname">${name}</div><span class="tcat">${cat}</span></td><td class="tprice">${p.cost}</td><td class="tprice">${p.price}</td><td class="tprice tprofit">${profit?fMNT(profit):'—'}</td><td><div class="links-col">${lb('ali','Alibaba',`https://www.alibaba.com/trade/search?SearchText=${enc}`)}${lb('tik','TIK',`https://www.tiktok.com/search?q=${enc}`)}${lb('ig','IG',`https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/ /g,''))}`)}${lb('fb','FB',`https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=${enc}&search_type=keyword_unordered`)}${lb('amz','AMZ',`https://www.amazon.com/s?k=${enc}`)}</div></td><td><div class="rc">${ratings}</div></td></tr>`;
+  }).join('');
+}
+function openPanel(idx){
+  curIdx=idx;const name=PRODUCTS[idx],cat=CAT_MAP[name]||'Kids',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—',costN:0,priceN:0};
+  const profit=gProfit(name),pct=gPct(name),emoji=CAT_EMOJI[cat]||'✨',grad=CAT_GRADIENT[cat]||'linear-gradient(135deg,#1a1a1a,#0a0a0a)',imgUrl=getImg(name);
+  document.getElementById('p-name').textContent=name;document.getElementById('p-cat').textContent=cat;
+  const wrap=document.getElementById('p-img-wrap'),pImg=document.getElementById('p-img'),pFall=document.getElementById('p-fallback');
+  wrap.style.background=grad;
+  if(imgUrl){pImg.src=imgUrl;pImg.style.display='block';pFall.innerHTML=`<span style="font-size:52px;opacity:.4">${emoji}</span>`;}
+  else{pImg.style.display='none';pFall.style.display='flex';pFall.innerHTML=`<span style="font-size:64px;opacity:.5">${emoji}</span>`;}
+  document.getElementById('p-prices').innerHTML=pdPricesHTML(p,profit,pct);
+  const enc=encodeURIComponent(name);
+  document.getElementById('p-links').innerHTML=`<a class="lb ali" href="https://www.alibaba.com/trade/search?SearchText=${enc}" target="_blank"><span class="dot"></span>Alibaba</a><a class="lb tik" href="https://www.tiktok.com/search?q=${enc}" target="_blank"><span class="dot"></span>TikTok</a><a class="lb ig" href="https://www.instagram.com/explore/tags/${encodeURIComponent(name.replace(/ /g,''))}" target="_blank"><span class="dot"></span>Instagram</a><a class="lb fb" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&q=${enc}&search_type=keyword_unordered" target="_blank"><span class="dot"></span>FB Ads</a><a class="lb amz" href="https://www.amazon.com/s?k=${enc}" target="_blank"><span class="dot"></span>Amazon</a>`;
+  let fh='';for(const [key,opts] of Object.entries(ROM)){const cur=R[key]||'';fh+=`<div class="rf"><label class="rfl">${RL[key]}</label><div class="ros">${opts.map(o=>`<button class="ro ${cur===o?'selected-'+o:''}" onclick="selOpt('${key}','${o}',this)">${VL[o]}</button>`).join('')}</div></div>`;}
+  fh+=`<div class="rf"><label class="rfl">Тэмдэглэл</label><textarea class="nf" id="nf" placeholder="Судалгааны тэмдэглэл...">${(userRatings[name]||{}).notes||''}</textarea></div>`;
+  document.getElementById('p-fields').innerHTML=fh;
+  document.getElementById('panel').classList.add('open');pdSyncWL(name);
+}
+function selOpt(key,val,btn){btn.closest('.ros').querySelectorAll('.ro').forEach(b=>b.className='ro');btn.className=`ro selected-${val}`;if(!userRatings[PRODUCTS[curIdx]])userRatings[PRODUCTS[curIdx]]={};userRatings[PRODUCTS[curIdx]][key]=val;}
+function saveRatings(){if(curIdx<0)return;const name=PRODUCTS[curIdx];if(!userRatings[name])userRatings[name]={};userRatings[name].notes=document.getElementById('nf').value;saveRat();renderAll();updateStats();closePanel();}
+function closePanel(){document.getElementById('panel').classList.remove('open');curIdx=-1;}
+function openImgModal(idx,e){if(e)e.stopPropagation();imgModalIdx=idx;pendingImg=null;document.getElementById('im-name').textContent=PRODUCTS[idx];setPrev(userImages[PRODUCTS[idx]]||null);document.getElementById('im-save').disabled=true;document.getElementById('im-file').value='';document.getElementById('img-modal').classList.add('open');}
+function closeImgModal(){document.getElementById('img-modal').classList.remove('open');imgModalIdx=-1;pendingImg=null;}
+function setPrev(d){const img=document.getElementById('im-img'),em=document.getElementById('im-empty');if(d){img.src=d;img.style.display='block';em.style.display='none';}else{img.style.display='none';em.style.display='flex';}}
+function handleFile(input){const file=input.files[0];if(file)procFile(file);}
+function handleDrop(e){e.preventDefault();document.getElementById('im-drop').classList.remove('drag-over');const file=e.dataTransfer.files[0];if(file&&file.type.startsWith('image/'))procFile(file);}
+function procFile(file){const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const MAX=600;let w=img.width,h=img.height;if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);pendingImg=c.toDataURL('image/jpeg',.82);setPrev(pendingImg);document.getElementById('im-save').disabled=false;};img.src=e.target.result;};reader.readAsDataURL(file);}
+function saveImg(){if(imgModalIdx<0||!pendingImg)return;userImages[PRODUCTS[imgModalIdx]]=pendingImg;saveImgs();const card=document.getElementById(`pc${imgModalIdx}`);if(card){let imgEl=card.querySelector('.pc-img img');const fb=card.querySelector('.pc-fb');if(!imgEl){imgEl=document.createElement('img');imgEl.style.cssText='width:100%;height:100%;object-fit:cover;transition:transform .4s';card.querySelector('.pc-img').prepend(imgEl);}imgEl.src=pendingImg;imgEl.style.display='block';if(fb)fb.style.display='none';}if(curIdx===imgModalIdx){const pImg=document.getElementById('p-img');if(pImg){pImg.src=pendingImg;pImg.style.display='block';}}closeImgModal();}
+function clearImg(){if(imgModalIdx<0)return;delete userImages[PRODUCTS[imgModalIdx]];saveImgs();pendingImg=null;setPrev(null);document.getElementById('im-save').disabled=true;document.getElementById('im-file').value='';renderGrid();}
+
+// ══ ProductDrop v8 extras ═══════════════════════════════════════════════════
+var pdOrig=[];
+var pdSort='default';
+var pdWLF=false;
+var PD_WL='pd_wl_v3';
+function pdGetWL(){try{return JSON.parse(localStorage.getItem(PD_WL)||'[]');}catch{return[];}}
+function pdSaveWL(a){try{localStorage.setItem(PD_WL,JSON.stringify(a));}catch{}}
+function pdIsWL(n){return pdGetWL().indexOf(n)>=0;}
+function toggleWL(name,btn){
+  var wl=pdGetWL(),i=wl.indexOf(name);
+  if(i>=0)wl.splice(i,1);else wl.push(name);
+  pdSaveWL(wl);pdSyncWL(name);pdStatWL();
+  if(pdWLF)applyFilters();
+}
+function pdSyncWL(name){
+  var b=document.getElementById('p-wl-btn');
+  if(!b)return;
+  var s=pdIsWL(name);b.textContent=s?'★ Хадгалсан':'☆ Хадгалах';b.classList.toggle('saved',s);
+}
+function pdStatWL(){var e=document.getElementById('s-wl');if(e)e.textContent=pdGetWL().length;}
+function setSort(t,btn){
+  var bs=document.querySelectorAll('#btn-top');
+  bs.forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  pdSort=t;applyFilters();
+}
+function setWLFilter(btn){
+  pdWLF=!pdWLF;if(btn)btn.classList.toggle('active',pdWLF);applyFilters();
+}
+function applyFilters(){
+  var q=(document.getElementById('si')||{value:''}).value.toLowerCase();
+  var wl=pdGetWL();
+  var sorted=pdOrig.slice();
+  if(pdSort==='profit'){
+    sorted.sort(function(a,b){return((PRICE_DATA[b]||{}).netProfitN||0)-((PRICE_DATA[a]||{}).netProfitN||0);});
+  }
+  var grid=document.getElementById('prod-grid');
+  if(grid){
+    if(pdSort==='profit'){sorted.forEach(function(name){var i=pdOrig.indexOf(name);var c=document.getElementById('pc'+i);if(c)grid.appendChild(c);});}
+    grid.querySelectorAll('.pc').forEach(function(card,i){
+      var n=pdOrig[i];if(!n){card.style.display='none';return;}
+      var cat=CAT_MAP[n]||'';
+      var ok=(curFilter==='all'||cat===curFilter)&&n.toLowerCase().includes(q)&&(!pdWLF||wl.indexOf(n)>=0);
+      card.style.display=ok?'':'none';
+    });
+  }
+  var tb=document.getElementById('tbl-body');
+  if(tb){
+    tb.querySelectorAll('tr').forEach(function(row,i){
+      var n=pdOrig[i];if(!n){row.style.display='none';return;}
+      var cat=CAT_MAP[n]||'';
+      var ok=(curFilter==='all'||cat===curFilter)&&n.toLowerCase().includes(q)&&(!pdWLF||wl.indexOf(n)>=0);
+      row.style.display=ok?'':'none';
+    });
+  }
+}
+function openCalc(idx){
+  if(idx===undefined||idx<0)return;
+  var p=PRICE_DATA[PRODUCTS[idx]]||{};
+  function sv(id,v){var e=document.getElementById(id);if(e)e.value=v||'';}
+  sv('pdc-cost',p.costN);sv('pdc-ship',p.shippingN);
+  sv('pdc-cust',p.customsN);sv('pdc-pkg',p.packagingN);
+  sv('pdc-price',p.priceN);
+  var q=document.getElementById('pdc-qty');if(q)q.value=1;
+  pdCalc();
+  var m=document.getElementById('pd-calc');if(m)m.classList.add('open');
+}
+function pdCloseCalc(){var m=document.getElementById('pd-calc');if(m)m.classList.remove('open');}
+function pdCalc(){
+  function g(id){return +(document.getElementById(id)||{value:0}).value||0;}
+  var c=g('pdc-cost'),s=g('pdc-ship'),cu=g('pdc-cust'),pk=g('pdc-pkg');
+  var pr=g('pdc-price'),qty=g('pdc-qty')||1;
+  var tc=c+s+cu+pk,up=pr-tc,mg=pr>0?Math.round((up/pr)*100):0,net=up*qty;
+  function fmt(n){return '₮'+Math.abs(Math.round(n)).toLocaleString();}
+  function sv(id,v,cl){var e=document.getElementById(id);if(e){e.textContent=v;if(cl)e.className='pdc-val '+cl;}}
+  sv('pdc-tc',tc>0?fmt(tc):'—');
+  sv('pdc-up',pr>0?(up>=0?fmt(up):'-'+fmt(up)):'—',up>=0?'p':'n');
+  sv('pdc-mg',pr>0?mg+'%':'—');
+  sv('pdc-net',pr>0?(net>=0?fmt(net):'-'+fmt(net)):'—',net>=0?'p':'n');
+}
+function pdPricesHTML(p,profit,pct){
+  var h='';
+  h+='<div class="p-pi"><div class="p-pil">Alibaba авах үнэ</div><div class="p-piv">'+(p.cost||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Тээвэр</div><div class="p-piv">'+(p.shipping||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Гааль+Татвар</div><div class="p-piv">'+(p.customs||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Боодол</div><div class="p-piv">'+(p.packaging||'—')+'</div></div>';
+  h+='<div class="p-pi full" style="background:rgba(255,184,0,.06)"><div class="p-pil">Нийт зардал</div><div class="p-piv" style="color:#ffb800">'+(p.totalCost||'—')+'</div></div>';
+  h+='<div class="p-pi"><div class="p-pil">Зарах үнэ</div><div class="p-piv">'+p.price+'</div></div>';
+  h+='<div class="p-pi full"><div class="p-pil">Цэвэр ашиг</div><div class="p-piv pr">'+(profit?(fMNT(profit)+(pct?' ('+pct+'%)':'')):'—')+'</div></div>';
+  return h;
+}
+(function init(){
+  if(typeof PRODUCTS!=='undefined')pdOrig=PRODUCTS.slice();
+  pdStatWL();
+})();
+
+</script>
+<div id="pd-calc">
+<div class="pdc-box">
+  <div class="pdc-hdr"><span class="pdc-ttl">🧮 Ашгийн тооцоолуур</span><button class="pdc-x" onclick="pdCloseCalc()">✕</button></div>
+  <div class="pdc-grid">
+    <div class="pdc-f"><label class="pdc-lbl">Alibaba авах үнэ ₮</label><input class="pdc-inp" id="pdc-cost" type="number" oninput="pdCalc()"></div>
+    <div class="pdc-f"><label class="pdc-lbl">Тээвэр ₮</label><input class="pdc-inp" id="pdc-ship" type="number" oninput="pdCalc()"></div>
+  </div>
+  <div class="pdc-grid">
+    <div class="pdc-f"><label class="pdc-lbl">Гааль / Татвар ₮</label><input class="pdc-inp" id="pdc-cust" type="number" oninput="pdCalc()"></div>
+    <div class="pdc-f"><label class="pdc-lbl">Боодол / Бусад ₮</label><input class="pdc-inp" id="pdc-pkg" type="number" oninput="pdCalc()"></div>
+  </div>
+  <div class="pdc-grid">
+    <div class="pdc-f"><label class="pdc-lbl">Зарах үнэ ₮</label><input class="pdc-inp" id="pdc-price" type="number" oninput="pdCalc()"></div>
+    <div class="pdc-f"><label class="pdc-lbl">Тоо (ширхэг)</label><input class="pdc-inp" id="pdc-qty" type="number" oninput="pdCalc()" value="1"></div>
+  </div>
+  <div class="pdc-res">
+    <div class="pdc-row"><span class="pdc-lbl2">Нийт зардал</span><span class="pdc-val" id="pdc-tc">—</span></div>
+    <div class="pdc-row"><span class="pdc-lbl2">1 ширхэгийн ашиг</span><span class="pdc-val" id="pdc-up">—</span></div>
+    <div class="pdc-row"><span class="pdc-lbl2">Ашгийн хувь</span><span class="pdc-val" id="pdc-mg">—</span></div>
+    <div class="pdc-row"><span class="pdc-lbl2" style="font-weight:600">Нийт ашиг (qty)</span><span class="pdc-val p" id="pdc-net">—</span></div>
+  </div>
+  <button class="pdc-btn" onclick="pdCloseCalc()">Хаах</button>
+</div>
+</div>
+</body>
+</html>
