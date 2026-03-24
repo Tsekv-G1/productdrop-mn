@@ -445,7 +445,10 @@ const VL={good:"Сайн",wow:"Wow",notbad:"Дунд",bad:"Муу",yes:"Тийм
 
 let curFilter="all",curIdx=-1,curView="grid",userRatings={},userImages={},imgModalIdx=-1,pendingImg=null;
 
-function loadData(){try{userRatings=JSON.parse(localStorage.getItem('beauty_v1_rat')||'{}')||{}}catch{userRatings={}}try{userImages=JSON.parse(localStorage.getItem('beauty_v1_img')||'{}')||{}}catch{userImages={}}}
+let userPrices={};
+function loadData(){
+try{userPrices=JSON.parse(localStorage.getItem('beauty_v1_prices')||'{}')||{}}catch{userPrices={}}try{userRatings=JSON.parse(localStorage.getItem('beauty_v1_rat')||'{}')||{}}catch{userRatings={}}try{userImages=JSON.parse(localStorage.getItem('beauty_v1_img')||'{}')||{}}catch{userImages={}}}
+function savePrices(){localStorage.setItem('beauty_v1_prices',JSON.stringify(userPrices));}
 function saveRat(){localStorage.setItem('beauty_v1_rat',JSON.stringify(userRatings));}
 function saveImgs(){try{localStorage.setItem('beauty_v1_img',JSON.stringify(userImages));}catch{alert('Storage дүүрлээ.');}}
 function getR(n){return Object.assign({},RATINGS_DATA[n]||{},userRatings[n]||{});}
