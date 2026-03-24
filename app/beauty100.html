@@ -595,8 +595,8 @@ function openCalc(idx){
   var m=document.getElementById('pd-calc');if(m)m.classList.add('open');
 }
 
-function pdPricesHTML(p,profit,pct){
-  var n=PRODUCTS[curIdx]||'';
+function pdPricesHTML(p,profit,pct,nameOverride){
+  var n=nameOverride||PRODUCTS[curIdx]||'';
   var ep=Object.assign({},p,userPrices[n]||{});
   var h='';
   h+='<div class="p-pi"><div class="p-pil">Alibaba авах үнэ</div><div class="p-piv">'+(ep.cost||'—')+'</div></div>';
@@ -628,8 +628,10 @@ function pdSaveCalc(){
   userPrices[name].netProfit=net>0?fmt(net):'—';
   userPrices[name].netPct=pct+'%';
   savePrices();
+  // Update panel BEFORE closing (curIdx still valid here)
   var pp=document.getElementById('p-prices');
-  if(pp)pp.innerHTML=pdPricesHTML(Object.assign({},PRICE_DATA[name]||{},userPrices[name]),net,pct+'%');
+  if(pp)pp.innerHTML=pdPricesHTML(Object.assign({},PRICE_DATA[name]||{},userPrices[name]),net,pct+'%',name);
+  // Update card
   var card=document.getElementById('pc'+idx);
   if(card){
     var pvs=card.querySelectorAll('.pc-pv');
@@ -653,17 +655,7 @@ function pdCalc(){
   sv('pdc-mg',pr>0?mg+'%':'—');
   sv('pdc-net',pr>0?(net>=0?fmt(net):'-'+fmt(net)):'—',net>=0?'p':'n');
 }
-function pdPricesHTML(p,profit,pct){
-  var h='';
-  h+='<div class="p-pi"><div class="p-pil">Alibaba авах үнэ</div><div class="p-piv">'+(p.cost||'—')+'</div></div>';
-  h+='<div class="p-pi"><div class="p-pil">Тээвэр</div><div class="p-piv">'+(p.shipping||'—')+'</div></div>';
-  h+='<div class="p-pi"><div class="p-pil">Гааль+Татвар</div><div class="p-piv">'+(p.customs||'—')+'</div></div>';
-  h+='<div class="p-pi"><div class="p-pil">Боодол</div><div class="p-piv">'+(p.packaging||'—')+'</div></div>';
-  h+='<div class="p-pi full" style="background:rgba(255,184,0,.06)"><div class="p-pil">Нийт зардал</div><div class="p-piv" style="color:#ffb800">'+(p.totalCost||'—')+'</div></div>';
-  h+='<div class="p-pi"><div class="p-pil">Зарах үнэ</div><div class="p-piv">'+p.price+'</div></div>';
-  h+='<div class="p-pi full"><div class="p-pil">Цэвэр ашиг</div><div class="p-piv pr">'+(profit?(fMNT(profit)+(pct?' ('+pct+'%)':'')):'—')+'</div></div>';
-  return h;
-}
+
 (function init(){
   if(typeof PRODUCTS!=='undefined')pdOrig=PRODUCTS.slice();
   pdStatWL();
