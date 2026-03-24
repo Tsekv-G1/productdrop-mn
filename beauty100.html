@@ -449,7 +449,11 @@ function loadData(){try{userRatings=JSON.parse(localStorage.getItem('beauty_v1_r
 function saveRat(){localStorage.setItem('beauty_v1_rat',JSON.stringify(userRatings));}
 function saveImgs(){try{localStorage.setItem('beauty_v1_img',JSON.stringify(userImages));}catch{alert('Storage дүүрлээ.');}}
 function getR(n){return Object.assign({},RATINGS_DATA[n]||{},userRatings[n]||{});}
-function getImg(n){return userImages[n]||null;}
+const GITHUB_IMG_BASE="https://raw.githubusercontent.com/Tsekv-G1/productdrop-mn/main/images/beauty";
+function getImg(n){
+  if(userImages[n]) return userImages[n];
+  return GITHUB_IMG_BASE+"/"+encodeURIComponent(n)+".jpg";
+}
 
 window.addEventListener('DOMContentLoaded',()=>{loadData();renderAll();updateStats();});
 
