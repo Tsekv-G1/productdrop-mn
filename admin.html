@@ -2,706 +2,194 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — ProductDrop.MN</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProductDrop.MN — Password Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#06060a;--surface:#0d0d12;--surface2:#13131a;--border:#1c1c26;--border2:#28283a;--text:#efefef;--muted:#5a5a72;--accent:#c8ff00;--red:#ff4444;--warn:#ff9632;}
+:root{--bg:#06060a;--s:#0d0d12;--s2:#13131a;--b:#1c1c26;--b2:#28283a;--t:#efefef;--m:#5a5a72;--a:#c8ff00;--r:#ff4444;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;min-height:100vh;}
-/* NAV */
-nav{position:sticky;top:0;z-index:100;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,10,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:-.3px;}
-.logo span{color:var(--accent);}
-.nav-right{display:flex;align-items:center;gap:10px;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);}
-.status-dot.ok{background:var(--accent);}
-.status-dot.err{background:var(--red);}
-#status-text{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
-/* SETUP PANEL */
-#setup-panel{background:var(--surface);border:1px solid var(--border2);margin:24px;padding:24px;}
-.setup-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;margin-bottom:4px;}
-.setup-sub{font-size:10px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+body{background:var(--bg);color:var(--t);font-family:'DM Mono',monospace;font-size:13px;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.wrap{width:min(560px,100%);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;margin-bottom:32px;letter-spacing:-.5px;}
+.logo span{color:var(--a);}
+.box{background:var(--s);border:1px solid var(--b2);padding:28px 24px;margin-bottom:16px;position:relative;}
+.box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--a);}
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--m);margin-bottom:20px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .field{display:flex;flex-direction:column;gap:5px;}
-.field label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-.field input{background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:10px 12px;outline:none;}
-.field input:focus{border-color:var(--accent);}
-.btn-save-setup{padding:11px 24px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:8px;}
-.btn-save-setup:hover{opacity:.85;}
-.help-link{font-size:9px;color:var(--muted);text-decoration:underline;cursor:pointer;margin-top:8px;display:inline-block;}
-/* MAIN */
-#main{display:none;}
-.toolbar{padding:12px 24px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.toolbar-left{display:flex;gap:8px;flex:1;align-items:center;}
-.search-wrap{position:relative;}
-.search-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:10px;opacity:.4;}
-.search-inp{background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:8px 12px 8px 28px;outline:none;width:200px;}
-.search-inp:focus{border-color:var(--accent);}
-.cat-btn{padding:5px 12px;font-size:9px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
-.cat-btn:hover,.cat-btn.active{border-color:var(--accent);color:var(--accent);}
-.btn-publish{padding:10px 20px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;}
-.btn-publish:hover{opacity:.85;}
-.btn-publish:disabled{opacity:.3;cursor:not-allowed;}
-.changed-badge{background:rgba(255,150,50,.12);border:1px solid rgba(255,150,50,.3);color:var(--warn);font-size:9px;padding:3px 10px;letter-spacing:1px;text-transform:uppercase;}
-/* STATS */
-.stats-row{padding:12px 24px;border-bottom:1px solid var(--border);display:flex;gap:24px;background:var(--surface);}
-.stat{display:flex;flex-direction:column;gap:2px;}
-.stat-v{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;}
-.stat-v.ac{color:var(--accent);}
-.stat-l{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
-/* PRODUCT LIST */
-.prod-list{padding:0 24px 100px;}
-.cat-section{margin-top:24px;}
-.cat-header{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:0;}
-.prod-row{display:grid;grid-template-columns:56px 1fr 130px 130px 110px 180px 100px;gap:0;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;}
-.prod-row:hover{background:var(--surface);}
-.prod-row.changed{border-left:2px solid var(--warn);}
-.col{padding:10px 10px;}
-/* Image cell */
-.img-cell{display:flex;align-items:center;justify-content:center;}
-.prod-thumb{width:40px;height:40px;object-fit:cover;background:var(--surface2);border:1px solid var(--border);}
-.no-img{width:40px;height:40px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;opacity:.3;cursor:pointer;}
-.upload-btn{position:relative;overflow:hidden;}
-.upload-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;}
-.img-action{padding:4px 8px;font-size:8px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;}
-.img-action:hover{border-color:var(--accent);color:var(--accent);}
-/* Name cell */
-.prod-name{font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:var(--text);}
-.prod-cat{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px;}
-/* Price cells */
-.price-inp{background:transparent;border:none;border-bottom:1px solid transparent;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;width:100%;outline:none;padding:2px 4px;}
-.price-inp:focus{border-bottom-color:var(--accent);}
-.price-inp.changed{color:var(--warn);}
-/* Profit cell */
-.profit-val{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--accent);}
-.margin-val{font-size:9px;color:var(--muted);margin-top:2px;}
-/* Actions cell */
-.row-actions{display:flex;gap:4px;}
-/* MODAL */
-#img-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-#img-modal.open{display:flex;}
-.modal-box{width:min(480px,94vw);background:var(--surface);border:1px solid var(--border2);}
-.modal-top{position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
-.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
-.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;}
-.modal-body{padding:20px;}
-.modal-prod-name{font-size:10px;color:var(--accent);letter-spacing:1px;margin-bottom:14px;font-family:'Syne',sans-serif;font-weight:700;}
-.preview-box{width:100%;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border2);margin-bottom:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.preview-box img{width:100%;height:100%;object-fit:cover;}
-.no-preview{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;}
-.drop-zone{border:2px dashed var(--border2);padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px;position:relative;}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--accent);}
-.drop-text{font-size:10px;color:var(--muted);line-height:1.7;}
-.drop-text strong{color:var(--accent);}
-.drop-file{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.url-row{display:flex;gap:6px;margin-bottom:10px;}
-.url-inp{flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:10px;padding:8px 10px;outline:none;}
-.url-inp:focus{border-color:var(--accent);}
-.btn-url{padding:8px 14px;font-size:9px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;}
-.btn-url:hover{border-color:var(--accent);color:var(--accent);}
-.modal-actions{display:flex;gap:6px;}
-.btn-modal-save{flex:1;padding:11px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
-.btn-modal-save:disabled{opacity:.3;cursor:not-allowed;}
-.btn-modal-clear{padding:11px 14px;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
-.btn-modal-clear:hover{border-color:var(--red);color:var(--red);}
-/* TOAST */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:12px 24px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
-#toast.show{opacity:1;}
-/* PUBLISH PROGRESS */
-#publish-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
-#publish-overlay.open{display:flex;}
-.pub-title{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--accent);}
-.pub-steps{display:flex;flex-direction:column;gap:8px;min-width:300px;}
-.pub-step{font-size:10px;letter-spacing:1px;color:var(--muted);}
-.pub-step.done{color:var(--accent);}
-.pub-step.active{color:var(--text);}
-.pub-step.error{color:var(--red);}
-/* Uploading state */
-.uploading{opacity:.5;pointer-events:none;}
-
-@media(max-width:768px){
-  nav{padding:0 14px;height:48px;}
-  .setup-panel,#setup-panel{padding:16px;margin:12px;}
-  .field-grid,.fields-grid{grid-template-columns:1fr!important;}
-  input,select,textarea{font-size:16px!important;}
-  button{min-height:44px;}
-  table{font-size:11px;}
-  td,th{padding:6px 4px;}
-  .form-row{flex-direction:column;}
-  .modal-box,.modal{width:94vw!important;max-width:94vw!important;padding:16px!important;}
-}
+label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--m);}
+input,select{background:var(--s2);border:1px solid var(--b2);color:var(--t);font-family:'DM Mono',monospace;font-size:13px;padding:9px 12px;outline:none;width:100%;}
+input:focus,select:focus{border-color:var(--a);}
+select option{background:var(--s2);}
+.btn{width:100%;margin-top:14px;padding:13px;background:var(--a);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.btn:hover{background:#b5e800;}
+.result{background:var(--s2);border:1px solid rgba(200,255,0,.2);padding:16px;margin-top:14px;display:none;}
+.pw-display{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--a);letter-spacing:2px;margin-bottom:8px;word-break:break-all;}
+.pw-meta{font-size:10px;color:var(--m);line-height:1.8;}
+.copy-btn{margin-top:10px;padding:8px 18px;background:transparent;border:1px solid var(--a);color:var(--a);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;}
+.copy-btn:hover{background:rgba(200,255,0,.08);}
+.list-box{margin-top:12px;max-height:280px;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--m);padding:8px 10px;text-align:left;border-bottom:1px solid var(--b2);}
+td{padding:9px 10px;font-size:11px;border-bottom:1px solid var(--b);}
+td.pw{color:var(--a);font-family:'Syne',sans-serif;font-weight:700;}
+.del-btn{background:none;border:none;color:var(--r);cursor:pointer;font-size:12px;padding:0;}
+.tag{display:inline-block;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(200,255,0,.08);color:var(--a);border:1px solid rgba(200,255,0,.2);}
+.tag.exp{background:rgba(255,68,68,.08);color:var(--r);border-color:rgba(255,68,68,.2);}
 </style>
 </head>
 <body>
-
-<nav>
-  <div class="logo">PRODUCT<span>DROP</span>.MN <span style="color:var(--muted);font-size:10px;font-family:'DM Mono',monospace;font-weight:400">— ADMIN</span></div>
-  <div class="nav-right">
-    <div class="status-dot" id="status-dot"></div>
-    <span id="status-text">Тохиргоо шаардлагатай</span>
-  </div>
-</nav>
-
-<!-- SETUP -->
-<div id="setup-panel">
-  <div class="setup-title">🔧 Нэг удаагийн тохиргоо</div>
-  <div class="setup-sub">
-    Эхлээд GitHub болон Cloudinary мэдээллийг оруулна уу.<br>
-    Нэг удаа хадгалсны дараа дахин асуухгүй.
-  </div>
-  <div class="field-row">
-    <div class="field">
-      <label>GitHub Token <span style="color:var(--red)">*</span></label>
-      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
-    </div>
-    <div class="field">
-      <label>GitHub Username / Repo <span style="color:var(--red)">*</span></label>
-      <input type="text" id="gh-repo" placeholder="username/productdrop-mn">
-    </div>
-  </div>
-  <div class="field-row">
-    <div class="field">
-      <label>Cloudinary Cloud Name <span style="color:var(--red)">*</span></label>
-      <input type="text" id="cl-cloud" placeholder="my-cloud-name">
-    </div>
-    <div class="field">
-      <label>Cloudinary Upload Preset</label>
-      <input type="text" id="cl-preset" placeholder="ml_default (unsigned preset)">
-    </div>
-  </div>
-  <div class="field-row">
-    <div class="field">
-      <label>Нэвтрэх нууц үг (Admin)</label>
-      <input type="password" id="admin-pass" placeholder="Хэрэглэгчдэд өгөх нууц үг">
-    </div>
-    <div class="field">
-      <label>Data файлын зам (repo дотор)</label>
-      <input type="text" id="data-path" placeholder="data/beauty.json" value="data/beauty.json">
-    </div>
-  </div>
-  <button class="btn-save-setup" onclick="saveSetup()">Тохиргоо хадгалах →</button>
-  <br>
-  <a class="help-link" onclick="showHelp()" href="#">📖 GitHub Token хэрхэн авах вэ?</a>
-</div>
-
-<!-- MAIN ADMIN -->
-<div id="main">
-  <div class="toolbar">
-    <div class="toolbar-left">
-      <div class="search-wrap">
-        <input class="search-inp" id="search" type="text" placeholder="Хайх..." oninput="renderList()">
+<!-- ADMIN LOGIN -->
+<div id="admin-login" style="position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;">
+  <div style="width:min(380px,90vw);">
+    <div class="logo">PRODUCT<span>DROP</span>.MN <span style="font-size:11px;color:var(--m);font-family:'DM Mono'">Admin</span></div>
+    <div class="box">
+      <h2>Admin нэвтрэх</h2>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Admin код</label>
+        <input type="password" id="admin-pwd" placeholder="Admin нууц үг" style="margin-top:5px;">
       </div>
-      <button class="cat-btn active" onclick="filterCat('',this)">Бүгд</button>
-      <button class="cat-btn" onclick="filterCat('Makeup',this)">Makeup</button>
-      <button class="cat-btn" onclick="filterCat('Skincare Tools',this)">Skincare</button>
-      <button class="cat-btn" onclick="filterCat('Hair Care',this)">Hair</button>
-      <button class="cat-btn" onclick="filterCat('Body & Slimming',this)">Body</button>
-      <button class="cat-btn" onclick="filterCat('Tools & Devices',this)">Devices</button>
-    </div>
-    <div id="changed-badge" class="changed-badge" style="display:none">● Хадгалаагүй өөрчлөлт байна</div>
-    <button class="btn-publish" id="btn-publish" onclick="publishToGitHub()" disabled>🚀 GitHub-д нийтлэх</button>
-  </div>
-
-  <div class="stats-row">
-    <div class="stat"><span class="stat-v" id="s-total">0</span><span class="stat-l">Нийт</span></div>
-    <div class="stat"><span class="stat-v ac" id="s-img">0</span><span class="stat-l">Зурагтай</span></div>
-    <div class="stat"><span class="stat-v" id="s-noimg">0</span><span class="stat-l">Зураггүй</span></div>
-    <div class="stat"><span class="stat-v" id="s-changed">0</span><span class="stat-l">Өөрчлөгдсөн</span></div>
-  </div>
-
-  <!-- TABLE HEADER -->
-  <div style="padding:0 24px;margin-top:16px;">
-    <div class="prod-row" style="border-bottom:2px solid var(--border2);">
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Зураг</div>
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Бараа нэр</div>
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Авах үнэ (₮)</div>
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Зарах үнэ (₮)</div>
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Ашиг</div>
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Зургийн URL</div>
-      <div class="col" style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Үйлдэл</div>
-    </div>
-    <div id="prod-list"></div>
-  </div>
-</div>
-
-<!-- IMAGE MODAL -->
-<div id="img-modal">
-  <div class="modal-box" style="position:relative;">
-    <div class="modal-top"></div>
-    <div class="modal-hdr">
-      <span class="modal-title">Зураг шинэчлэх</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-prod-name" id="modal-prod-name"></div>
-      <div class="preview-box" id="preview-box">
-        <div class="no-preview"><span>🖼️</span><span>Зураг байхгүй</span></div>
-      </div>
-      <div class="drop-zone" id="drop-zone"
-        ondrop="handleDrop(event)" ondragover="e=>e.preventDefault()"
-        ondragenter="this.classList.add('drag')" ondragleave="this.classList.remove('drag')">
-        <div class="drop-text">
-          <strong>Зураг чирж тавих</strong> эсвэл дарж сонгоно уу<br>
-          JPG / PNG / WEBP — Cloudinary-руу автомат upload хийнэ
-        </div>
-        <input type="file" class="drop-file" id="modal-file" accept="image/*" onchange="handleFileSelect(this)">
-      </div>
-      <div class="url-row">
-        <input class="url-inp" id="manual-url" type="text" placeholder="Эсвэл зургийн URL шууд оруулах...">
-        <button class="btn-url" onclick="useManualUrl()">URL ашиглах</button>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-modal-save" id="btn-modal-save" disabled onclick="saveImageUrl()">Хадгалах</button>
-        <button class="btn-modal-clear" onclick="clearImage()">Зураг устгах</button>
-      </div>
+      <button class="btn" onclick="adminLogin()">Нэвтрэх →</button>
+      <div id="admin-err" style="margin-top:10px;font-size:11px;color:var(--r);display:none;text-align:center;">Нууц үг буруу байна</div>
     </div>
   </div>
 </div>
 
-<!-- PUBLISH OVERLAY -->
-<div id="publish-overlay">
-  <div class="pub-title">🚀 GitHub-д нийтлэж байна...</div>
-  <div class="pub-steps" id="pub-steps"></div>
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none;min-height:100vh;width:100%;align-items:center;justify-content:center;padding:24px;">
+<div class="wrap">
+  <div class="logo">PRODUCT<span>DROP</span>.MN <span style="font-size:11px;color:var(--m);font-family:'DM Mono'">Admin</span></div>
+
+  <div class="box">
+    <h2>Шинэ нууц үг үүсгэх</h2>
+    <div class="row">
+      <div class="field"><label>Хэрэглэгчийн нэр</label><input id="f-name" placeholder="Билгүүн"></div>
+      <div class="field"><label>Утас / ID</label><input id="f-id" placeholder="99001122"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Хүчинтэй хугацаа</label>
+        <select id="f-days">
+          <option value="30">30 хоног</option>
+          <option value="60">60 хоног</option>
+          <option value="90">90 хоног</option>
+          <option value="180">180 хоног</option>
+          <option value="365">1 жил</option>
+        </select>
+      </div>
+      <div class="field"><label>Subscription төрөл</label>
+        <select id="f-plan">
+          <option value="lite">Lite</option>
+          <option value="pro" selected>Pro</option>
+          <option value="elite">Elite</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" onclick="genPW()">Нууц үг үүсгэх →</button>
+    <div class="result" id="result">
+      <div class="pw-display" id="pw-out"></div>
+      <div class="pw-meta" id="pw-meta"></div>
+      <button class="copy-btn" onclick="copyPW()">📋 Хуулах</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>Идэвхтэй нууц үгүүд</h2>
+    <div class="list-box">
+      <table>
+        <thead><tr><th>Нэр / ID</th><th>Нууц үг</th><th>Дуусах</th><th>Plan</th><th></th></tr></thead>
+        <tbody id="pw-list"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-<div id="toast"></div>
-
+</div><!-- /admin-panel -->
 <script>
-// ═══════════════════════════════════════════════════════
-// CONFIG
-let CFG = {};
-let PRODUCTS = [];
-let changedSet = new Set();
-let modalIdx = -1;
-let pendingImgUrl = null;
-let activeFilter = '';
+const ADMIN_PASS='PD-ADMIN-2026';
+const ADMIN_SESS='pd_admin_sess';
 
-const CFG_KEY = 'pd_admin_cfg_v2';
-
-// ═══════════════════════════════════════════════════════
-// SETUP
-function saveSetup() {
-  const token = document.getElementById('gh-token').value.trim();
-  const repo = document.getElementById('gh-repo').value.trim();
-  const cloud = document.getElementById('cl-cloud').value.trim();
-  const preset = document.getElementById('cl-preset').value.trim() || 'ml_default';
-  const pass = document.getElementById('admin-pass').value.trim();
-  const dataPath = document.getElementById('data-path').value.trim() || 'data/beauty.json';
-
-  if (!token || !repo || !cloud) {
-    showToast('GitHub Token, Repo болон Cloudinary Cloud Name шаардлагатай!', true);
-    return;
-  }
-  CFG = { token, repo, cloud, preset, pass, dataPath };
-  localStorage.setItem(CFG_KEY, JSON.stringify(CFG));
-  initAdmin();
-}
-
-function loadSetup() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(CFG_KEY)||'{}');
-    if (saved.token && saved.repo && saved.cloud) {
-      CFG = saved;
-      return true;
-    }
-  } catch {}
-  return false;
-}
-
-// ═══════════════════════════════════════════════════════
-// INIT
-async function initAdmin() {
-  document.getElementById('setup-panel').style.display = 'none';
-  document.getElementById('main').style.display = 'block';
-  document.getElementById('status-text').textContent = 'Ачааллаж байна...';
-  await loadData();
-}
-
-async function loadData() {
-  try {
-    // Load from GitHub raw (always fresh)
-    const [owner, repoName] = CFG.repo.split('/');
-    const url = `https://api.github.com/repos/${CFG.repo}/contents/${CFG.dataPath}`;
-    const res = await fetch(url, {
-      headers: { Authorization: `token ${CFG.token}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (!res.ok) throw new Error('GitHub API: ' + res.status);
-    const data = await res.json();
-    PRODUCTS = JSON.parse(atob(data.content.replace(/\n/g, '')));
-    
-    // Store SHA for update
-    CFG._sha = data.sha;
-    localStorage.setItem(CFG_KEY, JSON.stringify(CFG));
-
-    setStatus('ok', `${PRODUCTS.length} бараа ачааллаа`);
-    renderList();
-    updateStats();
-  } catch (e) {
-    setStatus('err', 'GitHub алдаа: ' + e.message);
-    showToast('Өгөгдөл ачааллахад алдаа: ' + e.message, true);
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// RENDER
-function filterCat(cat, btn) {
-  activeFilter = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderList();
-}
-
-function renderList() {
-  const q = (document.getElementById('search').value||'').toLowerCase();
-  const list = document.getElementById('prod-list');
-  const filtered = PRODUCTS.filter((p, i) => {
-    const catOk = !activeFilter || p.category === activeFilter;
-    const searchOk = !q || p.name.toLowerCase().includes(q);
-    return catOk && searchOk;
-  });
-
-  // Group by category
-  const groups = {};
-  filtered.forEach((p, fi) => {
-    const cat = p.category || 'Other';
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(p);
-  });
-
-  list.innerHTML = Object.entries(groups).map(([cat, prods]) => `
-    <div class="cat-section">
-      <div class="cat-header">${cat} — ${prods.length} бараа</div>
-      ${prods.map(p => renderRow(p, PRODUCTS.indexOf(p))).join('')}
-    </div>`).join('');
-}
-
-function renderRow(p, idx) {
-  const isChanged = changedSet.has(idx);
-  const profit = p.netProfitN ? '₮' + p.netProfitN.toLocaleString() : '—';
-  const pct = p.netMarginPct ? p.netMarginPct + '%' : '';
-  const imgEl = p.image
-    ? `<img class="prod-thumb" src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">`
-    : `<div class="no-img" onclick="openModal(${idx})" title="Зураг нэмэх">📷</div>`;
-
-  return `<div class="prod-row ${isChanged?'changed':''}" id="row-${idx}">
-    <div class="col img-cell">
-      <div class="upload-btn" title="Зураг солих">
-        ${imgEl}
-      </div>
-    </div>
-    <div class="col">
-      <div class="prod-name">${p.name}</div>
-      <div class="prod-cat">${p.category}</div>
-    </div>
-    <div class="col">
-      <input class="price-inp ${isChanged?'changed':''}" type="number" id="cost-${idx}"
-        value="${p.costN}" onchange="updatePrice(${idx},'costN',this.value)">
-    </div>
-    <div class="col">
-      <input class="price-inp ${isChanged?'changed':''}" type="number" id="price-${idx}"
-        value="${p.priceN}" onchange="updatePrice(${idx},'priceN',this.value)">
-    </div>
-    <div class="col">
-      <div class="profit-val">${profit}</div>
-      <div class="margin-val">${pct}</div>
-    </div>
-    <div class="col">
-      <input class="price-inp" type="text" id="img-url-${idx}"
-        value="${p.image||''}" placeholder="Cloudinary URL..."
-        onchange="updateImage(${idx}, this.value)" style="font-size:9px;color:var(--muted)">
-    </div>
-    <div class="col row-actions">
-      <button class="img-action" onclick="openModal(${idx})">📷 Зураг</button>
-    </div>
-  </div>`;
-}
-
-// ═══════════════════════════════════════════════════════
-// EDIT
-function updatePrice(idx, field, val) {
-  const num = parseInt(val) || 0;
-  PRODUCTS[idx][field] = num;
-  // Recalculate
-  recalcProfit(idx);
-  markChanged(idx);
-}
-
-function recalcProfit(idx) {
-  const p = PRODUCTS[idx];
-  const totalCost = (p.costN||0) + (p.shippingN||0) + (p.customsN||0) + (p.packagingN||0);
-  const profit = (p.priceN||0) - totalCost;
-  const pct = p.priceN > 0 ? Math.round(profit / p.priceN * 100) : 0;
-  p.totalCostN = totalCost;
-  p.netProfitN = profit;
-  p.netMarginPct = pct;
-  // Update formatted strings
-  p.cost = '₮' + (p.costN||0).toLocaleString();
-  p.price = '₮' + (p.priceN||0).toLocaleString();
-  p.totalCost = '₮' + totalCost.toLocaleString();
-  p.netProfit = '₮' + profit.toLocaleString();
-}
-
-function updateImage(idx, url) {
-  PRODUCTS[idx].image = url.trim();
-  markChanged(idx);
-}
-
-function markChanged(idx) {
-  changedSet.add(idx);
-  const row = document.getElementById(`row-${idx}`);
-  if (row) row.classList.add('changed');
-  document.getElementById('btn-publish').disabled = false;
-  document.getElementById('changed-badge').style.display = '';
-  updateStats();
-}
-
-// ═══════════════════════════════════════════════════════
-// IMAGE MODAL
-function openModal(idx) {
-  modalIdx = idx;
-  pendingImgUrl = null;
-  const p = PRODUCTS[idx];
-  document.getElementById('modal-prod-name').textContent = p.name;
-  document.getElementById('manual-url').value = p.image || '';
-  document.getElementById('modal-file').value = '';
-  showPreview(p.image || null);
-  document.getElementById('btn-modal-save').disabled = true;
-  document.getElementById('img-modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('img-modal').classList.remove('open');
-  modalIdx = -1;
-  pendingImgUrl = null;
-}
-
-function showPreview(url) {
-  const box = document.getElementById('preview-box');
-  if (url) {
-    box.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+function adminLogin(){
+  var v=document.getElementById('admin-pwd').value.trim();
+  if(v===ADMIN_PASS){
+    sessionStorage.setItem(ADMIN_SESS,'1');
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='flex';
   } else {
-    box.innerHTML = `<div class="no-preview"><span>🖼️</span><span>Зураг байхгүй</span></div>`;
+    var e=document.getElementById('admin-err');e.style.display='block';
+    document.getElementById('admin-pwd').style.borderColor='var(--r)';
+    setTimeout(function(){e.style.display='none';document.getElementById('admin-pwd').style.borderColor='';},2500);
   }
 }
+document.getElementById('admin-pwd').addEventListener('keydown',function(e){if(e.key==='Enter')adminLogin();});
 
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('drop-zone').classList.remove('drag');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) uploadToCloudinary(file);
-}
+(function(){
+  if(sessionStorage.getItem(ADMIN_SESS)==='1'){
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='flex';
+  }
+})();
+const SALT='PD2026MN';
+const STORE='pd_admin_pws';
 
-function handleFileSelect(input) {
-  const file = input.files[0];
-  if (file) uploadToCloudinary(file);
-}
+function loadPWs(){try{return JSON.parse(localStorage.getItem(STORE)||'[]');}catch{return[];}}
+function savePWs(a){localStorage.setItem(STORE,JSON.stringify(a));}
 
-async function uploadToCloudinary(file) {
-  const zone = document.getElementById('drop-zone');
-  zone.innerHTML = '<div style="font-size:10px;color:var(--accent);letter-spacing:1px;text-transform:uppercase">⬆️ Cloudinary-д upload хийж байна...</div>';
+function genPW(){
+  var name=document.getElementById('f-name').value.trim()||'User';
+  var uid=document.getElementById('f-id').value.trim()||Math.random().toString(36).slice(2,8).toUpperCase();
+  var days=+document.getElementById('f-days').value;
+  var plan=document.getElementById('f-plan').value;
+  var expiry=Date.now()+days*86400000;
+  var exB36=expiry.toString(36).toUpperCase();
+  // Normalize name for checksum: lowercase, trim
+  var normName=name.toLowerCase().replace(/\s+/g,'');
+  // Checksum includes name
+  var raw=uid+exB36+SALT+plan+normName;
+  var ck=0;for(var i=0;i<raw.length;i++)ck=(ck*31+raw.charCodeAt(i))&0xFFFFFF;
+  var ckStr=ck.toString(36).toUpperCase().padStart(5,'0');
+  var pw='PD-'+uid.toUpperCase().replace(/[^A-Z0-9]/g,'')+'-'+exB36+'-'+ckStr;
   
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CFG.preset);
-    formData.append('folder', 'productdrop');
-    
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CFG.cloud}/image/upload`, {
-      method: 'POST', body: formData
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    
-    // Use optimized URL
-    const url = data.secure_url.replace('/upload/', '/upload/w_600,q_auto,f_auto/');
-    pendingImgUrl = url;
-    showPreview(url);
-    document.getElementById('manual-url').value = url;
-    document.getElementById('btn-modal-save').disabled = false;
-    zone.innerHTML = `<div class="drop-text"><strong>✅ Upload амжилттай!</strong><br>Доорх "Хадгалах" товчийг дарна уу</div><input type="file" class="drop-file" id="modal-file" accept="image/*" onchange="handleFileSelect(this)">`;
-  } catch (e) {
-    zone.innerHTML = `<div style="color:var(--red);font-size:10px">❌ Upload алдаа: ${e.message}</div><input type="file" class="drop-file" id="modal-file" accept="image/*" onchange="handleFileSelect(this)">`;
-  }
-}
-
-function useManualUrl() {
-  const url = document.getElementById('manual-url').value.trim();
-  if (url) {
-    pendingImgUrl = url;
-    showPreview(url);
-    document.getElementById('btn-modal-save').disabled = false;
-  }
-}
-
-function saveImageUrl() {
-  if (modalIdx < 0 || !pendingImgUrl) return;
-  PRODUCTS[modalIdx].image = pendingImgUrl;
-  markChanged(modalIdx);
-  // Update the row image
-  const row = document.getElementById(`row-${modalIdx}`);
-  if (row) {
-    const imgCell = row.querySelector('.img-cell');
-    imgCell.innerHTML = `<div class="upload-btn"><img class="prod-thumb" src="${pendingImgUrl}" alt=""></div>`;
-    const urlInp = row.querySelector(`#img-url-${modalIdx}`);
-    if (urlInp) urlInp.value = pendingImgUrl;
-  }
-  showToast('Зураг хадгалагдлаа ✓');
-  closeModal();
-}
-
-function clearImage() {
-  if (modalIdx < 0) return;
-  PRODUCTS[modalIdx].image = '';
-  markChanged(modalIdx);
-  pendingImgUrl = null;
-  showPreview(null);
-  document.getElementById('manual-url').value = '';
-  document.getElementById('btn-modal-save').disabled = true;
+  var pws=loadPWs();
+  pws.push({name,uid,plan,expiry,pw,created:Date.now()});
+  savePWs(pws);
+  
+  document.getElementById('pw-out').textContent=pw;
+  document.getElementById('pw-meta').innerHTML=
+    'Хэрэглэгч: <b>'+name+'</b> ('+uid+')<br>'+
+    'Plan: <b>'+plan.toUpperCase()+'</b><br>'+
+    'Дуусах: <b>'+new Date(expiry).toLocaleDateString('mn-MN')+'</b><br>'+
+    '<span style="color:var(--a)">⚠ Нэвтрэх нэр: <b>'+name+'</b> — яг энэ нэрээр л нэвтэрнэ!</span>';
+  document.getElementById('result').style.display='block';
   renderList();
-  closeModal();
 }
 
-// ═══════════════════════════════════════════════════════
-// PUBLISH TO GITHUB
-async function publishToGitHub() {
-  const overlay = document.getElementById('publish-overlay');
-  const stepsEl = document.getElementById('pub-steps');
-  overlay.classList.add('open');
-
-  const steps = [
-    { id: 's1', text: '📋 JSON өгөгдөл бэлтгэж байна...' },
-    { id: 's2', text: '🔗 GitHub API холбогдож байна...' },
-    { id: 's3', text: '📤 Файл commit хийж байна...' },
-    { id: 's4', text: '⚡ Netlify дахин build хийх болно...' },
-  ];
-
-  stepsEl.innerHTML = steps.map(s => `<div class="pub-step" id="${s.id}">⏳ ${s.text}</div>`).join('');
-
-  const setStep = (id, state, msg) => {
-    const el = document.getElementById(id);
-    el.className = 'pub-step ' + state;
-    el.textContent = (state==='done'?'✅':state==='error'?'❌':'⏳') + ' ' + (msg||el.textContent.slice(2));
-  };
-
-  try {
-    setStep('s1', 'active');
-    const jsonStr = JSON.stringify(PRODUCTS, null, 2);
-    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    setStep('s1', 'done', 'JSON бэлэн — ' + PRODUCTS.length + ' бараа');
-
-    setStep('s2', 'active');
-    // Get current file SHA
-    const shaRes = await fetch(`https://api.github.com/repos/${CFG.repo}/contents/${CFG.dataPath}`, {
-      headers: { Authorization: `token ${CFG.token}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    const shaData = await shaRes.json();
-    const sha = shaData.sha || CFG._sha;
-    setStep('s2', 'done', 'GitHub холбоо амжилттай');
-
-    setStep('s3', 'active');
-    const commitRes = await fetch(`https://api.github.com/repos/${CFG.repo}/contents/${CFG.dataPath}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${CFG.token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: `🛍️ Update ${CFG.dataPath} — ${changedSet.size} product(s) [${new Date().toISOString().slice(0,16)}]`,
-        content: encoded,
-        sha: sha
-      })
-    });
-    if (!commitRes.ok) {
-      const errData = await commitRes.json();
-      throw new Error(errData.message || 'Commit алдаа');
-    }
-    const commitData = await commitRes.json();
-    CFG._sha = commitData.content.sha;
-    localStorage.setItem(CFG_KEY, JSON.stringify(CFG));
-    setStep('s3', 'done', 'Commit амжилттай → ' + commitData.commit?.sha?.slice(0,7));
-
-    setStep('s4', 'done', 'Netlify ~1 минутын дотор шинэчлэгдэнэ');
-
-    changedSet.clear();
-    document.getElementById('btn-publish').disabled = true;
-    document.getElementById('changed-badge').style.display = 'none';
-    updateStats();
-
-    setTimeout(() => {
-      overlay.classList.remove('open');
-      showToast('✅ GitHub-д амжилттай нийтлэгдлээ!');
-    }, 2000);
-
-  } catch(e) {
-    const activeStep = document.querySelector('.pub-step.active');
-    if (activeStep) activeStep.className = 'pub-step error';
-    stepsEl.innerHTML += `<div style="margin-top:12px;color:var(--red);font-size:10px">❌ Алдаа: ${e.message}</div>
-      <button onclick="document.getElementById('publish-overlay').classList.remove('open')" 
-        style="margin-top:10px;padding:8px 16px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-family:DM Mono,monospace;font-size:9px">Хаах</button>`;
-  }
+function copyPW(){
+  var pw=document.getElementById('pw-out').textContent;
+  navigator.clipboard.writeText(pw).then(function(){
+    document.querySelector('.copy-btn').textContent='✓ Хуулагдлаа';
+    setTimeout(function(){document.querySelector('.copy-btn').textContent='📋 Хуулах';},2000);
+  });
 }
 
-// ═══════════════════════════════════════════════════════
-// STATS
-function updateStats() {
-  document.getElementById('s-total').textContent = PRODUCTS.length;
-  const imgs = PRODUCTS.filter(p => p.image).length;
-  document.getElementById('s-img').textContent = imgs;
-  document.getElementById('s-noimg').textContent = PRODUCTS.length - imgs;
-  document.getElementById('s-changed').textContent = changedSet.size;
+function renderList(){
+  var pws=loadPWs();
+  var now=Date.now();
+  var tbody=document.getElementById('pw-list');
+  if(!pws.length){tbody.innerHTML='<tr><td colspan="5" style="color:var(--m);text-align:center;padding:16px">Нууц үг байхгүй</td></tr>';return;}
+  tbody.innerHTML=pws.map(function(p,i){
+    var exp=p.expiry<now;
+    return '<tr>'+
+      '<td>'+p.name+'<br><span style="color:var(--m);font-size:10px">'+p.uid+'</span></td>'+
+      '<td class="pw">'+p.pw+'</td>'+
+      '<td><span class="tag'+(exp?' exp':'')+'">'+new Date(p.expiry).toLocaleDateString('mn-MN')+(exp?' ✗':'')+'</span></td>'+
+      '<td><span class="tag">'+p.plan+'</span></td>'+
+      '<td><button class="del-btn" onclick="delPW('+i+')">✕</button></td>'+
+    '</tr>';
+  }).join('');
 }
 
-// ═══════════════════════════════════════════════════════
-// UTILS
-function setStatus(type, msg) {
-  document.getElementById('status-dot').className = 'status-dot ' + type;
-  document.getElementById('status-text').textContent = msg;
-}
+function delPW(i){var pws=loadPWs();pws.splice(i,1);savePWs(pws);renderList();}
 
-function showToast(msg, isErr) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.background = isErr ? 'var(--red)' : 'var(--accent)';
-  t.style.color = isErr ? '#fff' : '#000';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function showHelp() {
-  alert(`GitHub Personal Access Token авах заавар:
-
-1. github.com → Settings → Developer Settings
-2. Personal access tokens → Tokens (classic) → Generate new token
-3. Note: "ProductDrop Admin"
-4. Expiration: No expiration (эсвэл 1 жил)
-5. Scopes: ✅ repo (бүх repo эрх)
-6. Generate token → copy хийх
-
-⚠️ Token-ийг нэг удаа л харуулдаг — хуулж авна уу!`);
-}
-
-// ═══════════════════════════════════════════════════════
-// DragOver global prevent
-document.addEventListener('dragover', e => e.preventDefault());
-
-// ═══════════════════════════════════════════════════════
-// INIT
-if (loadSetup()) {
-  document.getElementById('setup-panel').style.display = 'none';
-  // Pre-fill setup fields
-  document.getElementById('gh-token').value = CFG.token;
-  document.getElementById('gh-repo').value = CFG.repo;
-  document.getElementById('cl-cloud').value = CFG.cloud;
-  document.getElementById('cl-preset').value = CFG.preset;
-  document.getElementById('admin-pass').value = CFG.pass || '';
-  document.getElementById('data-path').value = CFG.dataPath || 'data/beauty.json';
-  initAdmin();
-} else {
-  document.getElementById('setup-panel').style.display = 'block';
-}
+renderList();
 </script>
 </body>
 </html>
