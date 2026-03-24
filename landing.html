@@ -245,6 +245,17 @@ footer{border-top:1px solid var(--border);padding:36px 48px 28px;}
 /* Fade animations */
 .fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
 .fade-up.vis{opacity:1;transform:translateY(0);}
+
+@media(max-width:480px){
+  .hero-title,.h1{font-size:26px!important;line-height:1.2;}
+  .hero-sub,.subtitle{font-size:13px!important;}
+  .features-grid,.cards-grid{grid-template-columns:1fr!important;}
+  .pricing-grid{grid-template-columns:1fr!important;}
+  .cta-btn,button{min-height:48px;font-size:14px;}
+  .nav,.navbar{padding:0 14px;}
+  section{padding:40px 16px!important;}
+  .container{padding:0 14px!important;}
+}
 </style>
 </head>
 <body>
