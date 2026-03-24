@@ -447,8 +447,8 @@ let curFilter="all",curIdx=-1,curView="grid",userRatings={},userImages={},imgMod
 
 let userPrices={};
 function loadData(){
-try{userPrices=JSON.parse(localStorage.getItem('beauty_v1_prices')||'{}')||{}}catch{userPrices={}}try{userRatings=JSON.parse(localStorage.getItem('beauty_v1_rat')||'{}')||{}}catch{userRatings={}}try{userImages=JSON.parse(localStorage.getItem('beauty_v1_img')||'{}')||{}}catch{userImages={}}}
-function savePrices(){localStorage.setItem('beauty_v1_prices',JSON.stringify(userPrices));}
+try{userPrices=JSON.parse(localStorage.getItem("beauty_v1_prices")||"{}")||{}}catch{userPrices={}}try{userRatings=JSON.parse(localStorage.getItem('beauty_v1_rat')||'{}')||{}}catch{userRatings={}}try{userImages=JSON.parse(localStorage.getItem('beauty_v1_img')||'{}')||{}}catch{userImages={}}}
+function savePrices(){localStorage.setItem("beauty_v1_prices",JSON.stringify(userPrices));}
 function saveRat(){localStorage.setItem('beauty_v1_rat',JSON.stringify(userRatings));}
 function saveImgs(){try{localStorage.setItem('beauty_v1_img',JSON.stringify(userImages));}catch{alert('Storage дүүрлээ.');}}
 function getR(n){return Object.assign({},RATINGS_DATA[n]||{},userRatings[n]||{});}
@@ -464,16 +464,24 @@ function setFilter(btn,cat){document.querySelectorAll('.fb').forEach(b=>b.classL
 function setView(v){curView=v;document.getElementById('vb-grid').classList.toggle('active',v==='grid');document.getElementById('vb-table').classList.toggle('active',v==='table');document.getElementById('view-grid').style.display=v==='grid'?'':'none';document.getElementById('view-table').style.display=v==='table'?'':'none';}
 
 function updateStats(){let rated=0,wow=0,fx=0;PRODUCTS.forEach(n=>{const r=getR(n);if(r.value)rated++;if(r.wow==='wow')wow++;if(r.margin==='5x')fx++;});document.getElementById('s-rated').textContent=rated;document.getElementById('s-wow').textContent=wow;document.getElementById('s-5x').textContent=fx;}
-function gProfit(n){var p=PRICE_DATA[n];return p&&p.netProfitN!==undefined?p.netProfitN:null;}
+function gProfit(n){
+  if(userPrices[n]&&userPrices[n].netProfit){
+    var s=userPrices[n].netProfit;
+    return parseInt(s.replace(/[^0-9-]/g,''))||null;
+  }
+  var p=PRICE_DATA[n];return p&&p.netProfitN!==undefined?p.netProfitN:null;
+}
 function fMNT(n){return '₮'+n.toLocaleString();}
-function gPct(n){var p=PRICE_DATA[n];return p&&p.netMarginPct!==undefined?p.netMarginPct:0;}
+function gPct(n){
+  if(userPrices[n]&&userPrices[n].netPct) return userPrices[n].netPct.replace('%','');
+  var p=PRICE_DATA[n];return p&&p.netMarginPct!==undefined?p.netMarginPct:0;}
 function chipC(v){return['good','wow','yes','vgood','5x'].includes(v)?'g':['notbad','notyet','3x'].includes(v)?'n':'b';}
 
 function renderAll(){renderGrid();renderTbl();}
 function renderGrid(){
   const grid=document.getElementById('prod-grid');if(!grid)return;
   grid.innerHTML=PRODUCTS.map((name,i)=>{
-    const cat=CAT_MAP[name]||'Beauty',R=getR(name),p=PRICE_DATA[name]||{cost:'—',price:'—',costN:0,priceN:0};
+    const cat=CAT_MAP[name]||'Beauty',R=getR(name),p=Object.assign({},PRICE_DATA[name]||{cost:'—',price:'—',costN:0,priceN:0},userPrices[name]||{});
     const profit=gProfit(name),pct=gPct(name),emoji=CAT_EMOJI[cat]||'✨',grad=CAT_GRADIENT[cat]||'linear-gradient(135deg,#1a1a1a,#0a0a0a)';
     const imgUrl=getImg(name);
     const wow=R.wow==='wow'?'<div class="pc-wow wow">★ Wow</div>':'';
@@ -594,6 +602,42 @@ function openCalc(idx){
   pdCalc();
   var m=document.getElementById('pd-calc');if(m)m.classList.add('open');
 }
+function pdSaveCalc(){
+  var idx=curIdx;
+  if(idx===undefined||idx<0) return;
+  var name=PRODUCTS[idx];
+  if(!name) return;
+  var gv=function(id){var e=document.getElementById(id);return e?parseInt(e.value)||0:0;};
+  var costN=gv('pdc-cost'),shipN=gv('pdc-ship'),custN=gv('pdc-cust'),pkgN=gv('pdc-pkg'),priceN=gv('pdc-price');
+  var total=costN+shipN+custN+pkgN;
+  var net=priceN-total;
+  var pct=priceN>0?Math.round(net/priceN*100):0;
+  var fmt=function(n){return '₮'+n.toLocaleString();};
+  if(!userPrices[name]) userPrices[name]={};
+  userPrices[name].cost=fmt(costN);
+  userPrices[name].shipping=fmt(shipN);
+  userPrices[name].customs=fmt(custN);
+  userPrices[name].packaging=fmt(pkgN);
+  userPrices[name].totalCost=fmt(total);
+  userPrices[name].price=fmt(priceN);
+  userPrices[name].netProfit=net>0?fmt(net):'—';
+  userPrices[name].netPct=pct+'%';
+  savePrices();
+  // Update panel prices without full re-render
+  var pp=document.getElementById('p-prices');
+  if(pp) pp.innerHTML=pdPricesHTML(Object.assign({},PRICE_DATA[name]||{},userPrices[name]),net,pct+'%');
+  // Update only this card
+  var card=document.getElementById('pc'+idx);
+  if(card){
+    var cv=card.querySelector('.pc-pv');
+    if(cv) cv.textContent=fmt(costN);
+    var cvs=card.querySelectorAll('.pc-pv');
+    if(cvs[1]) cvs[1].textContent=fmt(priceN);
+    var profEl=card.querySelector('.pc-pval');
+    if(profEl) profEl.textContent=net>0?fmt(net)+' ('+pct+'%)':'—';
+  }
+  pdCloseCalc();
+}
 function pdCloseCalc(){var m=document.getElementById('pd-calc');if(m)m.classList.remove('open');}
 function pdCalc(){
   function g(id){return +(document.getElementById(id)||{value:0}).value||0;}
@@ -645,7 +689,7 @@ function pdPricesHTML(p,profit,pct){
     <div class="pdc-row"><span class="pdc-lbl2">Ашгийн хувь</span><span class="pdc-val" id="pdc-mg">—</span></div>
     <div class="pdc-row"><span class="pdc-lbl2" style="font-weight:600">Нийт ашиг (qty)</span><span class="pdc-val p" id="pdc-net">—</span></div>
   </div>
-  <button class="pdc-btn" onclick="pdCloseCalc()">Хаах</button>
+  <button class="pdc-btn" onclick="pdSaveCalc()">Хадгалах</button>
 </div>
 </div>
 </body>
