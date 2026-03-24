@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProductDrop.MN — Нэвтрэх</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06060a;--surface:#0d0d12;--surface2:#13131a;
+  --border:#1c1c26;--border2:#28283a;
+  --text:#efefef;--muted:#5a5a72;--muted2:#3a3a50;
+  --accent:#c8ff00;--red:#ff4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:.5;}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg);}
+.login-wrap{width:min(400px,92vw);}
+.login-back{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;transition:color .2s;}
+.login-back:hover{color:var(--text);}
+.login-box{background:var(--surface);border:1px solid var(--border2);padding:36px 32px;position:relative;overflow:hidden;}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);}
+.login-glow{position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(200,255,0,.05),transparent 70%);pointer-events:none;}
+.ll{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.5px;margin-bottom:4px;}
+.ll span{color:var(--accent);}
+.ls{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;}
+.lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block;}
+.pwd-input{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:13px 16px;outline:none;transition:border-color .2s;letter-spacing:.08em;}
+.pwd-input:focus{border-color:var(--accent);}
+.login-btn{width:100%;margin-top:14px;padding:14px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.login-btn:hover{background:#b5e800;transform:translateY(-1px);}
+.login-err{margin-top:10px;font-size:11px;color:var(--red);display:none;text-align:center;}
+.login-note{margin-top:16px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6;}
+.login-note a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
+
+/* DASHBOARD */
+#dashboard{display:none;}
+nav{position:sticky;top:0;background:rgba(6,6,10,.94);border-bottom:1px solid var(--border);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:50;backdrop-filter:blur(20px);}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:-.3px;}
+.nav-logo span{color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.nav-meta{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+#nav-user{color:var(--accent);font-weight:500;}
+.nav-logout{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;background:none;border:none;font-family:'DM Mono',monospace;transition:color .2s;}
+.nav-logout:hover{color:var(--red);}
+
+/* stats */
+.stats-bar{padding:12px 40px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+.stats-bar::-webkit-scrollbar{display:none;}
+.sb-i{display:flex;flex-direction:column;gap:3px;padding-right:22px;border-right:1px solid var(--border);margin-right:22px;flex-shrink:0;}
+.sb-i:last-child{border-right:none;}
+.sb-v{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;color:var(--text);}
+.sb-v.ac{color:var(--accent);}
+.sb-l{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+/* hero */
+.dash-hero{padding:48px 40px 40px;border-bottom:1px solid var(--border);}
+.dash-hero-inner{max-width:1100px;margin:0 auto;}
+.sec-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);max-width:60px;}
+.dash-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(24px,3vw,38px);letter-spacing:-2px;line-height:1.05;margin-bottom:8px;}
+.dash-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);}
+.dash-sub{color:var(--muted);font-size:12px;max-width:460px;}
+
+/* cat grid */
+.cat-section{padding:36px 40px 60px;max-width:1100px;margin:0 auto;}
+.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);}
+.cc{background:var(--surface);padding:0;cursor:pointer;transition:background .2s;position:relative;overflow:hidden;border:none;text-align:left;width:100%;display:flex;flex-direction:column;text-decoration:none;color:inherit;}
+.cc:hover{background:var(--surface2);}
+.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .35s;}
+.cc:hover::before{transform:scaleX(1);}
+.cc[data-c=beauty]::before{background:#ff6eb4;}
+.cc[data-c=home]::before{background:#4fc3f7;}
+.cc[data-c=health]::before{background:#00e676;}
+.cc[data-c=goods]::before{background:#ffb800;}
+.cc[data-c=kids]::before{background:#ce93d8;}
+.cc-img{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:46px;opacity:.6;}
+.cc-body{padding:16px 16px 20px;}
+.cc-badge{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:2px;display:inline-block;margin-bottom:8px;}
+.cc[data-c=beauty] .cc-badge{background:rgba(255,110,180,.08);color:#ff6eb4;border:1px solid rgba(255,110,180,.2);}
+.cc[data-c=home] .cc-badge{background:rgba(79,195,247,.08);color:#4fc3f7;border:1px solid rgba(79,195,247,.2);}
+.cc[data-c=health] .cc-badge{background:rgba(0,230,118,.08);color:#00e676;border:1px solid rgba(0,230,118,.2);}
+.cc[data-c=goods] .cc-badge{background:rgba(255,184,0,.08);color:#ffb800;border:1px solid rgba(255,184,0,.2);}
+.cc[data-c=kids] .cc-badge{background:rgba(206,147,216,.08);color:#ce93d8;border:1px solid rgba(206,147,216,.2);}
+.cc-name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.5px;margin-bottom:4px;}
+.cc-count{font-size:10px;color:var(--muted);margin-bottom:6px;}
+.cc-subs{font-size:9px;color:var(--muted2);line-height:1.6;}
+
+@media(max-width:700px){
+  nav{padding:0 16px;}
+  .stats-bar{padding:12px 16px;}
+  .dash-hero{padding:32px 16px 28px;}
+  .cat-section{padding:20px 16px 48px;}
+  .cat-grid{grid-template-columns:1fr 1fr;}
+  .sb-i{padding-right:14px;margin-right:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <a href="landing.html" class="login-back">← Буцах</a>
+    <div class="login-box">
+      <div class="login-glow"></div>
+      <div class="ll">PRODUCT<span>DROP</span>.MN</div>
+      <div class="ls">Бараа судалгааны платформ</div>
+      <label class="lbl">Хэрэглэгчийн нэр</label>
+      <input type="text" class="pwd-input" id="uname" placeholder="Нэрээ оруулна уу" autocomplete="username" style="margin-bottom:16px;">
+      <label class="lbl">Нэвтрэх код</label>
+      <input type="password" class="pwd-input" id="pwd" placeholder="PD-XXXXX-XXXXX-XXXXX" autocomplete="current-password">
+      <button class="login-btn" onclick="doLogin()">Нэвтрэх →</button>
+      <div class="login-err" id="lerr">Код буруу байна</div>
+      <div class="login-note">Код байхгүй юу? <a href="landing.html#pricing">Subscription авах →</a><br><span style="font-size:9px;color:var(--muted2)">Код: PD-... хэлбэрийн</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <nav>
+    <div class="nav-logo">PRODUCT<span>DROP</span>.MN</div>
+    <div class="nav-right">
+      <span class="nav-meta" id="nav-user"></span><span class="nav-meta" id="nav-plan">PRO</span><span class="nav-meta">Research DB · v2</span>
+      <button class="nav-logout" onclick="doLogout()">Гарах</button>
+    </div>
+  </nav>
+  <div class="stats-bar">
+    <div class="sb-i"><div class="sb-v ac">500</div><div class="sb-l">Нийт бараа</div></div>
+    <div class="sb-i"><div class="sb-v">5</div><div class="sb-l">Категори</div></div>
+    <div class="sb-i"><div class="sb-v">💄</div><div class="sb-l">Beauty · 100</div></div>
+    <div class="sb-i"><div class="sb-v">🏠</div><div class="sb-l">Home · 100</div></div>
+    <div class="sb-i"><div class="sb-v">💪</div><div class="sb-l">Health · 100</div></div>
+    <div class="sb-i"><div class="sb-v">🛍</div><div class="sb-l">Goods · 100</div></div>
+    <div class="sb-i"><div class="sb-v">🧸</div><div class="sb-l">Kids · 100</div></div>
+  </div>
+  <div class="dash-hero">
+    <div class="dash-hero-inner">
+      <div class="sec-lbl">Dashboard</div>
+      <h1 class="dash-title">Категори <em>сонгоно уу</em></h1>
+      <p class="dash-sub">500+ шалгарсан бараа. Карт дарж категорид нэвтэрнэ.</p>
+    </div>
+  </div>
+  <div class="cat-section">
+    <div class="cat-grid">
+      <a class="cc" data-c="beauty" href="app/beauty100.html"><div class="cc-img" style="background:linear-gradient(135deg,#1f0d18,#130a10)">💄</div><div class="cc-body"><span class="cc-badge">Beauty</span><div class="cc-name">Beauty</div><div class="cc-count">100 бараа</div><div class="cc-subs">Makeup · Skincare · Hair<br>Nails · Body · Tools</div></div></a>
+      <a class="cc" data-c="home" href="app/home100.html"><div class="cc-img" style="background:linear-gradient(135deg,#001a2a,#000f1a)">🏠</div><div class="cc-body"><span class="cc-badge">Home</span><div class="cc-name">Home</div><div class="cc-count">100 бараа</div><div class="cc-subs">Kitchen · Bedroom<br>Bathroom · Smart Home</div></div></a>
+      <a class="cc" data-c="health" href="app/health100.html"><div class="cc-img" style="background:linear-gradient(135deg,#001a10,#000f09)">💪</div><div class="cc-body"><span class="cc-badge">Health</span><div class="cc-name">Health</div><div class="cc-count">100 бараа</div><div class="cc-subs">Fitness · Recovery<br>Nutrition · Sleep</div></div></a>
+      <a class="cc" data-c="goods" href="app/goods100.html"><div class="cc-img" style="background:linear-gradient(135deg,#1a1200,#0f0900)">🛍️</div><div class="cc-body"><span class="cc-badge">Goods</span><div class="cc-name">Goods</div><div class="cc-count">100 бараа</div><div class="cc-subs">Electronics · Pet<br>Car · Travel · Sports</div></div></a>
+      <a class="cc" data-c="kids" href="app/kids100.html"><div class="cc-img" style="background:linear-gradient(135deg,#1a0d1f,#10080f)">🧸</div><div class="cc-body"><span class="cc-badge">Kids</span><div class="cc-name">Kids</div><div class="cc-count">100 бараа</div><div class="cc-subs">Baby · Learning<br>Creative · Safety</div></div></a>
+    </div>
+  </div>
+</div>
+
+<script>
+const SESSION_KEY = "pd_sess_v2";
+const SALT = 'PD2026MN';
+
+function validatePassword(pw,uname){
+  // Format: PD-{UID}-{EXPIRY_B36}-{CHECKSUM}
+  if(!pw||!pw.startsWith('PD-'))return null;
+  var parts=pw.split('-');
+  if(parts.length<4)return null;
+  var uid=parts[1];
+  var exB36=parts[2];
+  var ckStr=parts[3];
+  var expiry=parseInt(exB36,36);
+  if(isNaN(expiry)||expiry<Date.now())return null; // expired
+  // Normalize username: lowercase, no spaces
+  var normName=(uname||'').toLowerCase().replace(/\s+/g,'');
+  // Verify checksum (try all plans) — name must match
+  for(var plan of ['lite','pro','elite']){
+    var raw=uid+exB36+SALT+plan+normName;
+    var ck=0;for(var i=0;i<raw.length;i++)ck=(ck*31+raw.charCodeAt(i))&0xFFFFFF;
+    if(ck.toString(36).toUpperCase().padStart(5,'0')===ckStr){
+      return {uid,expiry,plan};
+    }
+  }
+  return null;
+}
+
+function chkSess(){
+  try{
+    var s=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
+    if(!s||!s.e||s.e<Date.now())return false;
+    return true;
+  }catch{return false;}
+}
+function startSess(info,uname){
+  localStorage.setItem(SESSION_KEY,JSON.stringify({e:info.expiry,uid:info.uid,plan:info.plan,uname:uname}));
+}
+function endSess(){localStorage.removeItem(SESSION_KEY);}
+function getSessInfo(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||"null");}catch{return null;}}
+
+
+
+document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function showLogin(){document.getElementById('login-screen').style.display='flex';document.getElementById('dashboard').style.display='none';}
+function showDash(){document.getElementById('login-screen').style.display='none';document.getElementById('dashboard').style.display='block';}
+
+function doLogin(){
+  var uname=document.getElementById('uname').value.trim();
+  var v=document.getElementById('pwd').value.trim();
+  if(!uname){
+    var e=document.getElementById('lerr');e.textContent='Нэрээ оруулна уу';e.style.display='block';
+    document.getElementById('uname').style.borderColor='var(--red)';
+    setTimeout(function(){e.style.display='none';document.getElementById('uname').style.borderColor='';},3000);
+    return;
+  }
+  var info=validatePassword(v,uname);
+  if(info){
+    startSess(info,uname);
+    var planEl=document.getElementById('nav-plan');
+    if(planEl)planEl.textContent=info.plan.toUpperCase();
+    var userEl=document.getElementById('nav-user');
+    if(userEl)userEl.textContent=uname;
+    showDash();
+  } else {
+    var msg='Нэр эсвэл код буруу байна';
+    var e=document.getElementById('lerr');e.textContent=msg;e.style.display='block';
+    document.getElementById('pwd').style.borderColor='var(--red)';
+    document.getElementById('uname').style.borderColor='var(--red)';
+    setTimeout(function(){e.style.display='none';document.getElementById('pwd').style.borderColor='';document.getElementById('uname').style.borderColor='';},3000);
+  }
+}
+function doLogout(){endSess();document.getElementById('pwd').value='';document.getElementById('uname').value='';showLogin();}
+
+window.addEventListener('DOMContentLoaded',function(){
+  if(chkSess()){
+    var info=getSessInfo();
+    var planEl=document.getElementById('nav-plan');
+    if(planEl&&info)planEl.textContent=info.plan?info.plan.toUpperCase():'PRO';
+    var userEl=document.getElementById('nav-user');
+    if(userEl&&info&&info.uname)userEl.textContent=info.uname;
+    showDash();
+  } else {showLogin();}
+});
+
+// Guard cat links
+document.querySelectorAll('.cc').forEach(link=>{
+  link.addEventListener('click',e=>{
+    if(!chkSess()){e.preventDefault();showLogin();}
+  });
+});
+</script>
+</body>
+</html>
