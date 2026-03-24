@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProductDrop Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#222;--border2:#2e2e2e;--text:#f0f0f0;--muted:#555;--accent:#c8ff00;--red:#ff5555;--warn:#ffaa00;--green:#00ff88;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;}
+nav{height:50px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;background:rgba(10,10,10,.95);z-index:50;backdrop-filter:blur(12px);}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;}.logo span{color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.badge{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border:1px solid rgba(200,255,0,.2);color:var(--accent);}
+.save-ind{font-size:9px;color:var(--muted);letter-spacing:.06em;}
+.save-ind.saved{color:var(--green);}
+
+/* START */
+#start{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 50px);}
+.sbox{text-align:center;max-width:420px;padding:20px;}
+.si2{font-size:52px;margin-bottom:20px;opacity:.5;}
+.st2{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;margin-bottom:8px;}
+.ss{font-size:11px;color:var(--muted);line-height:1.9;margin-bottom:28px;}
+.obtn{padding:14px 32px;background:var(--accent);color:#000;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border:none;}
+.obtn:hover{opacity:.85;}
+.resume-box{margin-top:16px;padding:14px 18px;border:1px solid var(--border2);background:var(--bg2);text-align:left;}
+.resume-lbl{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.resume-name{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;margin-bottom:10px;}
+.resume-meta{font-size:9px;color:var(--muted);margin-bottom:12px;}
+.rbtn{padding:8px 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:9px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:none;}
+.rbtn-p{background:var(--accent);color:#000;margin-right:6px;}
+.rbtn-g{background:transparent;border:1px solid var(--border2);color:var(--muted);}
+#fi{display:none;}
+
+/* EDITOR */
+#editor{display:none;padding:0 20px 80px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 0;gap:10px;flex-wrap:wrap;}
+.fbadge{display:flex;align-items:center;gap:8px;}
+.fdot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+.fname2{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;}
+.fcount{font-size:9px;color:var(--muted);}
+.tacts{display:flex;gap:7px;}
+.btn{padding:8px 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:9px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border:none;}
+.btnp{background:var(--accent);color:#000;}.btnp:hover{opacity:.85;}
+.btng{background:transparent;border:1px solid var(--border2);color:var(--muted);}.btng:hover{border-color:var(--accent);color:var(--accent);}
+.btnr{background:transparent;border:1px solid rgba(255,85,85,.3);color:var(--red);}.btnr:hover{background:rgba(255,85,85,.08);}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border2);margin-bottom:1px;}
+.stat{padding:12px 16px;border-right:1px solid var(--border2);}.stat:last-child{border-right:none;}
+.slbl{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.sval{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;}
+.sval.ac{color:var(--accent);}
+
+/* SEARCH */
+.sbar{padding:10px 0;display:flex;gap:7px;align-items:center;}
+.sw{position:relative;flex:1;}
+.sw::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
+.sinp{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:8px 10px 8px 30px;outline:none;}
+.sinp:focus{border-color:var(--accent);}
+.fbtn{padding:6px 12px;font-size:8px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;white-space:nowrap;}
+.fbtn:hover,.fbtn.on{border-color:var(--accent);color:var(--accent);background:rgba(200,255,0,.04);}
+
+/* TABLE */
+.tbl{border:1px solid var(--border2);}
+.thead{display:grid;grid-template-columns:40px 1fr 200px 120px 100px 44px;background:var(--bg3);border-bottom:2px solid var(--border2);padding:0 8px;}
+.th{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:9px 8px;}
+.trow{display:grid;grid-template-columns:40px 1fr 200px 120px 100px 44px;border-bottom:1px solid var(--border);padding:0 8px;align-items:center;}
+.trow:last-child{border-bottom:none;}
+.trow:hover{background:rgba(200,255,0,.02);}
+.td{padding:9px 8px;font-size:11px;}
+.tdnum{color:var(--muted);font-size:9px;}
+.pname{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#fff;}
+.inp{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:6px 8px;outline:none;}
+.inp:focus{border-color:var(--accent);}
+.inp.dirty{border-color:rgba(200,255,0,.45);background:rgba(200,255,0,.03);}
+.profit{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;}
+.profit.hi{color:var(--accent);}.profit.md{color:var(--warn);}.profit.lo{color:var(--red);}
+.pct{font-size:9px;color:var(--muted);}
+.edit-btn{width:30px;height:30px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.edit-btn:hover{border-color:var(--accent);color:var(--accent);}
+.edit-btn.has-edit{border-color:rgba(200,255,0,.4);color:var(--accent);}
+
+/* DRAWER */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:190;display:none;}
+#overlay.show{display:block;}
+#drawer{position:fixed;right:0;top:0;bottom:0;width:420px;background:var(--bg2);border-left:1px solid var(--border2);z-index:200;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+#drawer.open{transform:translateX(0);}
+.dhdr{padding:14px 18px;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:5;}
+.dname{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;line-height:1.4;flex:1;margin-right:10px;}
+.dclose{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;flex-shrink:0;}
+.dclose:hover{color:var(--text);}
+.dbody{padding:16px 18px 30px;}
+.dsec{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.dsec:first-child{margin-top:0;}
+
+/* Editable price grid */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border2);margin-bottom:1px;}
+.pcell{background:var(--bg3);padding:14px 14px 12px;}
+.pcell.full{grid-column:1/-1;}
+.pclbl{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.pcinp{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:28px;padding:4px 0 3px;outline:none;letter-spacing:-1px;-moz-appearance:textfield;}
+.pcinp::-webkit-outer-spin-button,.pcinp::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.pcinp:focus{border-bottom-color:var(--accent);}
+.pcinp.ac{color:var(--accent);}
+.pcinp[readonly]{color:var(--warn);cursor:default;border-bottom-color:transparent;font-size:22px;letter-spacing:-.5px;}
+
+/* URL */
+.urlprev{width:100%;aspect-ratio:16/9;background:var(--bg3);border:1px solid var(--border2);overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.urlprev img{width:100%;height:100%;object-fit:cover;}
+.urlprev span{font-size:10px;color:var(--muted);}
+.urlinp{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:8px 10px;outline:none;}
+.urlinp:focus{border-color:var(--accent);}
+.urlinp.dirty{border-color:rgba(200,255,0,.5);}
+
+/* Ratings */
+.rfield{margin-bottom:10px;}
+.rlbl{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.ropts{display:flex;gap:4px;flex-wrap:wrap;}
+.ropt{padding:5px 12px;font-size:9px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:all .1s;}
+.ropt:hover{border-color:var(--accent);color:var(--accent);}
+.ropt.sg{border-color:var(--accent);color:var(--accent);background:rgba(200,255,0,.08);}
+.ropt.sw{border-color:var(--warn);color:var(--warn);background:rgba(255,170,0,.08);}
+.ropt.sr{border-color:var(--red);color:var(--red);background:rgba(255,85,85,.08);}
+
+/* Notes */
+.ntxt{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:10px;resize:vertical;min-height:80px;outline:none;line-height:1.6;}
+.ntxt:focus{border-color:var(--accent);}
+
+/* Save btn */
+.dsave{width:100%;padding:13px;background:var(--accent);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;margin-top:16px;}
+.dsave:hover{opacity:.85;}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--accent);color:#000;font-family:'Syne',sans-serif;font-weight:800;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:10px 22px;z-index:999;transition:transform .22s;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:680px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .thead,.trow{grid-template-columns:32px 1fr 140px 44px;}
+  .th:nth-child(4),.td:nth-child(4),.th:nth-child(5),.td:nth-child(5){display:none;}
+  #drawer{width:100vw;}
+}
+
+@media(max-width:680px){
+  .editor-wrap,.main-wrap{flex-direction:column!important;}
+  .sidebar,.left-panel{width:100%!important;max-width:100%!important;}
+  .preview,.right-panel{width:100%!important;}
+  input,select,textarea{font-size:16px!important;}
+  button{min-height:44px;}
+  .toolbar{flex-wrap:wrap;gap:6px;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Product<span>Drop</span>.MN</div>
+  <div class="nav-right">
+    <span class="save-ind" id="save-ind">—</span>
+    <div class="badge">Editor</div>
+  </div>
+</nav>
+
+<!-- START -->
+<div id="start">
+  <div class="sbox">
+    <div class="si2">📂</div>
+    <div class="st2">HTML файл нээнэ үү</div>
+    <div class="ss">beauty.html · goods.html · health.html<br>home.html · kids.html<br><br>Бүх өөрчлөлт auto-save хийгдэнэ.<br>Refresh хийсэн ч алдагдахгүй.</div>
+    <button class="obtn" onclick="document.getElementById('fi').click()">📂 Файл нээх</button>
+    <div class="resume-box" id="resume-box" style="display:none;">
+      <div class="resume-lbl">Өмнөх ажил хадгалагдсан байна</div>
+      <div class="resume-name" id="resume-name">—</div>
+      <div class="resume-meta" id="resume-meta">—</div>
+      <button class="rbtn rbtn-p" onclick="resumeWork()">▶ Үргэлжлүүлэх</button>
+      <button class="rbtn rbtn-g" onclick="clearSaved()">Устгах</button>
+    </div>
+    <input type="file" id="fi" accept=".html" onchange="onFile(this)">
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div id="editor">
+  <div class="topbar">
+    <div class="fbadge">
+      <div class="fdot"></div>
+      <div>
+        <div class="fname2" id="fname">—</div>
+        <div class="fcount" id="fcount">0 бараа</div>
+      </div>
+    </div>
+    <div class="tacts">
+      <button class="btn btng" onclick="document.getElementById('fi').click()">📂 Өөр файл</button>
+      <button class="btn btnr" onclick="clearAll()">✕ Цэвэрлэх</button>
+      <button class="btn btnp" onclick="downloadFile()">⬇ Download</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="slbl">Нийт бараа</div><div class="sval" id="s0">0</div></div>
+    <div class="stat"><div class="slbl">Зураг оруулсан</div><div class="sval ac" id="s1">0</div></div>
+    <div class="stat"><div class="slbl">Дундаж ашиг</div><div class="sval" id="s2">—</div></div>
+    <div class="stat"><div class="slbl">Өөрчлөлт</div><div class="sval ac" id="s3">0</div></div>
+  </div>
+
+  <div class="sbar">
+    <div class="sw"><input class="sinp" id="search" placeholder="Барааны нэр хайх..." oninput="render()"></div>
+    <button class="fbtn on" onclick="setF('all',this)">Бүгд</button>
+    <button class="fbtn" onclick="setF('img',this)">🖼 Зурагтай</button>
+    <button class="fbtn" onclick="setF('ch',this)">✏ Засасан</button>
+  </div>
+
+  <div class="tbl">
+    <div class="thead">
+      <div class="th">#</div>
+      <div class="th">Барааны нэр</div>
+      <div class="th">Зургийн URL</div>
+      <div class="th">Зарах үнэ ₮</div>
+      <div class="th">Цэвэр ашиг</div>
+      <div class="th"></div>
+    </div>
+    <div id="list"></div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div id="overlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <div class="dhdr">
+    <div class="dname" id="dname">—</div>
+    <button class="dclose" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="dbody">
+    <div class="dsec">Үнийн мэдээлэл — засах боломжтой</div>
+    <div class="pgrid">
+      <div class="pcell">
+        <div class="pclbl">Alibaba авах үнэ ₮</div>
+        <input class="pcinp" id="d-cost" type="number" min="0" step="100" oninput="recalc()">
+      </div>
+      <div class="pcell">
+        <div class="pclbl">Тээвэр ₮</div>
+        <input class="pcinp" id="d-ship" type="number" min="0" step="100" oninput="recalc()">
+      </div>
+      <div class="pcell">
+        <div class="pclbl">Гааль+Татвар ₮</div>
+        <input class="pcinp" id="d-cust" type="number" min="0" step="100" oninput="recalc()">
+      </div>
+      <div class="pcell">
+        <div class="pclbl">Боодол ₮</div>
+        <input class="pcinp" id="d-pack" type="number" min="0" step="100" oninput="recalc()">
+      </div>
+    </div>
+    <div class="pgrid">
+      <div class="pcell">
+        <div class="pclbl">Нийт зардал ₮</div>
+        <input class="pcinp" id="d-total" readonly tabindex="-1">
+      </div>
+      <div class="pcell">
+        <div class="pclbl">Зарах үнэ ₮</div>
+        <input class="pcinp ac" id="d-price" type="number" min="0" step="100" oninput="recalc()">
+      </div>
+    </div>
+    <div class="pgrid" style="margin-bottom:0;">
+      <div class="pcell full">
+        <div class="pclbl">Цэвэр ашиг</div>
+        <input class="pcinp ac" id="d-profit" readonly tabindex="-1">
+      </div>
+    </div>
+
+    <!-- Image URL -->
+    <div class="dsec">Зургийн URL</div>
+    <div class="urlprev" id="d-prev"><span>Зураг байхгүй</span></div>
+    <input type="text" class="urlinp" id="d-urlinp" placeholder="https://res.cloudinary.com/..." oninput="onDUrl(this)">
+
+    <!-- Ratings -->
+    <div class="dsec">Үнэлгээ засах</div>
+    <div id="d-ratings"></div>
+
+    <!-- Notes -->
+    <div class="dsec">Тэмдэглэл</div>
+    <textarea class="ntxt" id="d-notes" placeholder="Судалгааны тэмдэглэл..."></textarea>
+
+    <button class="dsave" onclick="saveDrawer()">✓ Хадгалах</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── STATE ──
+let raw='', prods=[], prices={}, ratings={}, edits={}, filt='all', fn='', curIdx=-1;
+const LS_KEY='pd_editor_v3';
+
+const RFIELDS=[
+  {key:'value',  lbl:'Үнэ цэн',       opts:[{v:'good',l:'Сайн'},{v:'notbad',l:'Дунд'},{v:'bad',l:'Муу'}]},
+  {key:'wow',    lbl:'Wow Factor',     opts:[{v:'wow',l:'Wow'},{v:'good',l:'Сайн'},{v:'notyet',l:'Одоохондоо үгүй'},{v:'bad',l:'Муу'}]},
+  {key:'saturation',lbl:'Өрсөлдөөн',  opts:[{v:'notyet',l:'Одоохондоо үгүй'},{v:'notbad',l:'Дунд'},{v:'bad',l:'Муу'}]},
+  {key:'easy',   lbl:'Хялбар байдал', opts:[{v:'vgood',l:'Маш сайн'},{v:'good',l:'Сайн'},{v:'notbad',l:'Дунд'},{v:'bad',l:'Муу'}]},
+  {key:'margin', lbl:'Ашиг',          opts:[{v:'5x',l:'5x'},{v:'3x',l:'3x'}]},
+  {key:'unique', lbl:'Өвөрмөц',       opts:[{v:'yes',l:'Тийм'},{v:'no',l:'Үгүй'}]},
+  {key:'problem',lbl:'Асуудал шийднэ',opts:[{v:'yes',l:'Тийм'},{v:'no',l:'Үгүй'}]}
+];
+const GOOD=['good','wow','vgood','yes','5x','notyet'];
+const WARN=['notbad','3x'];
+function optCls(v){return GOOD.includes(v)?'sg':WARN.includes(v)?'sw':'sr';}
+
+// ── LOCAL STORAGE ──
+function autoSave(){
+  if(!fn||!raw)return;
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify({fn,raw,edits,ts:Date.now()}));
+    const ind=document.getElementById('save-ind');
+    ind.textContent='● Хадгалагдсан';ind.className='save-ind saved';
+    setTimeout(()=>{ind.textContent='Auto-saved';ind.className='save-ind';},1500);
+  }catch(e){}
+}
+
+function loadSaved(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LS_KEY)||'null');
+    if(!d||!d.fn||!d.raw)return;
+    const rb=document.getElementById('resume-box');
+    document.getElementById('resume-name').textContent=d.fn;
+    const ago=Math.round((Date.now()-d.ts)/60000);
+    const ch=Object.keys(d.edits||{}).length;
+    document.getElementById('resume-meta').textContent=
+      (ago<60?ago+'м':Math.round(ago/60)+'ц')+' өмнө хадгалсан · '+ch+' өөрчлөлт';
+    rb.style.display='block';
+  }catch(e){}
+}
+
+function resumeWork(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LS_KEY));
+    fn=d.fn;raw=d.raw;edits=d.edits||{};
+    parseHTML();
+  }catch(e){alert('Сэргээх алдаа');}
+}
+
+function clearSaved(){
+  localStorage.removeItem(LS_KEY);
+  document.getElementById('resume-box').style.display='none';
+}
+
+function clearAll(){
+  if(!confirm('Бүх өөрчлөлтийг устгах уу?'))return;
+  edits={};autoSave();stats();render();toast('Цэвэрлэгдлээ');
+}
+
+// ── FILE OPEN ──
+function onFile(inp){
+  const f=inp.files[0];if(!f)return;
+  fn=f.name;
+  const r=new FileReader();
+  r.onload=e=>{raw=e.target.result;edits={};parseHTML();};
+  r.readAsText(f);inp.value='';
+}
+
+// ── PARSE ──
+function braceMatch(str,start){
+  let d=0,inS=false,sc='';
+  for(let i=start;i<str.length;i++){
+    const c=str[i];
+    if(!inS){if(c==='{')d++;else if(c==='}'){d--;if(!d)return i;}else if(c==='"'||c==="'"){inS=true;sc=c;}}
+    else if(c===sc&&str[i-1]!=='\\')inS=false;
+  }return -1;
+}
+
+function parseHTML(){
+  // PRODUCTS
+  const pm=raw.indexOf('const PRODUCTS');
+  if(pm===-1){alert('PRODUCTS олдсонгүй');return;}
+  const bo=raw.indexOf('[',pm);
+  let d=0,inS=false,sc='',end=-1;
+  for(let i=bo;i<raw.length;i++){
+    const c=raw[i];
+    if(!inS){if(c==='[')d++;else if(c===']'){d--;if(!d){end=i;break;}}else if(c==='"'||c==="'"){inS=true;sc=c;}}
+    else if(c===sc&&raw[i-1]!=='\\')inS=false;
+  }
+  if(end===-1){alert('Parse алдаа');return;}
+  prods=[];
+  const blk=raw.slice(bo+1,end),re=/["']((?:[^"'\\]|\\.)*)["']/g;let m;
+  while((m=re.exec(blk))!==null){const s=m[1].replace(/\\'/g,"'").replace(/\\"/g,'"').trim();if(s)prods.push(s);}
+
+  // PRICE_DATA
+  prices={};
+  const pdm=raw.indexOf('const PRICE_DATA');
+  if(pdm!==-1){const bbo=raw.indexOf('{',pdm);const e2=braceMatch(raw,bbo);if(e2!==-1){try{prices=JSON.parse(raw.slice(bbo,e2+1));}catch(e){}}}
+
+  // RATINGS_DATA
+  ratings={};
+  const rdm=raw.indexOf('const RATINGS_DATA');
+  if(rdm!==-1){const bbo=raw.indexOf('{',rdm);const e2=braceMatch(raw,bbo);if(e2!==-1){try{ratings=JSON.parse(raw.slice(bbo,e2+1));}catch(e){}}}
+
+  document.getElementById('start').style.display='none';
+  document.getElementById('editor').style.display='block';
+  document.getElementById('fname').textContent=fn;
+  document.getElementById('fcount').textContent=prods.length+' бараа';
+  autoSave();stats();render();
+}
+
+// ── STATS ──
+function stats(){
+  let imgs=0,tot=0;
+  prods.forEach(n=>{
+    const e=edits[n]||{},p=getPrices(n);
+    if(e.url&&e.url.trim())imgs++;
+    tot+=Math.max(0,p.profit);
+  });
+  document.getElementById('s0').textContent=prods.length;
+  document.getElementById('s1').textContent=imgs;
+  document.getElementById('s2').textContent=prods.length?fmt(Math.round(tot/prods.length)):'—';
+  document.getElementById('s3').textContent=Object.keys(edits).length;
+}
+
+// Merge original prices with edits
+function getPrices(n){
+  const e=edits[n]||{},p=prices[n]||{};
+  const cost  =e.costN   !==undefined?e.costN   :(p.costN||0);
+  const ship  =e.shipN   !==undefined?e.shipN   :(p.shippingN||0);
+  const cust  =e.custN   !==undefined?e.custN   :(p.customsN||0);
+  const pack  =e.packN   !==undefined?e.packN   :(p.packagingN||0);
+  const total =cost+ship+cust+pack;
+  const price =e.priceN  !==undefined?e.priceN  :(p.priceN||0);
+  const profit=price-total;
+  const pct   =price>0?Math.round(profit/price*100):0;
+  return{cost,ship,cust,pack,total,price,profit,pct};
+}
+
+// ── RENDER TABLE ──
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let list=prods.map((n,i)=>({n,i}));
+  if(q)list=list.filter(({n})=>n.toLowerCase().includes(q));
+  if(filt==='img')list=list.filter(({n})=>{const e=edits[n]||{};return e.url&&e.url.trim();});
+  if(filt==='ch')list=list.filter(({n})=>edits[n]);
+  document.getElementById('list').innerHTML=list.map(({n,i})=>rowHTML(n,i)).join('');
+}
+
+function rowHTML(n,i){
+  const e=edits[n]||{},p=getPrices(n);
+  const pc=p.profit>25000?'hi':p.profit>0?'md':'lo';
+  const hasEdit=!!edits[n];
+  const urlVal=(e.url||'').replace(/"/g,'&quot;');
+  return `<div class="trow">
+<div class="td tdnum">${String(i+1).padStart(3,'0')}</div>
+<div class="td"><div class="pname">${n}</div></div>
+<div class="td"><input class="inp${e.url!==undefined?' dirty':''}" value="${urlVal}" placeholder="Cloudinary URL..." oninput="chUrl(${i},this)"></div>
+<div class="td"><input class="inp${e.priceN!==undefined?' dirty':''}" type="number" value="${e.priceN!==undefined?e.priceN:(prices[n]&&prices[n].priceN||'')}" placeholder="${prices[n]&&prices[n].priceN||0}" oninput="chPrice(${i},this)" min="0" step="100"></div>
+<div class="td"><div class="profit ${pc}">${p.profit>0?fmt(p.profit):'—'}</div><div class="pct">${p.pct>0?p.pct+'%':''}</div></div>
+<div class="td" style="display:flex;"><button class="edit-btn${hasEdit?' has-edit':''}" onclick="openDrawer(${i})" title="Дэлгэрэнгүй засах">✏</button></div>
+</div>`;
+}
+
+// ── INLINE EDITS ──
+function chUrl(i,el){
+  const n=prods[i];if(!edits[n])edits[n]={};
+  edits[n].url=el.value;el.classList.add('dirty');
+  stats();autoSave();
+}
+function chPrice(i,el){
+  const n=prods[i];if(!edits[n])edits[n]={};
+  edits[n].priceN=parseInt(el.value)||0;el.classList.add('dirty');
+  stats();autoSave();
+  // live profit
+  const r=el.closest('.trow');if(!r)return;
+  const p=getPrices(n);
+  const pc=p.profit>25000?'hi':p.profit>0?'md':'lo';
+  const c=r.querySelector('.profit'),pe=r.querySelector('.pct');
+  if(c){c.className='profit '+pc;c.textContent=p.profit>0?fmt(p.profit):'—';}
+  if(pe)pe.textContent=p.pct>0?p.pct+'%':'';
+}
+function setF(f,btn){
+  filt=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render();
+}
+
+// ── DRAWER ──
+function openDrawer(i){
+  curIdx=i;
+  const n=prods[i],e=edits[n]||{},p=getPrices(n);
+  document.getElementById('dname').textContent=n;
+
+  // Editable price fields
+  document.getElementById('d-cost').value=p.cost||'';
+  document.getElementById('d-ship').value=p.ship||'';
+  document.getElementById('d-cust').value=p.cust||'';
+  document.getElementById('d-pack').value=p.pack||'';
+  document.getElementById('d-price').value=p.price||'';
+  recalc();
+
+  // URL
+  const url=e.url!==undefined?e.url:'';
+  const ui=document.getElementById('d-urlinp');
+  ui.value=url;ui.className='urlinp'+(url?' dirty':'');
+  setPrev(url);
+
+  // Ratings
+  const rd=Object.assign({},ratings[n]||{},e.ratings||{});
+  let rhtml='';
+  RFIELDS.forEach(f=>{
+    const cur=rd[f.key]||'';
+    rhtml+=`<div class="rfield"><div class="rlbl">${f.lbl}</div><div class="ropts">`;
+    f.opts.forEach(o=>{
+      const sel=cur===o.v;
+      rhtml+=`<button class="ropt${sel?' '+optCls(o.v):''}" data-key="${f.key}" data-val="${o.v}" onclick="selRat(this,'${f.key}','${o.v}')">${o.l}</button>`;
+    });
+    rhtml+='</div></div>';
+  });
+  document.getElementById('d-ratings').innerHTML=rhtml;
+
+  // Notes
+  document.getElementById('d-notes').value=e.notes!==undefined?e.notes:((ratings[n]||{}).notes||'');
+
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function recalc(){
+  const cost=parseInt(document.getElementById('d-cost').value)||0;
+  const ship=parseInt(document.getElementById('d-ship').value)||0;
+  const cust=parseInt(document.getElementById('d-cust').value)||0;
+  const pack=parseInt(document.getElementById('d-pack').value)||0;
+  const price=parseInt(document.getElementById('d-price').value)||0;
+  const total=cost+ship+cust+pack;
+  const profit=price-total;
+  const pct=price>0?Math.round(profit/price*100):0;
+  document.getElementById('d-total').value=total?fmt(total):'';
+  document.getElementById('d-profit').value=profit>0?fmt(profit)+' ('+pct+'%)':'—';
+}
+
+function setPrev(url){
+  const prev=document.getElementById('d-prev');
+  if(url&&url.startsWith('http')){
+    prev.innerHTML=`<img src="${url.replace(/"/g,'&quot;')}" onerror="this.parentNode.innerHTML='<span>Зураг ачааллахгүй</span>'">`;
+  }else{prev.innerHTML='<span>Зураг байхгүй</span>';}
+}
+function onDUrl(el){setPrev(el.value);el.classList.toggle('dirty',!!el.value);}
+
+function selRat(btn,key,val){
+  btn.closest('.ropts').querySelectorAll('.ropt').forEach(b=>b.className='ropt');
+  btn.className='ropt '+optCls(val);
+}
+
+function saveDrawer(){
+  if(curIdx<0)return;
+  const n=prods[curIdx];
+  if(!edits[n])edits[n]={};
+
+  // Save all price fields
+  const cost=parseInt(document.getElementById('d-cost').value)||0;
+  const ship=parseInt(document.getElementById('d-ship').value)||0;
+  const cust=parseInt(document.getElementById('d-cust').value)||0;
+  const pack=parseInt(document.getElementById('d-pack').value)||0;
+  const price=parseInt(document.getElementById('d-price').value)||0;
+  const p0=prices[n]||{};
+  // Only save if changed
+  if(cost!==p0.costN)edits[n].costN=cost;
+  if(ship!==p0.shippingN)edits[n].shipN=ship;
+  if(cust!==p0.customsN)edits[n].custN=cust;
+  if(pack!==p0.packagingN)edits[n].packN=pack;
+  if(price!==p0.priceN)edits[n].priceN=price;
+
+  // URL
+  edits[n].url=document.getElementById('d-urlinp').value;
+
+  // Ratings
+  const rd={};
+  RFIELDS.forEach(f=>{
+    const sel=document.querySelector(`#d-ratings .ropt.sg[data-key="${f.key}"],#d-ratings .ropt.sw[data-key="${f.key}"],#d-ratings .ropt.sr[data-key="${f.key}"]`);
+    if(sel)rd[f.key]=sel.dataset.val;
+  });
+  edits[n].ratings=rd;
+  edits[n].notes=document.getElementById('d-notes').value;
+
+  // Clean empty edits
+  if(!edits[n].url&&edits[n].costN===undefined&&edits[n].priceN===undefined
+     &&!Object.keys(edits[n].ratings||{}).length&&!edits[n].notes){
+    delete edits[n];
+  }
+
+  autoSave();stats();render();closeDrawer();
+  toast('Хадгалагдлаа ✓');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  curIdx=-1;
+}
+
+// ── DOWNLOAD ──
+function downloadFile(){
+  let html=raw;
+
+  // Patch PRICE_DATA
+  const np=JSON.parse(JSON.stringify(prices));
+  prods.forEach(n=>{
+    const e=edits[n];if(!e)return;
+    if(!np[n])np[n]={};
+    const p=getPrices(n);
+    np[n].costN=p.cost; np[n].cost='₮'+p.cost.toLocaleString();
+    np[n].shippingN=p.ship; np[n].shipping='₮'+p.ship.toLocaleString();
+    np[n].customsN=p.cust; np[n].customs='₮'+p.cust.toLocaleString();
+    np[n].packagingN=p.pack; np[n].packaging='₮'+p.pack.toLocaleString();
+    np[n].totalCostN=p.total; np[n].totalCost='₮'+p.total.toLocaleString();
+    np[n].priceN=p.price; np[n].price='₮'+p.price.toLocaleString();
+    np[n].netProfitN=p.profit; np[n].netProfit='₮'+p.profit.toLocaleString();
+    np[n].netMarginPct=p.pct;
+  });
+  const pdm=html.indexOf('const PRICE_DATA');
+  if(pdm!==-1){const bbo=html.indexOf('{',pdm);const e2=braceMatch(html,bbo);if(e2!==-1)html=html.slice(0,bbo)+JSON.stringify(np)+html.slice(e2+1);}
+
+  // Patch RATINGS_DATA
+  const nr=JSON.parse(JSON.stringify(ratings));
+  prods.forEach(n=>{
+    const e=edits[n];if(!e)return;
+    if(e.ratings&&Object.keys(e.ratings).length){nr[n]=Object.assign({},nr[n]||{},e.ratings);}
+    if(e.notes!==undefined){if(!nr[n])nr[n]={};nr[n].notes=e.notes;}
+  });
+  const rdm=html.indexOf('const RATINGS_DATA');
+  if(rdm!==-1){const bbo=html.indexOf('{',rdm);const e2=braceMatch(html,bbo);if(e2!==-1)html=html.slice(0,bbo)+JSON.stringify(nr)+html.slice(e2+1);}
+
+  // Patch getImg
+  const imgMap={};
+  prods.forEach(n=>{const e=edits[n];if(e&&e.url&&e.url.trim())imgMap[n]=e.url.trim();});
+  if(Object.keys(imgMap).length>0){
+    const inject=`const EDITOR_IMGS=${JSON.stringify(imgMap)};\nfunction getImg(n){if(typeof EDITOR_IMGS!=='undefined'&&EDITOR_IMGS[n])return EDITOR_IMGS[n];return userImages[n]||null;}`;
+    html=html.replace(/function getImg\(n\)\{[^}]+\}/,inject);
+  }
+
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=fn||'edited.html';
+  a.click();URL.revokeObjectURL(a.href);
+  toast('⬇ '+fn+' татагдлаа');
+}
+
+function fmt(n){return'₮'+Math.round(n).toLocaleString();}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+// ── INIT ──
+loadSaved();
+</script>
+</body>
+</html>
