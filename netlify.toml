@@ -7,3 +7,9 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Cache-Control = "no-store, no-cache, must-revalidate"
+
+[[headers]]
+  for = "/og.png"
+  [headers.values]
+    Content-Type = "image/png"
+    Cache-Control = "public, max-age=86400"
