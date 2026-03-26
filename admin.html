@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ProductDrop.MN — Password Generator</title>
+<title>ProductDrop.MN — Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#06060a;--s:#0d0d12;--s2:#13131a;--b:#1c1c26;--b2:#28283a;--t:#efefef;--m:#5a5a72;--a:#c8ff00;--r:#ff4444;}
@@ -23,6 +23,7 @@ input:focus,select:focus{border-color:var(--a);}
 select option{background:var(--s2);}
 .btn{width:100%;margin-top:14px;padding:13px;background:var(--a);color:#000;border:none;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
 .btn:hover{background:#b5e800;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
 .result{background:var(--s2);border:1px solid rgba(200,255,0,.2);padding:16px;margin-top:14px;display:none;}
 .pw-display{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--a);letter-spacing:2px;margin-bottom:8px;word-break:break-all;}
 .pw-meta{font-size:10px;color:var(--m);line-height:1.8;}
@@ -36,9 +37,13 @@ td.pw{color:var(--a);font-family:'Syne',sans-serif;font-weight:700;}
 .del-btn{background:none;border:none;color:var(--r);cursor:pointer;font-size:12px;padding:0;}
 .tag{display:inline-block;font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(200,255,0,.08);color:var(--a);border:1px solid rgba(200,255,0,.2);}
 .tag.exp{background:rgba(255,68,68,.08);color:var(--r);border-color:rgba(255,68,68,.2);}
+.sync-status{font-size:10px;color:var(--m);margin-top:8px;text-align:right;}
+.sync-status.ok{color:var(--a);}
+.sync-status.err{color:var(--r);}
 </style>
 </head>
 <body>
+
 <!-- ADMIN LOGIN -->
 <div id="admin-login" style="position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;">
   <div style="width:min(380px,90vw);">
@@ -84,112 +89,142 @@ td.pw{color:var(--a);font-family:'Syne',sans-serif;font-weight:700;}
         </select>
       </div>
     </div>
-    <button class="btn" onclick="genPW()">Нууц үг үүсгэх →</button>
+    <button class="btn" id="gen-btn" onclick="genPW()">Нууц үг үүсгэх →</button>
     <div class="result" id="result">
       <div class="pw-display" id="pw-out"></div>
       <div class="pw-meta" id="pw-meta"></div>
       <button class="copy-btn" onclick="copyPW()">📋 Хуулах</button>
     </div>
+    <div class="sync-status" id="sync-status"></div>
   </div>
 
   <div class="box">
-    <h2>Идэвхтэй нууц үгүүд</h2>
+    <h2>Идэвхтэй нууц үгүүд <span id="reload-btn" onclick="renderList()" style="cursor:pointer;font-size:10px;color:var(--a);margin-left:8px;">↻ Шинэчлэх</span></h2>
     <div class="list-box">
       <table>
         <thead><tr><th>Нэр / ID</th><th>Нууц үг</th><th>Дуусах</th><th>Plan</th><th></th></tr></thead>
-        <tbody id="pw-list"></tbody>
+        <tbody id="pw-list"><tr><td colspan="5" style="color:var(--m);text-align:center;padding:16px">Уншиж байна...</td></tr></tbody>
       </table>
     </div>
   </div>
 </div>
-</div><!-- /admin-panel -->
-<script>
-const ADMIN_PASS='PD-ADMIN-2026';
-const ADMIN_SESS='pd_admin_sess';
+</div>
 
-function adminLogin(){
-  var v=document.getElementById('admin-pwd').value.trim();
-  if(v===ADMIN_PASS){
-    sessionStorage.setItem(ADMIN_SESS,'1');
-    document.getElementById('admin-login').style.display='none';
-    document.getElementById('admin-panel').style.display='flex';
+<script>
+const ADMIN_PASS = 'PD-ADMIN-2026';
+const ADMIN_SESS = 'pd_admin_sess';
+// ↓ Google Apps Script deploy URL — доор тайлбар байна
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyd3iPFcE8EhSd-fgpDotiDc1TonWUqAUxBVQVDLWcjbqR97OI2tUEsGTuJngVp7g8s/exec';
+
+function adminLogin() {
+  var v = document.getElementById('admin-pwd').value.trim();
+  if (v === ADMIN_PASS) {
+    sessionStorage.setItem(ADMIN_SESS, '1');
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'flex';
+    renderList();
   } else {
-    var e=document.getElementById('admin-err');e.style.display='block';
-    document.getElementById('admin-pwd').style.borderColor='var(--r)';
-    setTimeout(function(){e.style.display='none';document.getElementById('admin-pwd').style.borderColor='';},2500);
+    var e = document.getElementById('admin-err'); e.style.display = 'block';
+    document.getElementById('admin-pwd').style.borderColor = 'var(--r)';
+    setTimeout(function(){e.style.display='none';document.getElementById('admin-pwd').style.borderColor='';}, 2500);
   }
 }
-document.getElementById('admin-pwd').addEventListener('keydown',function(e){if(e.key==='Enter')adminLogin();});
-
+document.getElementById('admin-pwd').addEventListener('keydown', function(e){if(e.key==='Enter')adminLogin();});
 (function(){
   if(sessionStorage.getItem(ADMIN_SESS)==='1'){
     document.getElementById('admin-login').style.display='none';
     document.getElementById('admin-panel').style.display='flex';
+    renderList();
   }
 })();
-const SALT='PD2026MN';
-const STORE='pd_admin_pws';
 
-function loadPWs(){try{return JSON.parse(localStorage.getItem(STORE)||'[]');}catch{return[];}}
-function savePWs(a){localStorage.setItem(STORE,JSON.stringify(a));}
+const SALT = 'PD2026MN';
 
-function genPW(){
-  var name=document.getElementById('f-name').value.trim()||'User';
-  var uid=document.getElementById('f-id').value.trim()||Math.random().toString(36).slice(2,8).toUpperCase();
-  var days=+document.getElementById('f-days').value;
-  var plan=document.getElementById('f-plan').value;
-  var expiry=Date.now()+days*86400000;
-  var exB36=expiry.toString(36).toUpperCase();
-  // Normalize name for checksum: lowercase, trim
-  var normName=name.toLowerCase().replace(/\s+/g,'');
-  // Checksum includes name
-  var raw=uid+exB36+SALT+plan+normName;
-  var ck=0;for(var i=0;i<raw.length;i++)ck=(ck*31+raw.charCodeAt(i))&0xFFFFFF;
-  var ckStr=ck.toString(36).toUpperCase().padStart(5,'0');
-  var pw='PD-'+uid.toUpperCase().replace(/[^A-Z0-9]/g,'')+'-'+exB36+'-'+ckStr;
-  
-  var pws=loadPWs();
-  pws.push({name,uid,plan,expiry,pw,created:Date.now()});
-  savePWs(pws);
-  
-  document.getElementById('pw-out').textContent=pw;
-  document.getElementById('pw-meta').innerHTML=
+function genPW() {
+  var name = document.getElementById('f-name').value.trim() || 'User';
+  var uid  = document.getElementById('f-id').value.trim() || Math.random().toString(36).slice(2,8).toUpperCase();
+  var days = +document.getElementById('f-days').value;
+  var plan = document.getElementById('f-plan').value;
+  var expiry = Date.now() + days * 86400000;
+  var exB36  = expiry.toString(36).toUpperCase();
+  var normName = name.toLowerCase().replace(/\s+/g,'');
+  var raw = uid + exB36 + SALT + plan + normName;
+  var ck = 0; for(var i=0;i<raw.length;i++) ck=(ck*31+raw.charCodeAt(i))&0xFFFFFF;
+  var ckStr = ck.toString(36).toUpperCase().padStart(5,'0');
+  var pw = 'PD-' + uid.toUpperCase().replace(/[^A-Z0-9]/g,'') + '-' + exB36 + '-' + ckStr;
+
+  document.getElementById('pw-out').textContent = pw;
+  document.getElementById('pw-meta').innerHTML =
     'Хэрэглэгч: <b>'+name+'</b> ('+uid+')<br>'+
     'Plan: <b>'+plan.toUpperCase()+'</b><br>'+
     'Дуусах: <b>'+new Date(expiry).toLocaleDateString('mn-MN')+'</b><br>'+
-    '<span style="color:var(--a)">⚠ Нэвтрэх нэр: <b>'+name+'</b> — яг энэ нэрээр л нэвтэрнэ!</span>';
-  document.getElementById('result').style.display='block';
-  renderList();
-}
+    '<span style="color:var(--a)">⚠ Нэвтрэх нэр: <b>'+name+'</b></span>';
+  document.getElementById('result').style.display = 'block';
 
-function copyPW(){
-  var pw=document.getElementById('pw-out').textContent;
-  navigator.clipboard.writeText(pw).then(function(){
-    document.querySelector('.copy-btn').textContent='✓ Хуулагдлаа';
-    setTimeout(function(){document.querySelector('.copy-btn').textContent='📋 Хуулах';},2000);
+  // Google Sheets-т хадгалах
+  var btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.textContent = 'Хадгалж байна...';
+  var status = document.getElementById('sync-status');
+  status.className = 'sync-status';
+  status.textContent = '⏳ Google Sheets-т хадгалж байна...';
+
+  fetch(GAS_URL + '?action=add&name='+encodeURIComponent(name)+'&uid='+encodeURIComponent(uid)+'&plan='+plan+'&pw='+encodeURIComponent(pw)+'&expiry='+expiry)
+  .then(function(r){return r.json();})
+  .then(function(){
+    status.className = 'sync-status ok';
+    status.textContent = '✓ Google Sheets-т хадгалагдлаа';
+    btn.disabled = false;
+    btn.textContent = 'Нууц үг үүсгэх →';
+    renderList();
+  })
+  .catch(function(){
+    status.className = 'sync-status err';
+    status.textContent = '✗ Sheets холбогдсонгүй — GAS_URL шалгана уу';
+    btn.disabled = false;
+    btn.textContent = 'Нууц үг үүсгэх →';
   });
 }
 
-function renderList(){
-  var pws=loadPWs();
-  var now=Date.now();
-  var tbody=document.getElementById('pw-list');
-  if(!pws.length){tbody.innerHTML='<tr><td colspan="5" style="color:var(--m);text-align:center;padding:16px">Нууц үг байхгүй</td></tr>';return;}
-  tbody.innerHTML=pws.map(function(p,i){
-    var exp=p.expiry<now;
-    return '<tr>'+
-      '<td>'+p.name+'<br><span style="color:var(--m);font-size:10px">'+p.uid+'</span></td>'+
-      '<td class="pw">'+p.pw+'</td>'+
-      '<td><span class="tag'+(exp?' exp':'')+'">'+new Date(p.expiry).toLocaleDateString('mn-MN')+(exp?' ✗':'')+'</span></td>'+
-      '<td><span class="tag">'+p.plan+'</span></td>'+
-      '<td><button class="del-btn" onclick="delPW('+i+')">✕</button></td>'+
-    '</tr>';
-  }).join('');
+function copyPW() {
+  navigator.clipboard.writeText(document.getElementById('pw-out').textContent).then(function(){
+    document.querySelector('.copy-btn').textContent = '✓ Хуулагдлаа';
+    setTimeout(function(){document.querySelector('.copy-btn').textContent='📋 Хуулах';}, 2000);
+  });
 }
 
-function delPW(i){var pws=loadPWs();pws.splice(i,1);savePWs(pws);renderList();}
+function renderList() {
+  var tbody = document.getElementById('pw-list');
+  tbody.innerHTML = '<tr><td colspan="5" style="color:var(--m);text-align:center;padding:16px">Уншиж байна...</td></tr>';
 
-renderList();
+  fetch(GAS_URL)
+  .then(function(r){return r.json();})
+  .then(function(pws){
+    var now = Date.now();
+    if(!pws.length){
+      tbody.innerHTML='<tr><td colspan="5" style="color:var(--m);text-align:center;padding:16px">Нууц үг байхгүй</td></tr>';
+      return;
+    }
+    tbody.innerHTML = pws.map(function(p){
+      var exp = p.expiry < now;
+      return '<tr>'+
+        '<td>'+p.name+'<br><span style="color:var(--m);font-size:10px">'+p.uid+'</span></td>'+
+        '<td class="pw">'+p.pw+'</td>'+
+        '<td><span class="tag'+(exp?' exp':'')+'">'+new Date(p.expiry).toLocaleDateString('mn-MN')+(exp?' ✗':'')+'</span></td>'+
+        '<td><span class="tag">'+p.plan+'</span></td>'+
+        '<td><button class="del-btn" onclick="delPW(\''+p.pw+'\')">✕</button></td>'+
+      '</tr>';
+    }).join('');
+  })
+  .catch(function(){
+    tbody.innerHTML='<tr><td colspan="5" style="color:var(--r);text-align:center;padding:16px">Sheets холбогдсонгүй</td></tr>';
+  });
+}
+
+function delPW(pw) {
+  if(!confirm('Устгах уу?')) return;
+  fetch(GAS_URL + '?action=delete&pw='+encodeURIComponent(pw)).then(function(){renderList();});
+}
 </script>
 </body>
 </html>
