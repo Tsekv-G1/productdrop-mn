@@ -279,6 +279,7 @@ footer{border-top:1px solid var(--bd);padding:36px max(20px,4vw) 28px}
 .mob-nav-cta{display:block;width:100%;margin-top:24px;background:var(--ac);color:#000;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px;border:none;cursor:pointer;text-align:center}
 
 /* ── MOBILE ── */
+@media(max-width:768px){#scope .si>div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}}
 @media(max-width:900px){
   .hero{padding:100px 20px 50px}.hero-inner{grid-template-columns:1fr;gap:28px}
   /* show platform preview below hero text on mobile */
@@ -405,9 +406,9 @@ footer{border-top:1px solid var(--bd);padding:36px max(20px,4vw) 28px}
 <body>
 <div class="ub"><span class="ub-fire">🔥</span><span>Энэ сарын хямдрал дуусахад</span><span class="ub-cd" id="ub-cd">00:00:00</span><span class="ub-sep">|</span><div class="ub-live"><div class="ub-dot"></div><span id="ub-v">21 хүн үзэж байна</span></div></div>
 
-<nav id="nav"><div class="logo">PRODUCT<span>DROP</span>.MN</div><ul class="nav-links"><li><a href="#categories">Бараа</a></li><li><a href="#features">Хэрэгслүүд</a></li><li><a href="#pricing">Үнэ</a></li><li><a href="#faq">FAQ</a></li></ul><button class="nav-cta" onclick="openQPay('pro')">Эхлэх →</button><button class="mob-menu-btn" onclick="toggleMenu()" aria-label="Цэс">☰</button></nav>
+<nav id="nav"><div class="logo">PRODUCT<span>DROP</span>.MN</div><ul class="nav-links"><li><a href="#categories">Бараа</a></li><li><a href="#features">Хэрэгслүүд</a></li><li><a href="#scope">Хамрах хүрээ</a></li><li><a href="#pricing">Үнэ</a></li><li><a href="#faq">FAQ</a></li></ul><button class="nav-cta" onclick="openQPay('pro')">Эхлэх →</button><button class="mob-menu-btn" onclick="toggleMenu()" aria-label="Цэс">☰</button></nav>
 <div class="mob-overlay" id="mob-overlay" onclick="toggleMenu()"></div>
-<div class="mob-nav" id="mob-nav"><a href="#categories" onclick="toggleMenu()">Бараа</a><a href="#features" onclick="toggleMenu()">Хэрэгслүүд</a><a href="#pricing" onclick="toggleMenu()">Үнэ</a><a href="#faq" onclick="toggleMenu()">FAQ</a><a href="index.html">Нэвтрэх</a><button class="mob-nav-cta" onclick="toggleMenu();openQPay('pro')">Эхлэх →</button></div>
+<div class="mob-nav" id="mob-nav"><a href="#categories" onclick="toggleMenu()">Бараа</a><a href="#features" onclick="toggleMenu()">Хэрэгслүүд</a><a href="#scope" onclick="toggleMenu()">Хамрах хүрээ</a><a href="#pricing" onclick="toggleMenu()">Үнэ</a><a href="#faq" onclick="toggleMenu()">FAQ</a><a href="index.html">Нэвтрэх</a><button class="mob-nav-cta" onclick="toggleMenu();openQPay('pro')">Эхлэх →</button></div>
 
 <section class="hero" style="border-top:none">
 <div class="hero-glow"></div>
@@ -415,8 +416,8 @@ footer{border-top:1px solid var(--bd);padding:36px max(20px,4vw) 28px}
 <div class="rv">
   <div class="hero-badge"><div class="live-dot"></div><span>Монголын #1 платформ</span></div>
   <h1>Ашигтай бараа<br>олох хамгийн <em>хурдан</em> арга</h1>
-  <p class="hero-desc">500+ шалгарсан бараа, ашгийн тооцоолуур, AI контент санаанууд — бүгдийг нэг дороос. Монголын онлайн бизнесд зориулан бүтээсэн.</p>
-  <div class="hero-urg"><div class="hu-dot"></div><div class="hu-text">Энэ сарын хямдрал <strong id="hero-cd">3 хоног</strong> дараа нэмэгдэнэ</div></div>
+  <p class="hero-desc"><strong style="color:var(--tx)">Онлайн дэлгүүр нээсэн эсвэл нээхээр бэлдэж байгаа хүнд зориулсан.</strong> 500+ шалгарсан бараа, ашгийн тооцоолуур, supplier линк — бүгдийг нэг дороос. Бараа олох ажлыг тань хурдасгана — захиалга, тээвэр, supplier харилцааг та өөрөө хийнэ.</p>
+  <div class="hero-urg"><div class="hu-dot"></div><div class="hu-text">Энэ сарын хямдрал <strong id="hero-cd">3 хоног</strong> дараа дуусна</div></div>
   <div class="hero-actions"><button class="btn-p" onclick="openQPay('pro')">Одоо авах →</button><a href="index.html" class="btn-g">Нэвтрэх →</a></div>
   <div class="hero-stats">
     <div><div class="stat-num" data-t="500" data-s="+">0<span>+</span></div><div class="stat-lbl">Шалгарсан бараа</div></div>
@@ -533,10 +534,42 @@ footer{border-top:1px solid var(--bd);padding:36px max(20px,4vw) 28px}
 </section>
 
 
+<section id="scope" style="background:var(--sf);border-top:1px solid var(--bd)"><div class="si">
+<div class="sec-label rvl">Платформын хамрах хүрээ</div>
+<h2 class="rv">Юу <em>багтсан</em> бэ ?</h2>
+<p class="sec-desc rv d1">ProductDrop.MN бол бараа судалгааны платформ — бараа олох цагийг хэмнэнэ. Дараах зүйлс энд ороогүй.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd)" class="rv d2">
+<div style="background:var(--bg);padding:32px 28px">
+  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ac);margin-bottom:20px;display:flex;align-items:center;gap:8px"><span style="font-size:16px">✅</span> Платформд орсон зүйлс</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--ac);flex-shrink:0;margin-top:1px">→</span><span><strong style="color:var(--tx)">500+ бараа судалгаа</strong> — ашиг, margin, зах зээлийн дүн шинжилгээтэй</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--ac);flex-shrink:0;margin-top:1px">→</span><span><strong style="color:var(--tx)">Ашгийн тооцоолуур</strong> — авах үнэ + тээвэр + маркетинг = цэвэр ашиг</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--ac);flex-shrink:0;margin-top:1px">→</span><span><strong style="color:var(--tx)">Supplier хайлт</strong> — Alibaba, Amazon, хайлтын холбоос</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--ac);flex-shrink:0;margin-top:1px">→</span><span><strong style="color:var(--tx)">AI контент санаа</strong> — бараа бүрт hook, Body , Cta санаа</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--ac);flex-shrink:0;margin-top:1px">→</span><span><strong style="color:var(--tx)">Сар бүр шинэ бараа</strong> — тренд бараа нэмэгддэг</span></div>
+  </div>
+</div>
+<div style="background:var(--bg);padding:32px 28px">
+  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:20px;display:flex;align-items:center;gap:8px"><span style="font-size:16px">❌</span> Платформд ороогүй зүйлс</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--mu2);flex-shrink:0;margin-top:1px">×</span><span>Alibaba / 1688 дээр бүртгэл үүсгэх, тохиргоо хийх</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--mu2);flex-shrink:0;margin-top:1px">×</span><span>Supplier-тай харилцах, үнэ тохиролцох, sample захиалах</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--mu2);flex-shrink:0;margin-top:1px">×</span><span>Карго буюу тээврийн зохицуулалт</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--mu2);flex-shrink:0;margin-top:1px">×</span><span>Онлайн дэлгүүр байгуулах, тохируулах</span></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--mu)"><span style="color:var(--mu2);flex-shrink:0;margin-top:1px">×</span><span>Захиалга, хүргэлт, харилцагч үйлчилгээ</span></div>
+  </div>
+</div>
+</div>
+<div class="rv d3" style="margin-top:1px;background:rgba(200,255,0,.03);border:1px solid rgba(200,255,0,.1);padding:16px 22px;display:flex;align-items:center;gap:12px">
+  <span style="font-size:20px">💡</span>
+  <p style="font-size:11px;color:var(--mu);line-height:1.7">Хэрэв Alibaba дээр бүртгэл, supplier харилцаа, карго гэх мэт зүйлд туслуулахыг хүсвэл манай Telegram group-д ороод асууж болно.</p>
+</div>
+</div></section>
+
 <section id="pricing"><div class="si">
 <div class="sec-label rvl">Үнийн мэдээлэл</div>
-<h2 class="rv">Таны бизнест тохирох <em>төлөвлөгөө</em></h2>
-<p class="sec-desc rv d1">Төлбөр хийснийхээ дараа нэвтрэх нууц үг авна.</p>
+<h2 class="rv">Бараа судалгааны платформд <em>нэгдэх</em></h2>
+<p class="sec-desc rv d1">Бараа олох, ашиг тооцох, supplier хайх — энэ ажлыг хурдасгана. Төлбөр хийснийхээ дараа нэвтрэх нууц үг авна.</p>
 <div class="pricing-grid">
   <div class="pc soon rv"><div class="pc-soon-badge">Тун удахгүй</div><span class="pc-badge o">Lite</span><div class="pc-name">Starter</div><div class="pc-desc">Эхлэгч бизнес эрхлэгчдэд</div><div class="pc-price"><sup>₮</sup>29,900</div><div class="pc-period">сард</div><ul class="pc-features"><li>Beauty + Home — 200 бараа</li><li>Ашгийн тооцоолуур</li><li>Нийлүүлэгч линк (AliExpress)</li><li>Зураг upload боломж</li><li class="off">Health + Goods + Kids</li><li class="off">AI Контент санаа</li><li class="off">Шинжилгээ</li></ul><button class="pc-btn outline">Тун удахгүй</button></div>
   <div class="pc featured rv d1"><div class="pc-popular">Одоо авах боломжтой</div><span class="pc-badge g">Pro</span><div class="pc-name">Professional</div><div class="pc-desc">Идэвхтэй бизнес эрхлэгчдэд</div><div class="pc-price-old">₮120,000</div><div class="pc-price ac"><sup>₮</sup>59,900</div><div class="pc-period">сард · <span style="color:var(--ac)">50% хямдралтай</span></div><div class="pc-daily">Өдөрт <strong>₮1,997</strong> — нэг кофеноос ч бага</div><ul class="pc-features"><li>Бүх 5 категори — 500+ бараа</li><li>Ашгийн тооцоолуур</li><li>Нийлүүлэгч линк (5 платформ)</li><li>Зураг upload боломж</li><li>Монгол тайлбар + эрсдэл</li><li>Контент санаа</li><li>Сар бүр шинэ бараа нэмэгдэнэ</li></ul><button class="pc-btn primary" onclick="openQPay('pro')">Одоо авах →</button></div>
@@ -566,6 +599,8 @@ footer{border-top:1px solid var(--bd);padding:36px max(20px,4vw) 28px}
 <div class="sec-label rvl">Нийтлэг асуулт</div>
 <h2 class="rv">Түгээмэл <em>асуултууд</em></h2>
 <div class="faq-list rv d1" style="margin-top:52px">
+  <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Alibaba дээр захиалахад тусалж өгдөг үү?<div class="faq-icon">+</div></button><div class="faq-a">Үгүй. ProductDrop.MN бол бараа <strong>олох</strong> платформ — Alibaba бүртгэл, supplier харилцаа, карго зэрэг зүйлс манай үйлчилгээнд ороогүй болно. Эдгээр алхмуудад туслуулахыг хүсвэл манай Telegram group-д нийлэгтүн.</div></div>
+  <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Онлайн дэлгүүр байхгүй бол ашиглаж болох уу?<div class="faq-icon">+</div></button><div class="faq-a">Болно — гэхдээ платформ нь аль хэдийн онлайн дэлгүүр нээсэн эсвэл нээхэд бэлэн байгаа хүнд хамгийн их ашигтай. Бараа сонгох, ашгийг тооцох зорилготой хүн оролцвол хамгийн их үр дүн гарна.</div></div>
   <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Төлбөр хийсний дараа яаж нэвтрэх вэ?<div class="faq-icon">+</div></button><div class="faq-a">Дансаар шилжүүлэг хийснийхээ дараа манай Instagram/утсанд screenshot илгээнэ үү. Бид 30 минутын дотор нэвтрэх нууц үгийг илгээнэ.</div></div>
   <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Бараанууд хэр байн байн шинэчлэгддэг вэ?<div class="faq-icon">+</div></button><div class="faq-a">Судалгааны баг сар бүр шинэ бараа нэмдэг. Улирлын тренд, вирал болсон бараанууд тэр сартаа нэмэгддэг.</div></div>
   <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Монголын зах зээлд тохирсон уу?<div class="faq-icon">+</div></button><div class="faq-a">Тийм. ProductDrop.MN нь зөвхөн Монголын зах зээлд зориулж бүтээгдсэн. Үнэ ₮ төгрөгөөр, тайлбар монгол хэлээр байна.</div></div>
